@@ -29,7 +29,8 @@ public class RecordApiController {
     @PostMapping("/api/record")
     public CreateRecordResponse createRecord(@RequestBody @Valid CreateRecordRequest request) {
         User user = userService.findOne(Long.valueOf(0));
-        Record record = Record.createRecord(request.text, LocalDate.now().toString(), request.calory, request.carb, request.protein, request.fat, user);
+        Record record = Record.createRecord(request.text, LocalDate.now().toString(), request.calory, request.carb, request.protein, request.fat,
+                request.rdate, request.rtime, request.amount, user);
         Long id = recordService.record(record);
         return new CreateRecordResponse(id);
     }
@@ -64,6 +65,15 @@ public class RecordApiController {
 
         @NotNull
         private String fat;
+
+        @NotNull
+        private String rdate;
+
+        @NotNull
+        private String rtime;
+
+        @NotNull
+        private Double amount;
     }
 
     @Data
