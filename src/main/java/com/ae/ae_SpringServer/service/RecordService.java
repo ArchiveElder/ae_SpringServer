@@ -32,4 +32,8 @@ public class RecordService {
         userService.updateSome(record.getUser().getId(), record);
         return record.getId();
     }
+
+    public List<Record> findDateRecords(Long id, String date) {
+        return recordRepository.findDateRecords(id, date);
+    }
 }

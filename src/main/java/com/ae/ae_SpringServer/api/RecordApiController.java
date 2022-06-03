@@ -7,10 +7,7 @@ import com.ae.ae_SpringServer.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
@@ -40,9 +37,34 @@ public class RecordApiController {
         Long id = Long.valueOf(0);
         List<Record> findRecords = recordService.findRecords(id);
         List<RecordDto> collect = findRecords.stream()
-                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCalory(), m.getCarb(), m.getProtein(), m.getFat()))
+                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCalory(), m.getCarb(), m.getProtein(), m.getFat(),
+                        m.getDate(), m.getTime(), m.getAmount(), m.getMeal()))
                 .collect(toList());
         return new Result(collect.size(), collect);
+    }
+
+    @PostMapping("/api/daterecord")
+    public DateRecordResponse dateRecords(@RequestBody @Valid CreateDateRequest request) {
+        Long id = Long.valueOf(0);
+        List<Record> findRecords = recordService.findDateRecords(id, request.date);
+        List<RecordDto> collect = findRecords.stream()
+                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCalory(), m.getCarb(), m.getProtein(), m.getFat(),
+                        m.getDate(), m.getTime(), m.getAmount(), m.getMeal()))
+                .collect(toList());
+        Double totalCalory = Double.valueOf(0);
+        Double totalCarb = Double.valueOf(0);
+        Double totalPro = Double.valueOf(0);
+        Double totalFat = Double.valueOf(0);
+        User user = userService.findOne(id);
+        for(Record record: findRecords) {
+            totalCalory += Double.parseDouble(record.getCalory());
+            totalCarb += Double.parseDouble(record.getCarb());
+            totalPro += Double.parseDouble(record.getProtein());
+            totalFat += Double.parseDouble(record.getFat());
+        }
+        return new DateRecordResponse(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
+                user.getUcalory(), user.getUcarb(), user.getUpro(), user.getUfat(),
+                collect);
     }
 
     // 해야할것: 플라스크 서버에 전달해줄 식단 조회 (최신 6개) - 서버와 api 통신할 때 하기
@@ -80,9 +102,29 @@ public class RecordApiController {
     }
 
     @Data
+    private static class CreateDateRequest {
+        @NotNull
+        private String date;
+    }
+
+    @Data
     private static class CreateRecordResponse {
         private Long id;
         public CreateRecordResponse(Long id) { this.id = id; }
+    }
+
+    @Data
+    @AllArgsConstructor
+    private static class DateRecordResponse {
+        private int totalCalory;
+        private int totalCarb;
+        private int totalPro;
+        private int totalFat;
+        private int recommCalory;
+        private int recommCarb;
+        private int recommPro;
+        private int recommFat;
+        private List<RecordDto> records;
     }
 
     @Data
@@ -101,5 +143,9 @@ public class RecordApiController {
         private String carb;
         private String protein;
         private String fat;
+        private String rdate;
+        private String rtime;
+        private Double amount;
+        private int meal;
     }
 }
