@@ -23,7 +23,7 @@ public class Record {
     //private String image_url;
     private String text;
     private String server_date;
-    private String calory;
+    private String cal;
     private String carb;
     private String protein;
     private String fat;
@@ -44,12 +44,12 @@ public class Record {
     private User user;
 
 
-    public static Record createRecord(String text, String date, String calory, String carb, String protein, String fat, String rdate, String rtime,
+    public static Record createRecord(String text, String date, String cal, String carb, String protein, String fat, String rdate, String rtime,
                                       Double amount, int meal, User user) {
         Record record = new Record();
         record.setText(text);
         record.setServer_date(date);
-        record.setCalory(calory);
+        record.setCal(cal);
         record.setCarb(carb);
         record.setProtein(protein);
         record.setFat(fat);

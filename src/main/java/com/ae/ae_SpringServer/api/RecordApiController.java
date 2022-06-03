@@ -37,7 +37,7 @@ public class RecordApiController {
         Long id = Long.valueOf(0);
         List<Record> findRecords = recordService.findRecords(id);
         List<RecordDto> collect = findRecords.stream()
-                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCalory(), m.getCarb(), m.getProtein(), m.getFat(),
+                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(),
                         m.getDate(), m.getTime(), m.getAmount(), m.getMeal()))
                 .collect(toList());
         return new Result(collect.size(), collect);
@@ -48,7 +48,7 @@ public class RecordApiController {
         Long id = Long.valueOf(0);
         List<Record> findRecords = recordService.findDateRecords(id, request.date);
         List<RecordDto> collect = findRecords.stream()
-                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCalory(), m.getCarb(), m.getProtein(), m.getFat(),
+                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(),
                         m.getDate(), m.getTime(), m.getAmount(), m.getMeal()))
                 .collect(toList());
         Double totalCalory = Double.valueOf(0);
@@ -57,7 +57,7 @@ public class RecordApiController {
         Double totalFat = Double.valueOf(0);
         User user = userService.findOne(id);
         for(Record record: findRecords) {
-            totalCalory += Double.parseDouble(record.getCalory());
+            totalCalory += Double.parseDouble(record.getCal());
             totalCarb += Double.parseDouble(record.getCarb());
             totalPro += Double.parseDouble(record.getProtein());
             totalFat += Double.parseDouble(record.getFat());
