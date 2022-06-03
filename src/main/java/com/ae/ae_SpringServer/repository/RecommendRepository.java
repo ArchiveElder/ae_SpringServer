@@ -25,7 +25,7 @@ public class RecommendRepository {
         int pro = user.getRpro();
         int fat = user.getRfat();
 
-        List<Food> foodList = em.createQuery("select f from food f where f.food_calory <= :cal and f.food_carb <= :carb and f.food_pro <= :pro and f.food_fat <= :fat")
+        List<Food> foodList = em.createQuery("select f from Food f where f.food_calory <= :cal and f.food_carb <= :carb and f.food_pro <= :pro and f.food_fat <= :fat")
                 .setParameter("cal", cal)
                 .setParameter("carb", carb)
                 .setParameter("pro", pro)
