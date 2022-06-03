@@ -51,6 +51,9 @@ public class User {
     @Column(name = "remain_fat")
     private int rfat;
 
+    @Column(name = "signup_date")
+    private String date;
+
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Recommend> recommends = new ArrayList<>();
