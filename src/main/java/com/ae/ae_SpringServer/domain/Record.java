@@ -37,13 +37,15 @@ public class Record {
     @Column(name = "food_amount")
     private Double amount;
 
+    private int meal;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
 
     public static Record createRecord(String text, String date, String calory, String carb, String protein, String fat, String rdate, String rtime,
-                                      Double amount, User user) {
+                                      Double amount, int meal, User user) {
         Record record = new Record();
         record.setText(text);
         record.setServer_date(date);
@@ -55,6 +57,7 @@ public class Record {
         record.setTime(rtime);
         record.setAmount(amount);
         record.setUser(user);
+        record.setMeal(meal);
         return record;
     }
 }
