@@ -30,7 +30,7 @@ public class RecordApiController {
     public CreateRecordResponse createRecord(@RequestBody @Valid CreateRecordRequest request) {
         User user = userService.findOne(Long.valueOf(0));
         Record record = Record.createRecord(request.text, LocalDate.now().toString(), request.calory, request.carb, request.protein, request.fat,
-                request.rdate, request.rtime, request.amount, user);
+                request.rdate, request.rtime, request.amount, request.meal, user);
         Long id = recordService.record(record);
         return new CreateRecordResponse(id);
     }
@@ -74,6 +74,9 @@ public class RecordApiController {
 
         @NotNull
         private Double amount;
+
+        @NotNull
+        private int meal;
     }
 
     @Data
