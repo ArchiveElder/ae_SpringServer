@@ -29,6 +29,14 @@ public class RecordRepository {
                 .getResultList();
     }
 
+    public List<Record> findDateRecords(Long id, String date) {
+        String param = id.toString();
+        return em.createQuery("select r from record r join fetch r.user u where u.user_id = ?1 and r.record_date = :date", Record.class)
+                .setParameter(1, param)
+                .setParameter("date", date)
+                .getResultList();
+    }
+
     /* 2차때 구현
     public List<Record> findUserRecordSome(Long id) {
         String param = id.toString();
