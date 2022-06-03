@@ -18,20 +18,20 @@ public class RecordRepository {
     public Record findOne(Long id) { return em.find(Record.class, id); }
 
     public List<Record> findAll() {
-        return em.createQuery("select r from record r", Record.class)
+        return em.createQuery("select r from Record r", Record.class)
                 .getResultList();
     }
 
     public List<Record> findUserRecord(Long id) {
         String param = id.toString();
-        return em.createQuery("select r from record r" + " join fetch r.user u where u.user_id = ?1", Record.class)
+        return em.createQuery("select r from Record r" + " join fetch r.user u where u.user_id = ?1", Record.class)
                 .setParameter(1, param)
                 .getResultList();
     }
 
     public List<Record> findDateRecords(Long id, String date) {
         String param = id.toString();
-        return em.createQuery("select r from record r join fetch r.user u where u.user_id = ?1 and r.record_date = :date", Record.class)
+        return em.createQuery("select r from Record r join fetch r.user u where u.user_id = ?1 and r.record_date = :date", Record.class)
                 .setParameter(1, param)
                 .setParameter("date", date)
                 .getResultList();
