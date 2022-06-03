@@ -29,7 +29,7 @@ public class RecordApiController {
         Record record = Record.createRecord(request.text, LocalDate.now().toString(), request.calory, request.carb, request.protein, request.fat,
                 request.rdate, request.rtime, request.amount, request.meal, user);
         Long id = recordService.record(record);
-        return new CreateRecordResponse(id);
+        return new CreateRecordResponse(id.intValue());
     }
 
     @GetMapping("/api/record")
@@ -109,8 +109,8 @@ public class RecordApiController {
 
     @Data
     private static class CreateRecordResponse {
-        private Long id;
-        public CreateRecordResponse(Long id) { this.id = id; }
+        private int id;
+        public CreateRecordResponse(int id) { this.id = id; }
     }
 
     @Data
