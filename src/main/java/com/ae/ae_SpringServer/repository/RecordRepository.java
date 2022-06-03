@@ -31,8 +31,8 @@ public class RecordRepository {
 
     public List<Record> findDateRecords(Long id, String date) {
         String param = id.toString();
-        return em.createQuery("select r from Record r join fetch r.user u where u.user_id = ?1 and r.record_date = :date", Record.class)
-                .setParameter(1, param)
+        return em.createQuery("select r from Record r join fetch r.user u where u.user_id = :param and r.record_date = :date", Record.class)
+                .setParameter("param", param)
                 .setParameter("date", date)
                 .getResultList();
     }
