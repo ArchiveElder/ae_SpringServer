@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -58,6 +59,7 @@ public class RecordApiController {
         Double bCal = Double.valueOf(0);
         Double lCal = Double.valueOf(0);
         Double dCal = Double.valueOf(0);
+        List<Integer> mealCalory = Collections.emptyList();
         User user = userService.findOne(id);
         for(Record record: findRecords) {
             if(record.getMeal() == 0) {
@@ -72,9 +74,12 @@ public class RecordApiController {
             totalPro += Double.parseDouble(record.getProtein());
             totalFat += Double.parseDouble(record.getFat());
         }
+        mealCalory.add(bCal.intValue());
+        mealCalory.add(lCal.intValue());
+        mealCalory.add(dCal.intValue());
         return new DateRecordResponse(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
-                bCal.intValue(), lCal.intValue(), dCal.intValue(),
                 user.getUcalory(), user.getUcarb(), user.getUpro(), user.getUfat(),
+                mealCalory,
                 collect);
     }
 
@@ -131,13 +136,11 @@ public class RecordApiController {
         private int totalCarb;
         private int totalPro;
         private int totalFat;
-        private int bCal;
-        private int lCal;
-        private int dCal;
         private int recommCalory;
         private int recommCarb;
         private int recommPro;
         private int recommFat;
+        private List<Integer> mealCalory;
         private List<RecordDto> records;
     }
 
