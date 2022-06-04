@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,39 +49,46 @@ public class RecordApiController {
     public DateRecordResponse dateRecords(@RequestBody @Valid CreateDateRequest request) {
         Long id = Long.valueOf(0);
         List<Record> findRecords = recordService.findDateRecords(id, request.date);
-        List<RecordDto> collect = findRecords.stream()
-                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(),
-                        m.getDate(), m.getTime(), m.getAmount(), m.getMeal()))
-                .collect(toList());
+        List<DateRecordDto> bRecords = new ArrayList<DateRecordDto>();
+        List<DateRecordDto> lRecords = new ArrayList<DateRecordDto>();
+        List<DateRecordDto> dRecords = new ArrayList<DateRecordDto>();
+        Double bCal = Double.valueOf(0);
+        Double lCal = Double.valueOf(0);
+        Double dCal = Double.valueOf(0);
         Double totalCalory = Double.valueOf(0);
         Double totalCarb = Double.valueOf(0);
         Double totalPro = Double.valueOf(0);
         Double totalFat = Double.valueOf(0);
-        Double bCal = Double.valueOf(0);
-        Double lCal = Double.valueOf(0);
-        Double dCal = Double.valueOf(0);
-        List<Integer> mealCalory = Collections.emptyList();
-        User user = userService.findOne(id);
         for(Record record: findRecords) {
             if(record.getMeal() == 0) {
                 bCal += Double.parseDouble(record.getCal());
+                bRecords.add(new DateRecordDto(record.getText(), record.getServer_date(), record.getCal(), record.getCarb(), record.getProtein(),
+                        record.getFat(), record.getDate(), record.getTime(), record.getAmount()));
             } else if(record.getMeal() == 1) {
                 lCal += Double.parseDouble(record.getCal());
+                lRecords.add(new DateRecordDto(record.getText(), record.getServer_date(), record.getCal(), record.getCarb(), record.getProtein(),
+                        record.getFat(), record.getDate(), record.getTime(), record.getAmount()));
             } else if(record.getMeal() == 2) {
                 dCal += Double.parseDouble(record.getCal());
+                dRecords.add(new DateRecordDto(record.getText(), record.getServer_date(), record.getCal(), record.getCarb(), record.getProtein(),
+                        record.getFat(), record.getDate(), record.getTime(), record.getAmount()));
             }
             totalCalory += Double.parseDouble(record.getCal());
             totalCarb += Double.parseDouble(record.getCarb());
             totalPro += Double.parseDouble(record.getProtein());
             totalFat += Double.parseDouble(record.getFat());
         }
-        mealCalory.add(bCal.intValue());
-        mealCalory.add(lCal.intValue());
-        mealCalory.add(dCal.intValue());
+        RecordsDto b = new RecordsDto(0, bCal.intValue(), bRecords);
+        RecordsDto l = new RecordsDto(1, lCal.intValue(), lRecords);
+        RecordsDto d = new RecordsDto(2, dCal.intValue(), dRecords);
+        List<RecordsDto> records = new ArrayList<RecordsDto>();
+        records.add(b); records.add(l); records.add(d);
+
+        User user = userService.findOne(id);
+
         return new DateRecordResponse(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
                 user.getUcalory(), user.getUcarb(), user.getUpro(), user.getUfat(),
-                mealCalory,
-                collect);
+                records);
     }
 
     // 해야할것: 플라스크 서버에 전달해줄 식단 조회 (최신 6개) - 서버와 api 통신할 때 하기
@@ -140,8 +148,7 @@ public class RecordApiController {
         private int recommCarb;
         private int recommPro;
         private int recommFat;
-        private List<Integer> mealCalory;
-        private List<RecordDto> records;
+        private List<RecordsDto> records;
     }
 
     @Data
@@ -149,6 +156,28 @@ public class RecordApiController {
     static class Result<T> {
         private Integer count;
         private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class RecordsDto {
+        private int meal; // 아침, 점심, 저녁 구분
+        private int mCal; // 한끼니의 총 칼로리
+        private List<DateRecordDto> record; // 한끼니의 총 식단단
+   }
+
+   @Data
+   @AllArgsConstructor
+   static class DateRecordDto {
+       private String text;
+       private String date;
+       private String calory;
+       private String carb;
+       private String protein;
+       private String fat;
+       private String rdate;
+       private String rtime;
+       private Double amount;
     }
 
     @Data
