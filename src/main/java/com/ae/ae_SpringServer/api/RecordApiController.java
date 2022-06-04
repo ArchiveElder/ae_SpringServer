@@ -29,7 +29,7 @@ public class RecordApiController {
         Record record = Record.createRecord(request.text, LocalDate.now().toString(), request.calory, request.carb, request.protein, request.fat,
                 request.rdate, request.rtime, request.amount, request.meal, user);
         Long id = recordService.record(record);
-        return new CreateRecordResponse(id);
+        return new CreateRecordResponse(id.intValue());
     }
 
     @GetMapping("/api/record")
@@ -37,7 +37,7 @@ public class RecordApiController {
         Long id = Long.valueOf(0);
         List<Record> findRecords = recordService.findRecords(id);
         List<RecordDto> collect = findRecords.stream()
-                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCalory(), m.getCarb(), m.getProtein(), m.getFat(),
+                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(),
                         m.getDate(), m.getTime(), m.getAmount(), m.getMeal()))
                 .collect(toList());
         return new Result(collect.size(), collect);
@@ -48,7 +48,7 @@ public class RecordApiController {
         Long id = Long.valueOf(0);
         List<Record> findRecords = recordService.findDateRecords(id, request.date);
         List<RecordDto> collect = findRecords.stream()
-                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCalory(), m.getCarb(), m.getProtein(), m.getFat(),
+                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(),
                         m.getDate(), m.getTime(), m.getAmount(), m.getMeal()))
                 .collect(toList());
         Double totalCalory = Double.valueOf(0);
@@ -120,8 +120,8 @@ public class RecordApiController {
 
     @Data
     private static class CreateRecordResponse {
-        private Long id;
-        public CreateRecordResponse(Long id) { this.id = id; }
+        private int id;
+        public CreateRecordResponse(int id) { this.id = id; }
     }
 
     @Data

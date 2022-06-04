@@ -29,7 +29,7 @@ public class RecordService {
     public Long record(Record record) {
         recordRepository.save(record);
         //userService.updateBadge(record.getUser().getId());
-        userService.updateSome(record.getUser().getId(), record);
+        //userService.updateSome(record.getUser().getId(), record);
         return record.getId();
     }
 
