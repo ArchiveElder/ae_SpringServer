@@ -1,3 +1,4 @@
+/*
 package com.ae.ae_SpringServer.security;
 
 import com.ae.ae_SpringServer.domain.User;
@@ -43,3 +44,5 @@ public class TokenProvider {
         return claims.getSubject();
     }
 }
+
+ */

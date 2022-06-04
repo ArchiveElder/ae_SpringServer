@@ -40,7 +40,7 @@ public class Record {
     private int meal;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_user_id")
     private User user;
 
 

@@ -21,7 +21,7 @@ public class Recommend {
     private String server_date;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_user_id")
     private User user;
 
     public static Recommend createRecommend(String text, String date, User user) {
