@@ -61,13 +61,13 @@ public class RecordApiController {
         User user = userService.findOne(id);
         for(Record record: findRecords) {
             if(record.getMeal() == 0) {
-                bCal += Double.parseDouble(record.getCalory());
+                bCal += Double.parseDouble(record.getCal());
             } else if(record.getMeal() == 1) {
-                lCal += Double.parseDouble(record.getCalory());
+                lCal += Double.parseDouble(record.getCal());
             } else if(record.getMeal() == 2) {
-                dCal += Double.parseDouble(record.getCalory());
+                dCal += Double.parseDouble(record.getCal());
             }
-            totalCalory += Double.parseDouble(record.getCalory());
+            totalCalory += Double.parseDouble(record.getCal());
             totalCarb += Double.parseDouble(record.getCarb());
             totalPro += Double.parseDouble(record.getProtein());
             totalFat += Double.parseDouble(record.getFat());
