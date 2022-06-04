@@ -55,14 +55,25 @@ public class RecordApiController {
         Double totalCarb = Double.valueOf(0);
         Double totalPro = Double.valueOf(0);
         Double totalFat = Double.valueOf(0);
+        Double bCal = Double.valueOf(0);
+        Double lCal = Double.valueOf(0);
+        Double dCal = Double.valueOf(0);
         User user = userService.findOne(id);
         for(Record record: findRecords) {
+            if(record.getMeal() == 0) {
+                bCal += Double.parseDouble(record.getCalory());
+            } else if(record.getMeal() == 1) {
+                lCal += Double.parseDouble(record.getCalory());
+            } else if(record.getMeal() == 2) {
+                dCal += Double.parseDouble(record.getCalory());
+            }
             totalCalory += Double.parseDouble(record.getCalory());
             totalCarb += Double.parseDouble(record.getCarb());
             totalPro += Double.parseDouble(record.getProtein());
             totalFat += Double.parseDouble(record.getFat());
         }
         return new DateRecordResponse(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
+                bCal.intValue(), lCal.intValue(), dCal.intValue(),
                 user.getUcalory(), user.getUcarb(), user.getUpro(), user.getUfat(),
                 collect);
     }
@@ -120,6 +131,9 @@ public class RecordApiController {
         private int totalCarb;
         private int totalPro;
         private int totalFat;
+        private int bCal;
+        private int lCal;
+        private int dCal;
         private int recommCalory;
         private int recommCarb;
         private int recommPro;
