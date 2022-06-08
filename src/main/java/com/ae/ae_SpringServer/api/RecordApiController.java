@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +29,8 @@ public class RecordApiController {
     @PostMapping("/api/record")
     public CreateRecordResponse createRecord(@RequestBody @Valid CreateRecordRequest request) {
         User user = userService.findOne(Long.valueOf(0));
-        Record record = Record.createRecord(request.text, LocalDate.now().toString(), request.calory, request.carb, request.protein, request.fat,
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
+        Record record = Record.createRecord(request.text, date , request.calory, request.carb, request.protein, request.fat,
                 request.rdate, request.rtime, request.amount, request.meal, user);
         Long id = recordService.record(record);
         return new CreateRecordResponse(id.intValue());
