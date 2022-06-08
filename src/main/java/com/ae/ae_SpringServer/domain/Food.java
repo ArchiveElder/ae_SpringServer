@@ -26,14 +26,14 @@ public class Food {
     private int capacity;
 
     @Column(name = "food_calory")
-    private Long calory;
+    private Double calory;
 
     @Column(name = "food_carb")
-    private Long carb;
+    private Double carb;
 
     @Column(name = "food_pro")
-    private Long pro;
+    private Double pro;
 
     @Column(name = "food_fat")
-    private Long fat;
+    private Double fat;
 }

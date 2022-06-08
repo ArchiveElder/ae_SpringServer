@@ -23,7 +23,7 @@ public class UserRepository {
     }
 
     public List<User> findByName(String name) {
-        return em.createQuery("select u from user u where u.name = :name", User.class)
+        return em.createQuery("select u from User u where u.name = :name", User.class)
                 .setParameter("name", name)
                 .getResultList();
     }
@@ -41,21 +41,31 @@ public class UserRepository {
                 .toString();
         return Integer.parseInt(s);
     }
-     */
+
 
     public void updateSome(Long id, Record record) {
-        em.createQuery("update user u set u.badge_num = u.badge_num + 1, u.remain_calory = u.remain_calory - :cal, " +
+        em.createQuery("update User u set u.badge_num = u.badge_num + 1, u.remain_calory = u.remain_calory - :cal, " +
                 "u.remain_carb = u.remain_carb - :carb, u.remain_pro = u.remain_pro - :pro, u.remain_fat = u.remain_fat - :fat where u.user_id = :id")
-                .setParameter("cal", record.getCalory())
+                .setParameter("cal", record.getCal())
                 .setParameter("carb", record.getCarb())
                 .setParameter("pro", record.getProtein())
                 .setParameter("fat", record.getFat())
                 .executeUpdate();
         em.clear();
     }
-
+*/
+    public void updateSome(Long id, Record record) {
+        em.createQuery("update User u set u.rcalory = u.rcalory - :cal, " +
+                        "u.rcarb = u.rcarb - :carb, u.rpro = u.rpro - :pro, u.rfat = u.rfat - :fat where u.id = :id")
+                .setParameter("cal", record.getCal())
+                .setParameter("carb", record.getCarb())
+                .setParameter("pro", record.getProtein())
+                .setParameter("fat", record.getFat())
+                .executeUpdate();
+        em.clear();
+    }
     public int findBadge(Long id) {
-        String s = em.createQuery("select u.badge_num from user u where u.user_id = :id")
+        String s = em.createQuery("select u.badge_num from User u where u.user_id = :id")
                 .setParameter("id", id)
                 .getSingleResult()
                 .toString();
