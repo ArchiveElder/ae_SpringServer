@@ -20,12 +20,12 @@ public class RecommendRepository {
 
     public Food findRecommSome(Long id) {
         User user = em.find(User.class, id);
-        int cal = user.getRcalory();
-        int carb = user.getRcarb();
-        int pro = user.getRpro();
-        int fat = user.getRfat();
+        Double cal = Double.valueOf(user.getRcalory());
+        Double carb = Double.valueOf(user.getRcarb());
+        Double pro = Double.valueOf(user.getRpro());
+        Double fat = Double.valueOf(user.getRfat());
 
-        List<Food> foodList = em.createQuery("select f from Food f where f.food_calory <= :cal and f.food_carb <= :carb and f.food_pro <= :pro and f.food_fat <= :fat")
+        List<Food> foodList = em.createQuery("select f from Food f where f.calory <= :cal and f.carb <= :carb and f.pro <= :pro and f.fat <= :fat")
                 .setParameter("cal", cal)
                 .setParameter("carb", carb)
                 .setParameter("pro", pro)

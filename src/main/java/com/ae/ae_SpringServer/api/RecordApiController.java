@@ -30,9 +30,12 @@ public class RecordApiController {
     public CreateRecordResponse createRecord(@RequestBody @Valid CreateRecordRequest request) {
         User user = userService.findOne(Long.valueOf(0));
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
-        Record record = Record.createRecord(request.text, date , request.calory, request.carb, request.protein, request.fat,
-                request.rdate, request.rtime, request.amount, request.meal, user);
-        Long id = recordService.record(record);
+        Long id = null;
+        for(CreateDto dto: request.creates) {
+            Record record = Record.createRecord(dto.text, date, dto.calory, dto.carb, dto.protein, dto.fat, request.rdate, request.rtime,
+                    dto.amount, request.meal, user);
+            id = recordService.record(record);
+        }
         return new CreateRecordResponse(id.intValue());
     }
 
@@ -100,28 +103,13 @@ public class RecordApiController {
     @Data
     private static class CreateRecordRequest {
         @NotEmpty
-        private String text;
-
-        @NotNull
-        private String calory;
-
-        @NotNull
-        private String carb;
-
-        @NotNull
-        private String protein;
-
-        @NotNull
-        private String fat;
+        private List<CreateDto> creates;
 
         @NotNull
         private String rdate;
 
         @NotNull
         private String rtime;
-
-        @NotNull
-        private Double amount;
 
         @NotNull
         private int meal;
@@ -158,6 +146,17 @@ public class RecordApiController {
     static class Result<T> {
         private Integer count;
         private T data;
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class CreateDto {
+        private String text;
+        private String calory;
+        private String carb;
+        private String protein;
+        private String fat;
+        private Double amount;
     }
 
     @Data
