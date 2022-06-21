@@ -23,9 +23,8 @@ public class User {
     private int gender;
     private String height;
     private String weight;
-
-    @Column(name = "badge_num")
-    private int num;
+    private int activity;
+    private int type;
 
     @Column(name = "user_calory")
     private int ucalory;
@@ -53,6 +52,11 @@ public class User {
 
     @Column(name = "signup_date")
     private String date;
+
+    @Column(name = "recommend_calory")
+    private int rec_cal;
+
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "user")
