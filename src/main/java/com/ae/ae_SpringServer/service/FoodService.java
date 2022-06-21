@@ -18,5 +18,7 @@ public class FoodService {
         return foodRepository.findAll();
     }
 
+    public List<Food> findFood(Long id) { return  foodRepository.findFood(id); }
+
 
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -30,6 +31,14 @@ public class FoodApiController {
 
 
     }
+    @PostMapping("/api/food")
+    public Result foodResponse(@RequestBody @Valid CreateFoodRequest request){
+        List<Food> findFood = foodService.findFood(request.id);
+        List<FoodDto> collect = findFood.stream()
+                .map(m -> new FoodDto(m.getName(), m.getCapacity(), m.getCalory(), m.getCarb(), m.getPro(), m.getFat()))
+                .collect(toList());
+        return new Result(collect.size(), collect);
+    }
 
     @Data
     @AllArgsConstructor
@@ -44,4 +53,33 @@ public class FoodApiController {
         private Long id;
         private String name;
     }
+
+    @Data
+    @AllArgsConstructor
+    static class FoodDto {
+        private String name;
+        private int capacity;
+        private double calory;
+        private double carb;
+        private double pro;
+        private double fat;
+    }
+
+    @Data
+    private static class CreateFoodRequest {
+        @NotNull
+        private Long id;
+    }
+    /*
+    @Data
+    @AllArgsConstructor
+    private static class FoodResponse {
+        private String name;
+        private int capacity;
+        private double calory;
+        private double carb;
+        private double pro;
+        private double fat;
+    }
+    */
 }
