@@ -16,4 +16,10 @@ public class FoodRepository {
         return em.createQuery("select f from Food f", Food.class)
                 .getResultList();
     }
+
+    public List<Food> findFood(Long id) {
+        return em.createQuery("select f from Food f where f.id = :param", Food.class)
+                .setParameter("param", id)
+                .getResultList();
+    }
 }
