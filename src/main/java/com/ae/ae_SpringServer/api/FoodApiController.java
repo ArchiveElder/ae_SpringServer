@@ -72,16 +72,5 @@ public class FoodApiController {
         @NotNull
         private Long id;
     }
-    /*
-    @Data
-    @AllArgsConstructor
-    private static class FoodResponse {
-        private String name;
-        private int capacity;
-        private double calory;
-        private double carb;
-        private double pro;
-        private double fat;
-    }
-    */
+
 }
