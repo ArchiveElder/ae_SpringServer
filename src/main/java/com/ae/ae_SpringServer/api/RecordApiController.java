@@ -97,12 +97,6 @@ public class RecordApiController {
         // 쿼리를 통해 해당 날짜의 해당 끼니 먹은 음식들의 음식명, 칼로리, 탄, 단, 지, 이미지url 받아옴
         List<Record> findDetailRecord = recordService.findDetailOne(id, request.date, request.meal);
 
-        //위의 각 음식별 칼로리,탄,단,지에 +   해당 날짜의 끼니별 모든( 열량sum, 탄단지들 sum, all 사진들),
-        /*List<RecordDetailDto> collect = findDetailRecord.stream()
-                .map(m -> new RecordDetailDto(m.getText(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(), m.getImage_url()))
-                .collect(toList());
-
-        return new Result(collect.size(), collect);*/
         List<DetailRecordDto> detailDtos= new ArrayList<DetailRecordDto>();
         for(Record record : findDetailRecord) {
             detailDtos.add(new DetailRecordDto(record.getText(), record.getCal(), record.getCarb(), record.getProtein(), record.getFat(), record.getImage_url()));
@@ -117,9 +111,6 @@ public class RecordApiController {
         return new DetailRecordResponse(totalCalory.intValue(), totalCarb.intValue() ,totalPro.intValue(), totalFat.intValue(),
                 detailDtos);
 
-
-
-
     }
 
 
@@ -130,13 +121,10 @@ public class RecordApiController {
     private static class CreateRecordRequest {
         @NotEmpty
         private List<CreateDto> creates;
-
         @NotNull
         private String rdate;
-
         @NotNull
         private String rtime;
-
         @NotNull
         private int meal;
     }
@@ -178,8 +166,8 @@ public class RecordApiController {
     @Data
     @AllArgsConstructor
     private static class DetailRecordResponse {
-        private int totalCal;
-        private int totalCarb;
+        private int totalCal;   //끼니별 총 칼로리
+        private int totalCarb;  //끼니별 영양소 별 총합
         private int totalPro;
         private int totalFat;
         private List<DetailRecordDto> detailDtos;
