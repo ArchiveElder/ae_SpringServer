@@ -20,7 +20,7 @@ public class Record {
     @Column(name = "record_id")
     private Long id;
 
-    //private String image_url;
+    private String image_url;
     private String text;
     private String server_date;
     private String cal;

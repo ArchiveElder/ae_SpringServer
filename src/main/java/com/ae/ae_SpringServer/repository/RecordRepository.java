@@ -15,13 +15,6 @@ public class RecordRepository {
     // 차후에 s3로 이미지 보내고 받은 url로 저장시키게
     public void save(Record record) { em.persist(record); }
 
-    public Record findOne(Long id) { return em.find(Record.class, id); }
-
-    public List<Record> findAll() {
-        return em.createQuery("select r from Record r", Record.class)
-                .getResultList();
-    }
-
     public List<Record> findUserRecord(Long id) {
         String param = id.toString();
         return em.createQuery("select r from Record r" + " join fetch r.user u where u.user_id = ?1", Record.class)
@@ -45,13 +38,15 @@ public class RecordRepository {
                 .getResultList();
     }
 
-    /* 2차때 구현
-    public List<Record> findUserRecordSome(Long id) {
-        String param = id.toString();
-        return em.createQuery("select top 6 r from record r" + " join fetch r.user u where u.user_id = ?1 order by r.server_date desc", Record.class)
-                .setParameter(1, param)
+    public List<Record> findDetaileOne(Long id, String date, int meal) {
+        return em.createQuery("select r from Record r join r.user u where u.id = :param and r.date = :date and r.meal = :meal", Record.class)
+                .setParameter("param", id)
+                .setParameter("date", date)
+                .setParameter("meal", meal)
                 .getResultList();
+
     }
-     */
+
+
 
 }
