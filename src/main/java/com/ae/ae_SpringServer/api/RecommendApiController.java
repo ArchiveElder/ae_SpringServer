@@ -19,15 +19,15 @@ public class RecommendApiController {
     private final RecommendService recommendService;
     private final UserService userService;
 
-    @GetMapping("/api/recommend")
-    public Result recommend() {
-        Long id = Long.valueOf(0);
-        User user = userService.findOne(id);
-        Food f = recommendService.findRecommend(id);
-        Recommend recommend = Recommend.createRecommend(f.getName(), LocalDate.now().toString(), user);
-        recommendService.add(recommend);
-        return new Result(f);
-    }
+//    @GetMapping("/api/recommend")
+//    public Result recommend() {
+//        Long id = Long.valueOf(0);
+//        User user = userService.findOne(id);
+//        Food f = recommendService.findRecommend(id);
+//        Recommend recommend = Recommend.createRecommend(f.getName(), LocalDate.now().toString(), user);
+//        recommendService.add(recommend);
+//        return new Result(f);
+//    }
 
     @Data
     @AllArgsConstructor

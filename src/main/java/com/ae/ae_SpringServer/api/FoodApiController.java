@@ -21,6 +21,7 @@ import static java.util.stream.Collectors.toList;
 public class FoodApiController {
     private final FoodService foodService;
 
+    //2-1
     @GetMapping("/api/foodname")
     public Result foods() {
         List<Food> findFoods = foodService.findAllFoods();
@@ -31,6 +32,7 @@ public class FoodApiController {
 
 
     }
+    //2-2
     @PostMapping("/api/food")
     public Result foodResponse(@RequestBody @Valid CreateFoodRequest request){
         List<Food> findFood = foodService.findFood(request.id);

@@ -26,6 +26,7 @@ public class RecordApiController {
     private final RecordService recordService;
     private final UserService userService;
 
+    //1-1
     @PostMapping("/api/record")
     public CreateRecordResponse createRecord(@RequestBody @Valid CreateRecordRequest request) {
         User user = userService.findOne(Long.valueOf(0));
@@ -39,17 +40,7 @@ public class RecordApiController {
         return new CreateRecordResponse(id.intValue());
     }
 
-    @GetMapping("/api/record")
-    public Result records() {
-        Long id = Long.valueOf(0);
-        List<Record> findRecords = recordService.findRecords(id);
-        List<RecordDto> collect = findRecords.stream()
-                .map(m -> new RecordDto(m.getText(), m.getServer_date(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(),
-                        m.getDate(), m.getTime(), m.getAmount(), m.getMeal()))
-                .collect(toList());
-        return new Result(collect.size(), collect);
-    }
-
+    //1-2
     @PostMapping("/api/daterecord")
     public DateRecordResponse dateRecords(@RequestBody @Valid CreateDateRequest request) {
         Long id = Long.valueOf(0);
