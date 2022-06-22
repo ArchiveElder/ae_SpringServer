@@ -87,21 +87,44 @@ public class RecordApiController {
                 records);
     }
 
+    //1-3
+    @PostMapping("api/detailrecord")
+    public DetailRecordResponse recordResponse(@RequestBody @Valid CreateDetailRecordRequest request) {
+        Long id = Long.valueOf(2);
+        Double totalCalory, totalCarb, totalPro, totalFat;
+        totalCalory = totalCarb = totalPro =  totalFat = 0D;
+        // user_id= 2인 사용자의, 요청 날짜와 끼니를 가지고 상세 식단을 조회하는 것이 목적
+        // 쿼리를 통해 해당 날짜의 해당 끼니 먹은 음식들의 음식명, 칼로리, 탄, 단, 지, 이미지url 받아옴
+        List<Record> findDetailRecord = recordService.findDetailOne(id, request.date, request.meal);
+
+        List<DetailRecordDto> detailDtos= new ArrayList<DetailRecordDto>();
+        for(Record record : findDetailRecord) {
+            detailDtos.add(new DetailRecordDto(record.getText(), record.getCal(), record.getCarb(), record.getProtein(), record.getFat(), record.getImage_url()));
+
+            totalCalory += Double.parseDouble(record.getCal());
+            totalCarb += Double.parseDouble(record.getCarb());
+            totalPro += Double.parseDouble(record.getProtein());
+            totalFat += Double.parseDouble(record.getFat());
+
+        }
+
+        return new DetailRecordResponse(totalCalory.intValue(), totalCarb.intValue() ,totalPro.intValue(), totalFat.intValue(),
+                detailDtos);
+
+    }
+
+
     // 해야할것: 플라스크 서버에 전달해줄 식단 조회 (최신 6개) - 서버와 api 통신할 때 하기
 
-    // 해야할것: 식단 각각 상세 조회
 
     @Data
     private static class CreateRecordRequest {
         @NotEmpty
         private List<CreateDto> creates;
-
         @NotNull
         private String rdate;
-
         @NotNull
         private String rtime;
-
         @NotNull
         private int meal;
     }
@@ -110,6 +133,15 @@ public class RecordApiController {
     private static class CreateDateRequest {
         @NotNull
         private String date;
+    }
+
+    @Data
+    private static class CreateDetailRecordRequest {
+        @NotNull
+        private String date;
+        @NotNull
+        private int meal;
+
     }
 
     @Data
@@ -130,6 +162,15 @@ public class RecordApiController {
         private int recommPro;
         private int recommFat;
         private List<RecordsDto> records;
+    }
+    @Data
+    @AllArgsConstructor
+    private static class DetailRecordResponse {
+        private int totalCal;   //끼니별 총 칼로리
+        private int totalCarb;  //끼니별 영양소 별 총합
+        private int totalPro;
+        private int totalFat;
+        private List<DetailRecordDto> detailDtos;
     }
 
     @Data
@@ -155,7 +196,7 @@ public class RecordApiController {
     static class RecordsDto {
         private int meal; // 아침, 점심, 저녁 구분
         private int mCal; // 한끼니의 총 칼로리
-        private List<DateRecordDto> record; // 한끼니의 총 식단단
+        private List<DateRecordDto> record; // 한끼니의 총 식단
    }
 
    @Data
@@ -174,16 +215,12 @@ public class RecordApiController {
 
     @Data
     @AllArgsConstructor
-    static class RecordDto {
+    static class DetailRecordDto {
         private String text;
-        private String date;
-        private String calory;
+        private String cal;
         private String carb;
         private String protein;
         private String fat;
-        private String rdate;
-        private String rtime;
-        private Double amount;
-        private int meal;
+        private String image_url;
     }
 }

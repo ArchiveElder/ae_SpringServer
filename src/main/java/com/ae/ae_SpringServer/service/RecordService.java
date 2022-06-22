@@ -15,25 +15,17 @@ public class RecordService {
     private final RecordRepository recordRepository;
     private final UserService userService;
 
-    public List<Record> findRecords(Long id) {
-        return recordRepository.findUserRecord(id);
-    }
-
-    /* 2차때 구현
-    public List<Record> findRecordSome(Long id) {
-        return recordRepository.findUserRecordSome(id);
-    }
-     */
-
     @Transactional
     public Long record(Record record) {
         recordRepository.save(record);
-        //userService.updateBadge(record.getUser().getId());
-        //userService.updateSome(record.getUser().getId(), record);
         return record.getId();
     }
 
     public List<Record> findDateRecords(Long id, String date) {
         return recordRepository.findDateRecords(id, date);
+    }
+
+    public List<Record> findDetailOne(Long id, String date, int meal) {
+        return recordRepository.findDetaileOne(id, date, meal);
     }
 }
