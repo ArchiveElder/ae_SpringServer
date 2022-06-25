@@ -48,9 +48,5 @@ public class RecordRepository {
     }
 
 
-    public List<Record> findRecordMonth(Long id) {
-        return em.createQuery("select r from Record r join fetch r.user u where u.id = :param", Record.class)
-                .setParameter("param", id)
-                .getResultList();
-    }
+
 }

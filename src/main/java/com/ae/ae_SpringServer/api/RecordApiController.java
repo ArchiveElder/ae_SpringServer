@@ -113,32 +113,6 @@ public class RecordApiController {
                 detailDtos);
 
     }
-
-    //1-4
-    @PostMapping("api/mealalbum")
-    public MealAlbumResponse mealAlbumResponse(@RequestBody @Valid CreateMealAlbumRequest request) {
-        Long id = Long.valueOf(2); // 사용자 아이디
-        User user = userService.findOne(id);
-        List<Record> findMealAlbum = recordService.findRecordsMeal(user.getId());
-        // 날짜, 끼니[칼로리 합, 첫식사시간, 첫이미지url  ]
-        Double totalCalory = 0D;
-        MealDto mealDtos = null;
-        List<MealAlbumDto> collect = findMealAlbum.stream()
-                .map(m -> new MealAlbumDto(m.getTime(), m.getImage_url()))
-                .collect(toList());
-
-        for(Record record : findMealAlbum) {
-            totalCalory += Double.parseDouble(record.getCal());
-            mealDtos = new MealDto(record.getDate(), record.getMeal());
-            new MealDto(record.getDate(), record.getMeal());
-
-        }
-        return new MealAlbumResponse(mealDtos, totalCalory.intValue(), collect);
-
-
-    }
-
-
     // 해야할것: 플라스크 서버에 전달해줄 식단 조회 (최신 6개) - 서버와 api 통신할 때 하기
 
 
@@ -170,11 +144,6 @@ public class RecordApiController {
     }
 
     @Data
-    private static class CreateMealAlbumRequest {
-        private int id;
-    }
-
-    @Data
     private static class CreateRecordResponse {
         private int id;
         public CreateRecordResponse(int id) { this.id = id; }
@@ -202,14 +171,7 @@ public class RecordApiController {
         private int totalFat;
         private List<DetailRecordDto> detailDtos;
     }
-    @Data @AllArgsConstructor
-    private static class MealAlbumResponse {
-        // 날짜, 끼니[칼로리 합, 첫식사시간, 첫이미지url  ]
-        MealDto mealDto;
-        private int totalCal;
-        private List<MealAlbumDto> mealAlbumDtos;
 
-    }
 
     @Data
     @AllArgsConstructor
@@ -262,18 +224,5 @@ public class RecordApiController {
         private String image_url;
     }
 
-    @Data @AllArgsConstructor
-    static class MealAlbumDto{
-        // 날짜, 끼니[칼로리 합, 첫식사시간, 첫이미지url  ]
-        //private String mealTotalCal;
-        private String mealFrstTime;
-        private String mealFrstimg;
 
-    }
-
-    @Data @AllArgsConstructor @Setter
-    static class MealDto {
-        private String date;
-        private int meal;
-    }
 }

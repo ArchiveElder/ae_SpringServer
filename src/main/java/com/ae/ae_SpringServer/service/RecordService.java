@@ -29,7 +29,4 @@ public class RecordService {
         return recordRepository.findDetaileOne(id, date, meal);
     }
 
-    public List<Record> findRecordsMeal(Long id) {
-        return recordRepository.findRecordMonth(id);
-    }
 }
