@@ -24,7 +24,6 @@ public class User {
     private String height;
     private String weight;
     private int activity;
-    private int type;
 
     @Column(name = "user_calory")
     private int ucalory;
