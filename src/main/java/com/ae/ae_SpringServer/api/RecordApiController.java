@@ -44,7 +44,7 @@ public class RecordApiController {
     //1-2
     @PostMapping("/api/daterecord")
     public DateRecordResponse dateRecords(@RequestBody @Valid CreateDateRequest request) {
-        Long id = Long.valueOf(0);
+        Long id = Long.valueOf(3);
         List<Record> findRecords = recordService.findDateRecords(id, request.date);
         List<DateRecordDto> bRecords = new ArrayList<DateRecordDto>();
         List<DateRecordDto> lRecords = new ArrayList<DateRecordDto>();
@@ -59,15 +59,15 @@ public class RecordApiController {
         for(Record record: findRecords) {
             if(record.getMeal() == 0) {
                 bCal += Double.parseDouble(record.getCal());
-                bRecords.add(new DateRecordDto(record.getText(), record.getServer_date(), record.getCal(), record.getCarb(), record.getProtein(),
+                bRecords.add(new DateRecordDto(record.getId().intValue(), record.getText(), record.getServer_date(), record.getCal(), record.getCarb(), record.getProtein(),
                         record.getFat(), record.getDate(), record.getTime(), record.getAmount()));
             } else if(record.getMeal() == 1) {
                 lCal += Double.parseDouble(record.getCal());
-                lRecords.add(new DateRecordDto(record.getText(), record.getServer_date(), record.getCal(), record.getCarb(), record.getProtein(),
+                lRecords.add(new DateRecordDto(record.getId().intValue(), record.getText(), record.getServer_date(), record.getCal(), record.getCarb(), record.getProtein(),
                         record.getFat(), record.getDate(), record.getTime(), record.getAmount()));
             } else if(record.getMeal() == 2) {
                 dCal += Double.parseDouble(record.getCal());
-                dRecords.add(new DateRecordDto(record.getText(), record.getServer_date(), record.getCal(), record.getCarb(), record.getProtein(),
+                dRecords.add(new DateRecordDto(record.getId().intValue(), record.getText(), record.getServer_date(), record.getCal(), record.getCarb(), record.getProtein(),
                         record.getFat(), record.getDate(), record.getTime(), record.getAmount()));
             }
             totalCalory += Double.parseDouble(record.getCal());
@@ -202,6 +202,7 @@ public class RecordApiController {
    @Data
    @AllArgsConstructor
    static class DateRecordDto {
+       private int record_id;
        private String text;
        private String date;
        private String calory;
