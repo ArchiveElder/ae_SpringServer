@@ -52,13 +52,6 @@ public class RecordApiController {
         Double bCal, lCal, dCal, totalCalory, totalCarb, totalPro, totalFat;
         bCal = lCal =  dCal = totalCalory = totalCarb = totalPro = totalFat = 0D;
 
-//        Double bCal = Double.valueOf(0);
-//        Double lCal = Double.valueOf(0);
-//        Double dCal = Double.valueOf(0);
-//        Double totalCalory = Double.valueOf(0);
-//        Double totalCarb = Double.valueOf(0);
-//        Double totalPro = Double.valueOf(0);
-//        Double totalFat = Double.valueOf(0);
         for(Record record: findRecords) {
             if(record.getMeal() == 0) {
                 bCal += Double.parseDouble(record.getCal());
@@ -93,29 +86,14 @@ public class RecordApiController {
 
     //1-3
     @PostMapping("api/detailrecord")
-    public DetailRecordResponse recordResponse(@RequestBody @Valid CreateDetailRecordRequest request) {
+    public Result recordResponse(@RequestBody @Valid CreateDetailRecordRequest request) {
         Long id = Long.valueOf(3);
-        Double totalCalory, totalCarb, totalPro, totalFat;
-        totalCalory = totalCarb = totalPro =  totalFat = 0D;
-        List<Record> findDetailRecord = recordService.findDetailOne(id, request.date, request.meal);
+        List<Record> findDetailRecord = recordService.findDetailOne(id, Long.valueOf(request.record_id));
 
-        List<DetailRecordDto> detailDtos= new ArrayList<DetailRecordDto>();
-        /*for(Record record : findDetailRecord) {
-            detailDtos.add(new DetailRecordDto(record.getText(), record.getCal(), record.getCarb(), record.getProtein(), record.getFat(), record.getImage_url()));
-
-            totalCalory += Double.parseDouble(record.getCal());
-            totalCarb += Double.parseDouble(record.getCarb());
-            totalPro += Double.parseDouble(record.getProtein());
-            totalFat += Double.parseDouble(record.getFat());
-
-        }
-
-        return new DetailRecordResponse(totalCalory.intValue(), totalCarb.intValue() ,totalPro.intValue(), totalFat.intValue(),
-                detailDtos);*/
-        for(Record record : findDetailRecord) {
-            detailDtos.add(new DetailRecordDto(record.getText(), record.getCal(), record.getCarb(), record.getProtein(), record.getFat(), record.getImage_url(), record.getDate(), record.getTime(), record.getAmount()));
-        }
-        return new DetailRecordResponse(detailDtos);
+        List<DetailRecordDto> collect = findDetailRecord.stream()
+                .map(m -> new DetailRecordDto(m.getText(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(), m.getImage_url(), m.getDate(), m.getTime(), m.getAmount()))
+                .collect(toList());
+        return new Result(collect);
 
     }
     // 해야할것: 플라스크 서버에 전달해줄 식단 조회 (최신 6개) - 서버와 api 통신할 때 하기
@@ -142,9 +120,7 @@ public class RecordApiController {
     @Data
     private static class CreateDetailRecordRequest {
         @NotNull
-        private String date;
-        @NotNull
-        private int meal;
+        private int record_id;
 
     }
 
@@ -167,21 +143,11 @@ public class RecordApiController {
         private int recommFat;
         private List<RecordsDto> records;
     }
-    @Data
-    @AllArgsConstructor
-    private static class DetailRecordResponse {
-//        private int totalCal;   //끼니별 총 칼로리
-//        private int totalCarb;  //끼니별 영양소 별 총합
-//        private int totalPro;
-//        private int totalFat;
-        private List<DetailRecordDto> detailDtos;
-    }
-
 
     @Data
     @AllArgsConstructor
     static class Result<T> {
-        private Integer count;
+        //private Integer count;
         private T data;
     }
 

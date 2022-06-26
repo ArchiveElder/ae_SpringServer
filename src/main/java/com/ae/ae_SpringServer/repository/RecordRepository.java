@@ -38,11 +38,10 @@ public class RecordRepository {
                 .getResultList();
     }
 
-    public List<Record> findDetaileOne(Long id, String date, int meal) {
-        return em.createQuery("select r from Record r join r.user u where u.id = :param and r.date = :date and r.meal = :meal", Record.class)
+    public List<Record> findDetaileOne(Long id, Long record_id) {
+        return em.createQuery("select r from Record r join r.user u where u.id = :param and r.id = :record_id", Record.class)
                 .setParameter("param", id)
-                .setParameter("date", date)
-                .setParameter("meal", meal)
+                .setParameter("record_id", record_id)
                 .getResultList();
 
     }
