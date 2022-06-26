@@ -93,7 +93,7 @@ public class RecordApiController {
         List<DetailRecordDto> collect = findDetailRecord.stream()
                 .map(m -> new DetailRecordDto(m.getText(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(), m.getImage_url(), m.getDate(), m.getTime(), m.getAmount()))
                 .collect(toList());
-        return new Result<>(collect.size(), collect);
+        return new Result(collect);
 
     }
     // 해야할것: 플라스크 서버에 전달해줄 식단 조회 (최신 6개) - 서버와 api 통신할 때 하기
@@ -147,7 +147,7 @@ public class RecordApiController {
     @Data
     @AllArgsConstructor
     static class Result<T> {
-        private Integer count;
+        //private Integer count;
         private T data;
     }
 
