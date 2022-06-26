@@ -25,8 +25,8 @@ public class RecordService {
         return recordRepository.findDateRecords(id, date);
     }
 
-    public List<Record> findDetailOne(Long id, String date, int meal) {
-        return recordRepository.findDetaileOne(id, date, meal);
+    public List<Record> findDetailOne(Long id, Long record_id) {
+        return recordRepository.findDetaileOne(id, record_id);
     }
 
 }
