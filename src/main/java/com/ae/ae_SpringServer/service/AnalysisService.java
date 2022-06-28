@@ -20,18 +20,16 @@ public class AnalysisService {
     public List<Record> findRecords(Long id) {
         //현재날짜 제외하고 7개 날짜 검색하는 쿼리 날리는 코드 : 7개 날짜들 반환
         //List dateRecords= recordRepository.analysisDates(id, 0, 7);
-        Pageable paging = PageRequest.of(0,7);
+        //Pageable paging = PageRequest.of(0,7);
 
-        Page<DateAnalysisDto> dateRecords = recordRepository.analysisDates(id, paging);
+        //Page<DateAnalysisDto> dateRecords = recordRepository.analysisDates(id, paging);
         //List<DateAnalysisDto> dateRecords = recordRepository.analysisDates(id, PageRequest.of(0, 7));
-        for(DateAnalysisDto dateAnalysisDto : dateRecords) {
-            String date = dateAnalysisDto.getDate();
-        }
-        String frst = " d ";
-        String lst = " l ";
-        //Object frst = dateRecords.get(0);
-        //Object lst = dateRecords.get(dateRecords.size()-1);
-        return recordRepository.analysis((String) frst, (String) lst);
+        return recordRepository.analysisDates(id);
+//        for(DateAnalysisDto dateAnalysisDto : dateRecords) {
+//            String date = dateAnalysisDto.getDate();
+//        }
+
+        //return recordRepository.analysis((String) frst, (String) lst);
     }
 
 

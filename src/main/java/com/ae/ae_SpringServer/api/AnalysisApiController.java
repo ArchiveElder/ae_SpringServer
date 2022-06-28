@@ -1,5 +1,6 @@
 package com.ae.ae_SpringServer.api;
 
+import com.ae.ae_SpringServer.api.dto.DateAnalysisDto;
 import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.service.AnalysisService;
 import com.ae.ae_SpringServer.service.RecordService;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static java.lang.Integer.valueOf;
 import static java.util.stream.Collectors.toList;
 
 @RestController
@@ -25,33 +27,39 @@ public class AnalysisApiController {
     @GetMapping("api/analysis")
     public AnalysisResponse analysisResponse() {
         Long id = Long.valueOf(3);
+        int ratioCarb, ratioPro, ratioFat, totalCarb, totalPro, totalFat;
+        ratioCarb = ratioPro = ratioFat = totalCarb = totalPro = totalFat = 0;
+
         List<Record> findRecords = analysisService.findRecords(id);
+
         List<AnalysisDto> collect = findRecords.stream()
-                .map(m -> new AnalysisDto(m.getId(),m.getDate(), m.getCal()))
+                .map(m -> new AnalysisDto(m.getDate(), valueOf(m.getCal())))
                 .collect(toList());
-        return new AnalysisResponse(collect);
+
+
+        //sumCarb, sumPro, sumFat, ratio 관련 처리해주고
+
+        return new AnalysisResponse(ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, collect);
 
 
     }
 
     @Data
     @AllArgsConstructor
-    private class AnalysisResponse {
-//        private int ratioCarb;
-//        private int ratioPro;
-//        private int ratioFat;
-//        private int totalCarb;
-//        private int totalPro;
-//        private int totalFat;
+    private class AnalysisResponse {    //7일간 섭취 영양소 비율, 총량, [날짜별 총칼로리]
+        private int ratioCarb;
+        private int ratioPro;
+        private int ratioFat;
+        private int totalCarb;
+        private int totalPro;
+        private int totalFat;
         private List<AnalysisDto> analysisDtos;
     }
 
     @Data
     @AllArgsConstructor
-    static class AnalysisDto {
-        private Long id;
+    static class AnalysisDto {  //날짜별 날짜와 하루총칼로리
         private String date;
-        //private int totalCal;
-        private String cal;
+        private int totalCal;
     }
 }
