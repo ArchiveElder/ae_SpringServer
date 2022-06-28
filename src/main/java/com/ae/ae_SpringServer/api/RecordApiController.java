@@ -30,7 +30,7 @@ public class RecordApiController {
     //1-1
     @PostMapping("/api/record")
     public CreateRecordResponse createRecord(@RequestBody @Valid CreateRecordRequest request) {
-        User user = userService.findOne(Long.valueOf(0));
+        User user = userService.findOne(Long.valueOf(3));
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
         Long id = null;
         for(CreateDto dto: request.creates) {
