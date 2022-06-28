@@ -1,7 +1,7 @@
 package com.ae.ae_SpringServer.api;
 
-import com.ae.ae_SpringServer.api.dto.DateAnalysisDto;
 import com.ae.ae_SpringServer.domain.Record;
+import com.ae.ae_SpringServer.jpql.DateAnalysisDto;
 import com.ae.ae_SpringServer.service.AnalysisService;
 import com.ae.ae_SpringServer.service.RecordService;
 import com.ae.ae_SpringServer.service.UserService;
@@ -30,10 +30,10 @@ public class AnalysisApiController {
         int ratioCarb, ratioPro, ratioFat, totalCarb, totalPro, totalFat;
         ratioCarb = ratioPro = ratioFat = totalCarb = totalPro = totalFat = 0;
 
-        List<Record> findRecords = analysisService.findRecords(id);
+        List<DateAnalysisDto> findRecords = analysisService.findRecords(id);
 
         List<AnalysisDto> collect = findRecords.stream()
-                .map(m -> new AnalysisDto(m.getDate(), valueOf(m.getCal())))
+                .map(m -> new AnalysisDto(m.getDate(), Double.valueOf(m.getSumCal())))
                 .collect(toList());
 
 
@@ -60,6 +60,6 @@ public class AnalysisApiController {
     @AllArgsConstructor
     static class AnalysisDto {  //날짜별 날짜와 하루총칼로리
         private String date;
-        private int totalCal;
+        private Double totalCal;
     }
 }
