@@ -33,11 +33,10 @@ public class RecordApiController {
         User user = userService.findOne(Long.valueOf(3));
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
         Long id = null;
-        for(CreateDto dto: request.creates) {
-            Record record = Record.createRecord(dto.text, date, dto.calory, dto.carb, dto.protein, dto.fat, request.rdate, request.rtime,
-                    dto.amount, request.meal, user);
-            id = recordService.record(record);
-        }
+        Record record = Record.createRecord(request.text, date, request.calory, request.carb, request.protein, request.fat,
+                request.rdate, request.rtime, request.amount, request.meal, user);
+        id = recordService.record(record);
+
         return new CreateRecordResponse(id.intValue());
     }
 
@@ -101,8 +100,13 @@ public class RecordApiController {
 
     @Data
     private static class CreateRecordRequest {
-        @NotEmpty
-        private List<CreateDto> creates;
+        @NotNull
+        private String text;
+        private String calory;
+        private String carb;
+        private String protein;
+        private String fat;
+        private Double amount;
         @NotNull
         private String rdate;
         @NotNull
@@ -151,16 +155,6 @@ public class RecordApiController {
         private T data;
     }
 
-    @Data
-    @AllArgsConstructor
-    static class CreateDto {
-        private String text;
-        private String calory;
-        private String carb;
-        private String protein;
-        private String fat;
-        private Double amount;
-    }
 
     @Data
     @AllArgsConstructor
