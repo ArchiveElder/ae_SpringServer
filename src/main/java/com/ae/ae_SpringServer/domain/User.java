@@ -1,22 +1,33 @@
 package com.ae.ae_SpringServer.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user")
 @Getter
 @Setter
+@NoArgsConstructor
 public class User {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
+    private String kakao;
 
     private String name;
     private int icon;
@@ -64,4 +75,11 @@ public class User {
     @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Record> records = new ArrayList<>();
+
+
+    public static User createUser(String kakao) {
+        User user = new User();
+        user.setKakao(kakao);
+        return user;
+    }
 }
