@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,8 +30,8 @@ public class RecordApiController {
 
     //1-1
     @PostMapping("/api/record")
-    public CreateRecordResponse createRecord(@RequestBody @Valid CreateRecordRequest request) {
-        User user = userService.findOne(Long.valueOf(3));
+    public CreateRecordResponse createRecord(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateRecordRequest request) {
+        User user = userService.findOne(Long.valueOf(userId));
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
         Long id = null;
         Record record = Record.createRecord(request.text, date, request.calory, request.carb, request.protein, request.fat,
@@ -42,9 +43,8 @@ public class RecordApiController {
 
     //1-2
     @PostMapping("/api/daterecord")
-    public DateRecordResponse dateRecords(@RequestBody @Valid CreateDateRequest request) {
-        Long id = Long.valueOf(3);
-        List<Record> findRecords = recordService.findDateRecords(id, request.date);
+    public DateRecordResponse dateRecords(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateDateRequest request) {
+        List<Record> findRecords = recordService.findDateRecords(Long.valueOf(userId), request.date);
         List<DateRecordDto> bRecords = new ArrayList<DateRecordDto>();
         List<DateRecordDto> lRecords = new ArrayList<DateRecordDto>();
         List<DateRecordDto> dRecords = new ArrayList<DateRecordDto>();
@@ -76,7 +76,7 @@ public class RecordApiController {
         List<RecordsDto> records = new ArrayList<RecordsDto>();
         records.add(b); records.add(l); records.add(d);
 
-        User user = userService.findOne(id);
+        User user = userService.findOne(Long.valueOf(userId));
 
         return new DateRecordResponse(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
                 user.getRcal(), user.getRcarb(), user.getRpro(), user.getRfat(),
@@ -85,9 +85,8 @@ public class RecordApiController {
 
     //1-3
     @PostMapping("api/detailrecord")
-    public Result recordResponse(@RequestBody @Valid CreateDetailRecordRequest request) {
-        Long id = Long.valueOf(3);
-        List<Record> findDetailRecord = recordService.findDetailOne(id, Long.valueOf(request.record_id));
+    public Result recordResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateDetailRecordRequest request) {
+        List<Record> findDetailRecord = recordService.findDetailOne(Long.valueOf(userId), Long.valueOf(request.record_id));
 
         List<DetailRecordDto> collect = findDetailRecord.stream()
                 .map(m -> new DetailRecordDto(m.getText(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(), m.getImage_url(), m.getDate(), m.getTime(), m.getAmount()))

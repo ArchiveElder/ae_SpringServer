@@ -8,6 +8,7 @@ import com.ae.ae_SpringServer.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,13 +27,12 @@ public class AnalysisApiController {
 
     //5-1
     @GetMapping("api/analysis")
-    public AnalysisResponse analysisResponse() {
-        Long id = Long.valueOf(3);
+    public AnalysisResponse analysisResponse(@AuthenticationPrincipal String userId) {
         int status = 0;
         int ratioCarb, ratioPro, ratioFat, totalCarb, totalPro, totalFat;
         ratioCarb = ratioPro = ratioFat = totalCarb = totalPro = totalFat = 0;
 
-        List<DateAnalysisDto> findRecords = analysisService.findRecords(id);
+        List<DateAnalysisDto> findRecords = analysisService.findRecords(Long.valueOf(userId));
         List<AnalysisDto> collect = new ArrayList<>();
         //받아온 기록이 7개일 경우 : 정상로직 : status = 1
         for(DateAnalysisDto dateAnalysisDto : findRecords) {
