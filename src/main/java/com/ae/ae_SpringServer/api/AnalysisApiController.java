@@ -1,7 +1,7 @@
 package com.ae.ae_SpringServer.api;
 
-import com.ae.ae_SpringServer.api.dto.DateAnalysisDto;
 import com.ae.ae_SpringServer.domain.Record;
+import com.ae.ae_SpringServer.jpql.DateAnalysisDto;
 import com.ae.ae_SpringServer.service.AnalysisService;
 import com.ae.ae_SpringServer.service.RecordService;
 import com.ae.ae_SpringServer.service.UserService;
@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Integer.valueOf;
@@ -27,19 +28,27 @@ public class AnalysisApiController {
     @GetMapping("api/analysis")
     public AnalysisResponse analysisResponse() {
         Long id = Long.valueOf(3);
+        int status = 0;
         int ratioCarb, ratioPro, ratioFat, totalCarb, totalPro, totalFat;
         ratioCarb = ratioPro = ratioFat = totalCarb = totalPro = totalFat = 0;
 
-        List<Record> findRecords = analysisService.findRecords(id);
+        List<DateAnalysisDto> findRecords = analysisService.findRecords(id);
+        List<AnalysisDto> collect = new ArrayList<>();
+        //받아온 기록이 7개일 경우 : 정상로직 : status = 1
+        for(DateAnalysisDto dateAnalysisDto : findRecords) {
+            totalCarb += dateAnalysisDto.getSumCarb();
+            totalPro += dateAnalysisDto.getSumPro();
+            totalFat += dateAnalysisDto.getSumFat();
+            collect.add(new AnalysisDto(dateAnalysisDto.getDate(), dateAnalysisDto.getSumCal().intValue()));
+        }
+        int sum = totalCarb + totalPro + totalFat;
+        ratioCarb = totalCarb * 100 / sum;
+        ratioPro = totalPro * 100 / sum;
+        ratioFat = totalFat * 100 / sum;
 
-        List<AnalysisDto> collect = findRecords.stream()
-                .map(m -> new AnalysisDto(m.getDate(), valueOf(m.getCal())))
-                .collect(toList());
+        status = 1;
 
-
-        //sumCarb, sumPro, sumFat, ratio 관련 처리해주고
-
-        return new AnalysisResponse(ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, collect);
+        return new AnalysisResponse(status, ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, collect);
 
 
     }
@@ -47,6 +56,7 @@ public class AnalysisApiController {
     @Data
     @AllArgsConstructor
     private class AnalysisResponse {    //7일간 섭취 영양소 비율, 총량, [날짜별 총칼로리]
+        private int status;         //정상 로직이면 1, 비정상이면 0
         private int ratioCarb;
         private int ratioPro;
         private int ratioFat;

@@ -1,4 +1,4 @@
-package com.ae.ae_SpringServer.api.dto;
+package com.ae.ae_SpringServer.jpql;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +12,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DateAnalysisDto {
     private String date;
-    private String sumCal;
-    private String sumCarb;
-    private String sumPro;
-    private String sumFat;
+    private Double sumCal;
+    private Double sumCarb;
+    private Double sumPro;
+    private Double sumFat;
 }
