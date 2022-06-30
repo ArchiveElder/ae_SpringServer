@@ -4,21 +4,24 @@ import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
-@Transactional(readOnly = true)
+@Transactional(readOnly = false)
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     /*
     int updateBadge(Long id) {
         return userRepository.updateOne(id);
     }
      */
-
     public User findOne(Long id) {
         return userRepository.findOne(id);
     }
@@ -27,4 +30,13 @@ public class UserService {
     public int findBadge(Long id) {
         return userRepository.findBadge(id);
     }
+
+    public void create(User user) {
+        userRepository.save(user);
+    }
+
+    public Optional<User> findByKakaoId(String kakao) {
+        return userRepository.findByKakao(kakao);
+    }
+
 }
