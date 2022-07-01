@@ -3,25 +3,26 @@ package com.ae.ae_SpringServer.api;
 import com.ae.ae_SpringServer.config.security.JwtProvider;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.KakaoProfile;
+import com.ae.ae_SpringServer.dto.SignupRequestDto;
 import com.ae.ae_SpringServer.dto.UserSocialLoginRequestDto;
+import com.ae.ae_SpringServer.dto.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.service.UserService;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
@@ -80,6 +81,24 @@ public class UserApiController {
         }
     }
 
+    @PostMapping("/api/signup")
+    public ResponseEntity<?> signup(@AuthenticationPrincipal String userId, @RequestBody SignupRequestDto signupRequestDto) {
+        userService.signup(Long.valueOf(userId), signupRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/api/userinfo")
+    public UserInfoDto info(@AuthenticationPrincipal String userId) {
+        User user = userService.findOne(Long.valueOf(userId));
+        return new UserInfoDto(user.getName(), user.getGender(), user.getAge(), user.getHeight(), user.getWeight(), user.getIcon(), user.getActivity());
+    }
+
+    @PutMapping("/api/userupdate")
+    public ResponseEntity<?> update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+        userService.update(Long.valueOf(userId), userUpdateRequestDto);
+        return ResponseEntity.ok().build();
+    }
+
 
     /*
     // 액세스 토큰 만료시 회원 검증 후 리프레쉬 토큰을 검증해서 액세스 토큰과 리프레시 토큰을 재발급함
@@ -111,4 +130,21 @@ public class UserApiController {
         private String token;
         private boolean isSignup; // 온보딩 띄워야 하는 여부 (true가 띄워야함)
     }
+
+
+
+    @Data
+    @AllArgsConstructor
+    static class UserInfoDto {
+        private String name;
+        private int gender;
+        private int age;
+        private String height;
+        private String weight;
+        private int icon;
+        private int activity;
+    }
+
+
+
 }
