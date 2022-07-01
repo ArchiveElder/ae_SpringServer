@@ -79,7 +79,7 @@ public class RecordApiController {
         User user = userService.findOne(Long.valueOf(userId));
 
         return new DateRecordResponse(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
-                user.getRcal(), user.getRcarb(), user.getRpro(), user.getRfat(),
+                Integer.parseInt(user.getRcal()), Integer.parseInt(user.getRcarb()), Integer.parseInt(user.getRpro()), Integer.parseInt(user.getRfat()),
                 records);
     }
 

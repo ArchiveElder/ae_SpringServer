@@ -2,6 +2,8 @@ package com.ae.ae_SpringServer.service;
 
 import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
+import com.ae.ae_SpringServer.dto.SignupRequestDto;
+import com.ae.ae_SpringServer.dto.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,4 +41,11 @@ public class UserService {
         return userRepository.findByKakao(kakao);
     }
 
+    public void signup(Long id, SignupRequestDto dto) {
+        userRepository.signup(id, dto);
+    }
+
+    public void update(Long id, UserUpdateRequestDto dto) {
+        userRepository.update(id, dto);
+    }
 }
