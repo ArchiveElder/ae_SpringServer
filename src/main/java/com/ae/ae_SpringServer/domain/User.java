@@ -39,13 +39,13 @@ public class User {
     private String date;
 
     @Column(name = "recommend_calory")
-    private int rcal;
+    private String rcal;
     @Column(name = "recommend_carb")
-    private int rcarb;
+    private String rcarb;
     @Column(name = "recommend_pro")
-    private int rpro;
+    private String rpro;
     @Column(name = "recommend_fat")
-    private int rfat;
+    private String rfat;
 
 
     @JsonIgnore
