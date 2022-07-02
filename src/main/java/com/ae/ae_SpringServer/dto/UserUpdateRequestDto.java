@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserUpdateRequestDto {
     private int age;
-    private int icon;
     private String height;
     private String weight;
     private int activity;
