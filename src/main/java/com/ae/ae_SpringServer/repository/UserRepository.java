@@ -43,6 +43,7 @@ public class UserRepository {
     }
 
     public void signup(Long id, SignupRequestDto dto) {
+        int icon = (int)(Math.random() * 13);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
         Double rCal = (Double.parseDouble(dto.getHeight()) - 100) * 0.9 * dto.getActivity();
         int gender = dto.getGender(); int age = dto.getAge();
@@ -93,7 +94,7 @@ public class UserRepository {
         }
         fat = lino + alp + dha;
         em.createQuery("update User u set u.name = :name, u.age = :age, u.gender = :gender, u.height = :height, u.weight = :weight," +
-                        "u.date = :date, u.icon = 0, u.activity = :activity, u.rcal = :calory, u.rcarb = :carb," +
+                        "u.date = :date, u.icon = :icon, u.activity = :activity, u.rcal = :calory, u.rcarb = :carb," +
                         "u.rpro = :pro, u.rfat = :fat " +
                 "where u.id = :id")
                 .setParameter("name", dto.getName())
@@ -101,6 +102,7 @@ public class UserRepository {
                 .setParameter("gender", gender)
                 .setParameter("height", dto.getHeight())
                 .setParameter("weight", dto.getWeight())
+                .setParameter("icon", icon)
                 .setParameter("activity", dto.getActivity())
                 .setParameter("calory", Double.toString(rCal))
                 .setParameter("carb", "130")
@@ -112,13 +114,12 @@ public class UserRepository {
     }
 
     public void update(Long id, UserUpdateRequestDto dto) {
-        em.createQuery("update User u set u.age = :age, u.height = :height, u.weight = :weight, u.activity = :activity," +
-                "u.icon = :icon where u.id = :id")
+        em.createQuery("update User u set u.age = :age, u.height = :height, u.weight = :weight, u.activity = :activity" +
+                " where u.id = :id")
                 .setParameter("age", dto.getAge())
                 .setParameter("height", dto.getHeight())
                 .setParameter("weight", dto.getWeight())
                 .setParameter("activity", dto.getActivity())
-                .setParameter("icon", dto.getIcon())
                 .setParameter("id", id)
                 .executeUpdate();
     }
