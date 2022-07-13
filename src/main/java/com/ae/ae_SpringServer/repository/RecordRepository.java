@@ -7,6 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,10 +45,12 @@ public class RecordRepository {
     public List<DateAnalysisDto> analysisDate(Long id) {
         String sql = "SELECT r.record_date, SUM(r.cal), SUM(r.carb), SUM(r.protein), SUM(r.fat)" +
                 " FROM record r JOIN user u WHERE r.user_user_id = :user_id" +
+                " and r.record_date != :date" +
                 " GROUP BY r.record_date ORDER BY r.record_date DESC LIMIT 7";
         //NativeQuery로 직접 날림
         Query nativeQuery = em.createNativeQuery(sql)
-                .setParameter("user_id", id);
+                .setParameter("user_id", id)
+                .setParameter("date", LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd.")));
         List<Object[]> resultList = nativeQuery.getResultList();
         List<DateAnalysisDto> dateAnalysisDtos = new ArrayList<>();
         for(Object[] row : resultList){
