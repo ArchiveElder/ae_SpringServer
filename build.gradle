@@ -37,6 +37,10 @@ dependencies {
 	implementation 'mysql:mysql-connector-java'
 	implementation 'com.google.code.gson:gson'
 	implementation 'org.apache.httpcomponents:httpclient'
+
+	//s3 의존성 설치
+	//compileOnly 'org.springframework.cloud:spring-cloud-starter-aws:2.2.5.RELEASE'
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 }
 
 tasks.named('test') {
