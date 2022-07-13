@@ -94,7 +94,7 @@ public class UserRepository {
         }
         fat = lino + alp + dha;
         em.createQuery("update User u set u.name = :name, u.age = :age, u.gender = :gender, u.height = :height, u.weight = :weight," +
-                        "u.date = :date, u.icon = :icon, u.activity = :activity, u.rcal = :calory, " +
+                        "u.date = :date, u.icon = :icon, u.activity = :activity, u.rcal = :calory, u.rcarb = :carb, " +
                         "u.rpro = :pro, u.rfat = :fat " +
                 "where u.id = :id")
                 .setParameter("name", dto.getName())
@@ -105,6 +105,7 @@ public class UserRepository {
                 .setParameter("icon", icon)
                 .setParameter("activity", dto.getActivity())
                 .setParameter("calory", Double.toString(rCal))
+                .setParameter("carb", "130")
                 .setParameter("pro", Integer.toString(pro))
                 .setParameter("fat", Double.toString(fat))
                 .setParameter("date", date)
