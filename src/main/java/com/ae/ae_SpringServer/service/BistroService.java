@@ -17,4 +17,12 @@ public class BistroService {
     public List<Bistro> getMiddle(String wide) {
         return bistroRepository.getMiddle(wide);
     }
+
+    public List<Bistro> getCategoryList(String wide, String middle) {
+        return bistroRepository.getCategoryList(wide, middle);
+    }
+
+    public List<Bistro> getCategories(String wide, String middle) {
+        return bistroRepository.getCategories(wide, middle);
+    }
 }

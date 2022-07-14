@@ -30,6 +30,25 @@ public class BistroApiController {
         return new Result(middles);
     }
 
+    @PostMapping("/api/categories")
+    public CategoryListResponse categories(@AuthenticationPrincipal String userId, @RequestBody @Valid CategoryRequest request) {
+        List<Bistro> categoryList = bistroService.getCategoryList(request.getWide(), request.getMiddle());
+        List<Bistro> categoryGroup = bistroService.getCategories(request.getWide(), request.getMiddle());
+
+        List<CategoryListDto> listDtos = new ArrayList<>();
+        List<String> categories = new ArrayList<>();
+
+        for(Bistro bistro : categoryList) {
+            listDtos.add(new CategoryListDto(bistro.getCategory(), bistro.getName(), bistro.getRAddr(), bistro.getLAddr(), bistro.getTel()));
+        }
+
+        for(Bistro bistro : categoryGroup) {
+            categories.add(bistro.getCategory());
+        }
+
+        return new CategoryListResponse(categories, listDtos.size(), listDtos);
+    }
+
     @Data
     @AllArgsConstructor
     static class Result<T> {
@@ -41,5 +60,28 @@ public class BistroApiController {
         private String wide;
     }
 
+    @Data
+    private static class CategoryRequest {
+        private String wide;
+        private String middle;
+    }
+
+    @Data
+    @AllArgsConstructor
+    private static class CategoryListDto {
+        private String category;
+        private String name;
+        private String roadAddr;
+        private String lnmAddr;
+        private String telNo;
+    }
+
+    @Data
+    @AllArgsConstructor
+    private static class CategoryListResponse {
+        private List<String> categories;
+        private int size;
+        private List<CategoryListDto> CategoryList;
+    }
    
 }
