@@ -41,10 +41,5 @@ public class BistroApiController {
         private String wide;
     }
 
-    @Data
-    @AllArgsConstructor
-    static class MiddleClassDto {
-        private int meal; // 아침, 점심, 저녁 구분
-        private int mCal; // 한끼니의 총 칼로리
-    }
+   
 }
