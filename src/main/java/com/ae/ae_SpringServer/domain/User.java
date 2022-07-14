@@ -1,20 +1,13 @@
 package com.ae.ae_SpringServer.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user")
@@ -56,7 +49,7 @@ public class User {
     @JoinTable(name = "bookmark",
     joinColumns = @JoinColumn(name = "user_user_id"),
     inverseJoinColumns = @JoinColumn(name = "restaurant_restaurant_id"))
-    private List<Restaurant> restaurants = new ArrayList<>();
+    private List<Bistro> restaurants = new ArrayList<>();
 
 
     public static User createUser(String kakao) {
