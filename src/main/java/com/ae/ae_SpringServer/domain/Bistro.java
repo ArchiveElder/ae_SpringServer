@@ -7,14 +7,13 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "restaurant")
+@Table(name = "bistro")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Bistro {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "restaurant_id")
     private Long id;
     private String category;
     private String name;
