@@ -15,7 +15,7 @@ public class BistroRepository {
     private final EntityManager em;
 
     public List<Bistro> getMiddle(String wide) {
-        return em.createQuery("select r from Bistro r where r.wide = :wide", Bistro.class)
+        return em.createQuery("select b from Bistro b where b.wide = :wide group by b.middle", Bistro.class)
                 .setParameter("wide", wide)
                 .getResultList();
     }
