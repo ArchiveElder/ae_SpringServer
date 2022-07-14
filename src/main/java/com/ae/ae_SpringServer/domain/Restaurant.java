@@ -19,6 +19,9 @@ public class Restaurant {
     private String category;
     private String name;
 
+    private String wide;
+    private String middle;
+
     @Column(name = "road_addr")
     private String rAddr;
     @Column(name = "lnm_addr")
