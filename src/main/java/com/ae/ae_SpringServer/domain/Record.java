@@ -44,9 +44,10 @@ public class Record {
     private User user;
 
 
-    public static Record createRecord(String text, String date, String cal, String carb, String protein, String fat, String rdate, String rtime,
+    public static Record createRecord(String image_url, String text, String date, String cal, String carb, String protein, String fat, String rdate, String rtime,
                                       Double amount, int meal, User user) {
         Record record = new Record();
+        record.setImage_url(image_url);
         record.setText(text);
         record.setServer_date(date);
         record.setCal(cal);
