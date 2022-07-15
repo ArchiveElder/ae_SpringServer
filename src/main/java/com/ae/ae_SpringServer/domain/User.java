@@ -45,11 +45,11 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Record> records = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "bookmark",
-    joinColumns = @JoinColumn(name = "user_user_id"),
-    inverseJoinColumns = @JoinColumn(name = "restaurant_restaurant_id"))
-    private List<Bistro> restaurants = new ArrayList<>();
+//    @ManyToMany
+//    @JoinTable(name = "bookmark",
+//    joinColumns = @JoinColumn(name = "user_user_id"),
+//    inverseJoinColumns = @JoinColumn(name = "restaurant_restaurant_id"))
+//    private List<Bistro> restaurants = new ArrayList<>();
 
 
     public static User createUser(String kakao) {

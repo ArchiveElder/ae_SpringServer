@@ -12,6 +12,8 @@ import java.util.List;
 public class BistroRepository {
     private final EntityManager em;
 
+    public Bistro findOne(Long id) { return em.find(Bistro.class, id);  }
+
     public List<Bistro> getMiddle(String wide) {
         return em.createQuery("select b from Bistro b where b.wide = :wide group by b.middle", Bistro.class)
                 .setParameter("wide", wide)
