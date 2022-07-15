@@ -31,4 +31,9 @@ public class BistroRepository {
                 .setParameter("middle", middle)
                 .getResultList();
     }
+
+    public List<Bistro> getBistro() {
+        return em.createQuery("select b from Bistro b", Bistro.class)
+                .getResultList();
+    }
 }
