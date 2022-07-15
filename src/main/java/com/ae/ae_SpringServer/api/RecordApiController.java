@@ -4,20 +4,22 @@ import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.service.RecordService;
 import com.ae.ae_SpringServer.service.UserService;
+import com.ae.ae_SpringServer.aws.S3Uploader;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -27,14 +29,20 @@ import static java.util.stream.Collectors.toList;
 public class RecordApiController {
     private final RecordService recordService;
     private final UserService userService;
+    private final S3Uploader s3Uploader;
 
     //1-1
-    @PostMapping("/api/record")
-    public CreateRecordResponse createRecord(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateRecordRequest request) {
+    @PostMapping(value = "/api/record", consumes = {"multipart/form-data", MediaType.APPLICATION_JSON_VALUE})
+    public CreateRecordResponse createRecord(@AuthenticationPrincipal String userId,
+                                             @RequestPart  ("image") MultipartFile multipartFile,
+                                             @Valid @RequestPart CreateRecordRequest request) throws IOException {
         User user = userService.findOne(Long.valueOf(userId));
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
+        //S3 Bucket upload
+        String img_url = s3Uploader.upload(multipartFile, "static");
+
         Long id = null;
-        Record record = Record.createRecord(request.text, date, request.calory, request.carb, request.protein, request.fat,
+        Record record = Record.createRecord(img_url, request.text, date, request.calory, request.carb, request.protein, request.fat,
                 request.rdate, request.rtime, request.amount, request.meal, user);
         id = recordService.record(record);
 
@@ -94,7 +102,6 @@ public class RecordApiController {
         return new Result(collect);
 
     }
-    // 해야할것: 플라스크 서버에 전달해줄 식단 조회 (최신 6개) - 서버와 api 통신할 때 하기
 
 
     @Data

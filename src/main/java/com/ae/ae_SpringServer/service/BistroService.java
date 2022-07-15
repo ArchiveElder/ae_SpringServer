@@ -25,4 +25,8 @@ public class BistroService {
     public List<Bistro> getCategories(String wide, String middle) {
         return bistroRepository.getCategories(wide, middle);
     }
+
+    public List<Bistro> getBistro() {
+        return bistroRepository.getBistro();
+    }
 }
