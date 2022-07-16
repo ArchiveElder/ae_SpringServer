@@ -19,11 +19,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    /*
-    int updateBadge(Long id) {
-        return userRepository.updateOne(id);
-    }
-     */
     public User findOne(Long id) {
         return userRepository.findOne(id);
     }
