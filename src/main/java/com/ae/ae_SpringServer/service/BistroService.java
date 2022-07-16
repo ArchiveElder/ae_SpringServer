@@ -14,6 +14,8 @@ import java.util.List;
 public class BistroService {
     private final BistroRepository bistroRepository;
 
+    public Bistro findOne(Long id) { return bistroRepository.findOne(id); }
+
     public List<Bistro> getMiddle(String wide) {
         return bistroRepository.getMiddle(wide);
     }
