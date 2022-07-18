@@ -135,9 +135,9 @@ public class RecordApiController {
     }
 
     @Data
+    @AllArgsConstructor
     private static class CreateRecordResponse {
         private int id;
-        public CreateRecordResponse(int id) { this.id = id; }
     }
 
     @Data

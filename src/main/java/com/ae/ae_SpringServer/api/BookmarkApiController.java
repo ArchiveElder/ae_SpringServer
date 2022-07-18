@@ -6,15 +6,19 @@ import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.service.BistroService;
 import com.ae.ae_SpringServer.service.BookmarkService;
 import com.ae.ae_SpringServer.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,14 +39,50 @@ public class BookmarkApiController {
         return new CreateBookmarkResponse(id.intValue());
     }
 
+    //7-2
+    @GetMapping("api/bookmarklist")
+    public Result bookmarkList(@AuthenticationPrincipal String userId) {
+        List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
+        List<RestaurantDto> restaurantDtos = new ArrayList<>();
+
+        for(Bistro bistro: restaurant) {
+            restaurantDtos.add(new RestaurantDto(bistro.getCategory(), bistro.getName(),
+                    bistro.getRAddr(), bistro.getLAddr(),
+                    bistro.getTel(), bistro.getLa(), bistro.getLo()));
+        }
+        return new Result(restaurantDtos.size(), restaurantDtos);
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private Integer count;
+        private T data;
+    }
+
     @Data
     private static class BookmarkRequest{
         @NotNull
         private Long id;
     }
     @Data
+    @AllArgsConstructor
     private static class CreateBookmarkResponse {
         private int id;
-        public CreateBookmarkResponse(int id) { this.id = id; }
     }
+
+    @Data
+    @AllArgsConstructor
+    private static class RestaurantDto {
+        private String category;
+        private String name;
+        private String roadAddr;
+        private String lnmAddr;
+        private String telNo;
+        private String la;
+        private String lo;
+
+    }
+
 }

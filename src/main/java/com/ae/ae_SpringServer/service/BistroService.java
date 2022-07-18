@@ -31,4 +31,6 @@ public class BistroService {
     public List<Bistro> getBistro() {
         return bistroRepository.getBistro();
     }
+
+
 }
