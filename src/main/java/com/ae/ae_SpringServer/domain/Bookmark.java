@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.LAZY;
+
 @Entity
 @Table(name = "bookmark")
 @Getter @Setter
@@ -14,8 +16,8 @@ public class Bookmark {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_user_id")
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "bm_user_id")
     private User user;
 
     @ManyToOne

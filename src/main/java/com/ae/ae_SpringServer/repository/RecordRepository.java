@@ -19,13 +19,6 @@ public class RecordRepository {
 
     public void save(Record record) { em.persist(record); }
 
-    public List<Record> findUserRecord(Long id) {
-        String param = id.toString();
-        return em.createQuery("select r from Record r" + " join fetch r.user u where u.user_id = ?1", Record.class)
-                .setParameter(1, param)
-                .getResultList();
-    }
-
     public List<Record> findDateRecords(Long id, String date) {
         return em.createQuery("select r from Record r join fetch r.user u where u.id = :param and r.date = :date", Record.class)
                 .setParameter("param", id)
