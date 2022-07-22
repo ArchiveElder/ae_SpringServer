@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.MediaType.TEXT_PLAIN;
 
 @RestController
 @RequiredArgsConstructor
@@ -31,19 +32,28 @@ public class RecordApiController {
     private final UserService userService;
     private final S3Uploader s3Uploader;
 
-    //1-1
-    @PostMapping(value = "/api/record", consumes = {"multipart/form-data", MediaType.APPLICATION_JSON_VALUE})
+        //1-1
+    @PostMapping(value = "/api/record", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public CreateRecordResponse createRecord(@AuthenticationPrincipal String userId,
-                                             @RequestPart  ("image") MultipartFile multipartFile,
-                                             @Valid @RequestPart CreateRecordRequest request) throws IOException {
+                                             @RequestParam (value = "image", required = false) MultipartFile multipartFile,
+                                             @RequestParam (value = "text", required = true) String text,
+                                             @RequestParam (value = "calory", required = false) String calory,
+                                             @RequestParam (value = "carb", required = false) String carb,
+                                             @RequestParam (value = "protein", required = false) String protein,
+                                             @RequestParam (value = "fat", required = false) String fat,
+                                             @RequestParam (value = "rdate", required = true) String rdate,
+                                             @RequestParam (value = "rtime", required = true) String rtime,
+                                             @RequestParam (value = "amount", required = false) Double amount,
+                                             @RequestParam (value = "meal", required = true) int meal
+                                             ) throws IOException {
         User user = userService.findOne(Long.valueOf(userId));
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
         //S3 Bucket upload
         String img_url = s3Uploader.upload(multipartFile, "static");
 
         Long id = null;
-        Record record = Record.createRecord(img_url, request.text, date, request.calory, request.carb, request.protein, request.fat,
-                request.rdate, request.rtime, request.amount, request.meal, user);
+        Record record = Record.createRecord(img_url, text, date, calory, carb, protein, fat,
+                rdate, rtime, amount, meal, user);
         id = recordService.record(record);
 
         return new CreateRecordResponse(id.intValue());
@@ -102,25 +112,7 @@ public class RecordApiController {
         return new Result(collect);
 
     }
-
-
-    @Data
-    private static class CreateRecordRequest {
-        @NotNull
-        private String text;
-        private String calory;
-        private String carb;
-        private String protein;
-        private String fat;
-        private Double amount;
-        @NotNull
-        private String rdate;
-        @NotNull
-        private String rtime;
-        @NotNull
-        private int meal;
-    }
-
+    
     @Data
     private static class CreateDateRequest {
         @NotNull
