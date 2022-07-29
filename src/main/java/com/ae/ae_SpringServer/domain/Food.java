@@ -17,9 +17,6 @@ public class Food {
     @Column(name = "food_id")
     private Long id;
 
-    @Column(name = "is_vegetarian")
-    private int vegetarian;
-
     @Column(name = "food_type")
     private String name;
 
