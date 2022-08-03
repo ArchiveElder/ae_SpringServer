@@ -9,6 +9,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import static java.util.stream.Collectors.toList;
 
@@ -18,7 +19,7 @@ import static java.util.stream.Collectors.toList;
 public class IngredientApiController {
     private final IngredientService ingredientService;
 
-    //8-3
+    //9-1
     @GetMapping("/api/ingredient")
     public Result ingredients(@AuthenticationPrincipal String userId) {
         List<Ingredient> findIngredients = ingredientService.findAllIngredients();
@@ -31,13 +32,16 @@ public class IngredientApiController {
     @Data
     @AllArgsConstructor
     static class Result<T> {
+        @NotNull
         private Integer count;
         private T data;
     }
     @Data
     @AllArgsConstructor
     static class IngredientDto {
+        @NotNull
         private Long id;
+        @NotNull
         private String name;
     }
 }
