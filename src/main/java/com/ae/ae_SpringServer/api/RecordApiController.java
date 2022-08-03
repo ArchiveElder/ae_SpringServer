@@ -129,6 +129,7 @@ public class RecordApiController {
     @Data
     @AllArgsConstructor
     private static class CreateRecordResponse {
+        @NotNull
         private int id;
     }
 

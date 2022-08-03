@@ -69,6 +69,7 @@ public class BookmarkApiController {
     @Data
     @AllArgsConstructor
     private static class CreateBookmarkResponse {
+        @NotNull
         private int id;
     }
 
@@ -76,11 +77,14 @@ public class BookmarkApiController {
     @AllArgsConstructor
     private static class RestaurantDto {
         private String category;
+        @NotNull
         private String name;
         private String roadAddr;
         private String lnmAddr;
         private String telNo;
+        @NotNull
         private String la;
+        @NotNull
         private String lo;
 
     }

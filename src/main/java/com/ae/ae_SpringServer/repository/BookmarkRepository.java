@@ -21,7 +21,7 @@ public class BookmarkRepository {
     public List<Bistro> findBookmark(Long id) {
         return em.createQuery("select b from Bistro b" +
                 " where b.id IN" +
-                " (select bm.id from Bookmark bm join bm.user u where u.id = :param)", Bistro.class)
+                " (select bm.bistro from Bookmark bm join bm.user u where u.id = :param)", Bistro.class)
                 .setParameter("param", id)
                 .getResultList();
 

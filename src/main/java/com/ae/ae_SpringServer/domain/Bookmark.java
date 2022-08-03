@@ -21,7 +21,7 @@ public class Bookmark {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "restaurant_id")
+    @JoinColumn(name = "bistro_id")
     private Bistro bistro;
 
     public static Bookmark createBookmark(User user, Bistro bistro){
