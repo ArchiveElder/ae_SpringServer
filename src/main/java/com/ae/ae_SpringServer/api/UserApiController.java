@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
@@ -126,8 +127,11 @@ public class UserApiController {
     @Data
     @AllArgsConstructor
     static class LoginDto {
+        @NotNull
         private Long userId;
+        @NotNull
         private String token;
+        @NotNull
         private boolean isSignup; // 온보딩 띄워야 하는 여부 (true가 띄워야함)
     }
 

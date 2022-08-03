@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +59,7 @@ public class AnalysisApiController {
     @Data
     @AllArgsConstructor
     private class AnalysisResponse {    //7일간 섭취 영양소 비율, 총량, [날짜별 총칼로리]
+        @NotNull
         private int status;         //정상 로직이면 1, 비정상이면 0
         private int ratioCarb;
         private int ratioPro;

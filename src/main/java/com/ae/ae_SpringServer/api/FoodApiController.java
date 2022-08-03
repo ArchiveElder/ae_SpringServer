@@ -53,13 +53,16 @@ public class FoodApiController {
     @Data
     @AllArgsConstructor
     static class FoodTypeDto {
+        @NotNull
         private Long id;
+        @NotNull
         private String name;
     }
 
     @Data
     @AllArgsConstructor
     static class FoodDto {
+        @NotNull
         private String name;
         private int capacity;
         private double calory;
