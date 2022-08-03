@@ -68,7 +68,7 @@ public class BistroApiController {
             } else {
                 isBookmark = 0;
             }
-            bistroDtos.add(new BistroDto(isBookmark, bistro.getCategory(), bistro.getName(), bistro.getRAddr(), bistro.getLAddr(),
+            bistroDtos.add(new BistroDto(isBookmark, bistro.getId(), bistro.getCategory(), bistro.getName(), bistro.getRAddr(), bistro.getLAddr(),
                     bistro.getTel(), bistro.getMenu(), Double.parseDouble(bistro.getLa()), Double.parseDouble(bistro.getLo())));
         }
         return new Result(bistroDtos);
@@ -112,6 +112,7 @@ public class BistroApiController {
     @AllArgsConstructor
     private static class BistroDto {
         private int isBookmark;
+        private Long bistro_id;
         private String category;
         private String name;
         private String roadAddr;
