@@ -107,7 +107,7 @@ public class RecordServiceTest {
         user.setWeight("70");
         user.setIcon(2);
         user.setActivity(40);
-        em.persist(user);
+        userService.create(user);
         //권장 영양소정보 주입
         UserUpdateRequestDto requestDto = new UserUpdateRequestDto();
 //        requestDto.setAge(user.getAge());

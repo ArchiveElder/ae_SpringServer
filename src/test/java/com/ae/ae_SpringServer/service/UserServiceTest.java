@@ -21,6 +21,41 @@ public class UserServiceTest {
     @Autowired
     UserService userService;
 
+    //3-1
+    @Test
+    public void 회원정보조회(){
+        //given
+        //유저 주입 : 가입시 회원 정보
+        User user = new User();
+        String name = "김박사";
+        int sex = 1;
+        int age = 30;
+        String height = "170";
+        String weight = "50";
+        int icon =3;
+        int activity = 40;
+        user.setName(name);
+        user.setGender(sex);
+        user.setAge(age);
+        user.setHeight(height);
+        user.setWeight(weight);
+        user.setIcon(icon);
+        user.setActivity(activity);
+        userService.create(user);
+
+        //when 유저id로 조회 시
+        userService.findOne(user.getId());
+
+        //then 기입한 유저정보와 같아야한다.
+        assertEquals(name,user.getName());
+        assertEquals(sex,user.getGender());
+        assertEquals(age,user.getAge());
+        assertEquals(height,user.getHeight());
+        assertEquals(weight,user.getWeight());
+        assertEquals(icon,user.getIcon());
+        assertEquals(activity,user.getActivity());
+    }
+
     //3-2   : 현재 세팅시 null로 권장 칼,탄단지가 들어가고있으므로 코드 수정 후 다시 테스트 시도할 것
     @Test
     public void 회원정보수정(){
@@ -34,7 +69,7 @@ public class UserServiceTest {
         user.setWeight("70");
         user.setIcon(2);
         user.setActivity(40);
-        em.persist(user);
+        userService.create(user);
         String orginRcal = user.getRcal();
         String orginRcarb = user.getRcarb();
         String orginRpro = user.getRpro();
