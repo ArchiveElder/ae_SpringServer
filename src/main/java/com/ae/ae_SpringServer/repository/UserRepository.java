@@ -43,10 +43,17 @@ public class UserRepository {
     }
 
     public void signup(Long id, SignupRequestDto dto) {
+        int gender = dto.getGender();
+        int age = dto.getAge();
+        String name = dto.getName();
+        String weight = dto.getWeight();
+        String height = dto.getHeight();
+        int activity = dto.getActivity();
+
         int icon = (int)(Math.random() * 13);
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
         Double rCal = (Double.parseDouble(dto.getHeight()) - 100) * 0.9 * dto.getActivity();
-        int gender = dto.getGender(); int age = dto.getAge();
+
         int pro = 0;
         Double fat, lino, alp, dha;
         fat = lino = alp = dha = 0D;
@@ -97,13 +104,13 @@ public class UserRepository {
                         "u.date = :date, u.icon = :icon, u.activity = :activity, u.rcal = :calory, u.rcarb = :carb, " +
                         "u.rpro = :pro, u.rfat = :fat " +
                 "where u.id = :id")
-                .setParameter("name", dto.getName())
+                .setParameter("name", name)
                 .setParameter("age", age)
                 .setParameter("gender", gender)
-                .setParameter("height", dto.getHeight())
-                .setParameter("weight", dto.getWeight())
+                .setParameter("height", height)
+                .setParameter("weight", weight)
                 .setParameter("icon", icon)
-                .setParameter("activity", dto.getActivity())
+                .setParameter("activity", activity)
                 .setParameter("calory", Double.toString(rCal))
                 .setParameter("carb", "130")
                 .setParameter("pro", Integer.toString(pro))

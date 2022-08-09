@@ -61,16 +61,16 @@ public class UserServiceTest {
         userService.create(user);
 
         //when 유저id로 조회 시
-        userService.findOne(user.getId());
+        User user1 = userService.findOne(user.getId());
 
         //then 기입한 유저정보와 같아야한다.
-        assertEquals(name,user.getName());
-        assertEquals(sex,user.getGender());
-        assertEquals(age,user.getAge());
-        assertEquals(height,user.getHeight());
-        assertEquals(weight,user.getWeight());
-        assertEquals(icon,user.getIcon());
-        assertEquals(activity,user.getActivity());
+        assertEquals(name,user1.getName());
+        assertEquals(sex,user1.getGender());
+        assertEquals(age,user1.getAge());
+        assertEquals(height,user1.getHeight());
+        assertEquals(weight,user1.getWeight());
+        assertEquals(icon,user1.getIcon());
+        assertEquals(activity,user1.getActivity());
     }
 
     //3-2   : 현재 세팅시 null로 권장 칼,탄단지가 들어가고있으므로 코드 수정 후 다시 테스트 시도할 것
@@ -144,5 +144,34 @@ public class UserServiceTest {
         assertEquals(kakaoId, user.get().getKakao());
 
     }
+    //3-3
+    @Test
+    public void 회원등록() { // 왜 안될까
+        //given
 
+        //유저 주입 : 등록시 회원 정보
+        String name = "이박사";
+        int age= 40;
+        int gender = 1;
+        String height= "165";
+        String weight= "70";
+        int activity = 40;
+        SignupRequestDto requestDto = new SignupRequestDto(name, age, gender, height, weight, activity);
+
+        //when 회원 등록 <create : 정보생성 create , signup : 온보딩 후 update>
+        User user = new User();
+        em.persist(user);
+        Long userIdx = user.getId();
+        userService.signup(userIdx,requestDto);
+        User user1 = userService.findOne(userIdx);
+
+        //then
+        assertEquals(name,user1.getName());
+        assertEquals(age,user1.getAge());
+        assertEquals(height,user1.getHeight());
+        assertEquals(weight,user1.getWeight());
+        assertEquals(activity,user1.getActivity());
+
+
+    }
 }
