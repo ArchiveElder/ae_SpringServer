@@ -37,4 +37,49 @@ public class BistroServiceTest {
         assertEquals(allBistro.stream().count(), 118);
     }
 
+    //6-1
+    @Test
+    public void 음식점중분류조회() {
+        //given 조회하려는 대분류가 주어졌을 경우
+        String wide = "서울특별시";
+
+        //when  주어진 대분류에 해당하는 중분류 조회
+        Object count = em.createQuery("select COUNT(DISTINCT(b.middle))" +
+                        " from Bistro b where b.wide = :wide group by b.wide")
+                .setParameter("wide",wide)
+                .getSingleResult();
+        List<Bistro> bistros = bistroService.getMiddle(wide);
+        //then
+        assertEquals(count, bistros.stream().count());
+    }
+
+    //6-2
+    @Test
+    public void 음식점대중분류별조회(){
+        //given 조회하려는 대분류, 중분류가 주어졌을 경우
+        String wide = "서울특별시";
+        String middle = "강남구";
+
+        //when 주어진 대, 중분류 에 해당하는 식당들 조회
+        Object listCount = em.createQuery("select COUNT(b.name)" +
+                        " from Bistro b where b.wide = :wide and b.middle = :middle")
+                .setParameter("wide",wide)
+                .setParameter("middle", middle)
+                .getSingleResult();
+        List<Bistro> categoryList = bistroService.getCategoryList(wide,middle);
+
+        Object categoryCount = em.createQuery("select COUNT(DISTINCT(b.category))" +
+                        " from Bistro b where b.wide = :wide and b.middle = :middle")
+                .setParameter("wide",wide)
+                .setParameter("middle", middle)
+                .getSingleResult();
+        List<Bistro> categoryGroup = bistroService.getCategories(wide,middle);
+
+
+        //then
+        assertEquals(listCount, categoryList.stream().count());
+        assertEquals(categoryCount, categoryGroup.stream().count());
+
+    }
+
 }
