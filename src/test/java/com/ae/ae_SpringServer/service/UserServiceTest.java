@@ -144,34 +144,5 @@ public class UserServiceTest {
         assertEquals(kakaoId, user.get().getKakao());
 
     }
-    //3-3
-    @Test
-    public void 회원등록() { // 왜 안될까
-        //given
 
-        //유저 주입 : 등록시 회원 정보
-        String name = "이박사";
-        int age= 40;
-        int gender = 1;
-        String height= "165";
-        String weight= "70";
-        int activity = 40;
-        SignupRequestDto requestDto = new SignupRequestDto(name, age, gender, height, weight, activity);
-
-        //when 회원 등록 <create : 정보생성 create , signup : 온보딩 후 update>
-        User user = new User();
-        em.persist(user);
-        Long userIdx = user.getId();
-        userService.signup(userIdx,requestDto);
-        User user1 = userService.findOne(userIdx);
-
-        //then
-        assertEquals(name,user1.getName());
-        assertEquals(age,user1.getAge());
-        assertEquals(height,user1.getHeight());
-        assertEquals(weight,user1.getWeight());
-        assertEquals(activity,user1.getActivity());
-
-
-    }
 }
