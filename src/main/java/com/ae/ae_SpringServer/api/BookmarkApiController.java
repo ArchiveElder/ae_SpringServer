@@ -10,10 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -32,7 +29,7 @@ public class BookmarkApiController {
     public CreateBookmarkResponse createBookmarkResponse(@AuthenticationPrincipal String userId,
                                                          @RequestBody @Valid BookmarkRequest request) {
         User user = userService.findOne(Long.valueOf(userId));
-        Bistro bistro = bistroService.findOne(request.id);
+        Bistro bistro = bistroService.findOne(request.bistroId);
         Bookmark bookmark = Bookmark.createBookmark(user, bistro);
         Long id = bookmarkService.create(bookmark);
 
@@ -54,6 +51,15 @@ public class BookmarkApiController {
 
     }
 
+    //7-3
+    @DeleteMapping("api/del/bookmark")
+    public CreateBookmarkResponse deleteBookmark(@AuthenticationPrincipal String userId,
+                              @RequestBody @Valid BookmarkRequest request){
+        Long bistroId = bookmarkService.deleteBookmark(Long.valueOf(userId), request.bistroId);
+        return new CreateBookmarkResponse(bistroId.intValue());
+
+    }
+
     @Data
     @AllArgsConstructor
     static class Result<T> {
@@ -64,7 +70,7 @@ public class BookmarkApiController {
     @Data
     private static class BookmarkRequest{
         @NotNull
-        private Long id;
+        private Long bistroId;
     }
     @Data
     @AllArgsConstructor

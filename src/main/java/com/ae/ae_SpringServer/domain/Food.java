@@ -16,7 +16,7 @@ public class Food {
     @GeneratedValue
     @Column(name = "food_id")
     private Long id;
-    
+
     @Column(name = "food_type")
     private String name;
 
