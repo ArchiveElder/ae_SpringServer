@@ -78,13 +78,13 @@ public class UserRepository {
         CalcRequestDto calcRequestDto = new CalcRequestDto(name, dto.getAge(), gender, dto.getHeight(), dto.getWeight(), dto.getActivity());
         CalcNutrientDtos calcNutrientDtos = CalcNutrients.calcNutrientDtos(calcRequestDto);
         em.createQuery("update User u set u.age = :age, u.height = :height, u.weight = :weight, u.activity = :activity," +
-                        "u.rcal = :calory, u.rcarb = :carb, u.rpro = :pro, u.rfat = :fat " +
+                        " u.rcal = :cal, u.rcarb = :carb, u.rpro = :pro, u.rfat = :fat " +
                 "where u.id = :id")
                 .setParameter("age", dto.getAge())
                 .setParameter("height", dto.getHeight())
                 .setParameter("weight", dto.getWeight())
                 .setParameter("activity", dto.getActivity())
-                .setParameter("calory", calcNutrientDtos.getRcal())
+                .setParameter("cal", calcNutrientDtos.getRcal())
                 .setParameter("carb", calcNutrientDtos.getRcarb())
                 .setParameter("pro", calcNutrientDtos.getRpro())
                 .setParameter("fat", calcNutrientDtos.getRfat())
