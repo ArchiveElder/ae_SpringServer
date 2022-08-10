@@ -1,6 +1,7 @@
 package com.ae.ae_SpringServer.api;
 
 import com.ae.ae_SpringServer.domain.Bistro;
+import com.ae.ae_SpringServer.dto.request.MiddleRequestDto;
 import com.ae.ae_SpringServer.service.BistroService;
 import com.ae.ae_SpringServer.service.BookmarkService;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class BistroApiController {
 
     //6-1
     @PostMapping("/api/bistromiddle")
-    public Result middle(@AuthenticationPrincipal String userId, @RequestBody @Valid MiddleRequest request) {
+    public Result middle(@AuthenticationPrincipal String userId, @RequestBody @Valid MiddleRequestDto request) {
         List<Bistro> bistros = bistroService.getMiddle(request.getWide());
         List<String> middles = new ArrayList<>();
 
@@ -82,13 +83,7 @@ public class BistroApiController {
     static class Result<T> {
         private T data;
     }
-
-    @Data
-    private static class MiddleRequest {
-        @NotNull
-        private String wide;
-    }
-
+    
     @Data
     private static class CategoryRequest {
         @NotNull

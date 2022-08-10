@@ -6,12 +6,11 @@ import com.ae.ae_SpringServer.dto.KakaoProfile;
 import com.ae.ae_SpringServer.dto.SignupRequestDto;
 import com.ae.ae_SpringServer.dto.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
+import com.ae.ae_SpringServer.dto.response.UserInfoResponseDto;
 import com.ae.ae_SpringServer.service.UserService;
 import com.nimbusds.jose.shaded.json.JSONObject;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
@@ -41,7 +39,7 @@ public class UserApiController {
 
     // 로그인 시에, kakaoprofile로 받은 정보가 db에 있으면 jwt 토큰 발급(status코드는 온보딩 안띄우게). db에 없으면 new user로 저장시키고 jwt 토큰발급(온보딩 띄우게)
     @PostMapping("/api/login")
-    public LoginDto loginByKakao(
+    public LoginResponseDto loginByKakao(
             @RequestBody UserSocialLoginRequestDto socialLoginRequestDto) {
         String token = socialLoginRequestDto.getAccessToken();
         // KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(token);
@@ -74,11 +72,11 @@ public class UserApiController {
         boolean isEmpty = user.isEmpty();
         System.out.println(isEmpty);
         if(!isEmpty) {
-            return new LoginDto(user.get().getId(), jwtProvider.createToken(user.get()), false);
+            return new LoginResponseDto(user.get().getId(), jwtProvider.createToken(user.get()), false);
         } else {
             User u = User.createUser(id);
             userService.create(u);
-            return new LoginDto(u.getId(), jwtProvider.createToken(u), true);
+            return new LoginResponseDto(u.getId(), jwtProvider.createToken(u), true);
         }
     }
 
@@ -89,9 +87,9 @@ public class UserApiController {
     }
 
     @GetMapping("/api/userinfo")
-    public UserInfoDto info(@AuthenticationPrincipal String userId) {
+    public UserInfoResponseDto info(@AuthenticationPrincipal String userId) {
         User user = userService.findOne(Long.valueOf(userId));
-        return new UserInfoDto(user.getName(), user.getGender(), user.getAge(), user.getHeight(), user.getWeight(), user.getIcon(), user.getActivity());
+        return new UserInfoResponseDto(user.getName(), user.getGender(), user.getAge(), user.getHeight(), user.getWeight(), user.getIcon(), user.getActivity());
     }
 
     @PutMapping("/api/userupdate")
@@ -111,36 +109,6 @@ public class UserApiController {
     }
      */
 
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        private T data;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class LoginDto {
-        @NotNull
-        private Long userId;
-        @NotNull
-        private String token;
-        @NotNull
-        private boolean isSignup; // 온보딩 띄워야 하는 여부 (true가 띄워야함)
-    }
-
-
-
-    @Data
-    @AllArgsConstructor
-    static class UserInfoDto {
-        private String name;
-        private int gender;
-        private int age;
-        private String height;
-        private String weight;
-        private int icon;
-        private int activity;
-    }
 
 
 
