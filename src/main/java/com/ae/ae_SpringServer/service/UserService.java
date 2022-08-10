@@ -17,15 +17,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public User findOne(Long id) {
         return userRepository.findOne(id);
-    }
-    void updateSome(Long id, Record record) { userRepository.updateSome(id, record); }
-
-    public int findBadge(Long id) {
-        return userRepository.findBadge(id);
     }
 
     public void create(User user) {
