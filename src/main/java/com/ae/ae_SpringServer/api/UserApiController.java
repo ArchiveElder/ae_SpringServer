@@ -111,13 +111,6 @@ public class UserApiController {
     }
      */
 
-    @GetMapping("/api/userbadge")
-    public Result userBadge() {
-        Long id = Long.valueOf(0);
-        int num = userService.findBadge(id);
-        return new Result(num);
-    }
-
     @Data
     @AllArgsConstructor
     static class Result<T> {
