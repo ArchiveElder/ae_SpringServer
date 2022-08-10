@@ -1,12 +1,10 @@
 package com.ae.ae_SpringServer.service;
 
-import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
-import com.ae.ae_SpringServer.dto.SignupRequestDto;
-import com.ae.ae_SpringServer.dto.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
+import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

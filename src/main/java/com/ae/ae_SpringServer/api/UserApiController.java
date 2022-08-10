@@ -2,10 +2,9 @@ package com.ae.ae_SpringServer.api;
 
 import com.ae.ae_SpringServer.config.security.JwtProvider;
 import com.ae.ae_SpringServer.domain.User;
-import com.ae.ae_SpringServer.dto.KakaoProfile;
-import com.ae.ae_SpringServer.dto.SignupRequestDto;
-import com.ae.ae_SpringServer.dto.UserSocialLoginRequestDto;
-import com.ae.ae_SpringServer.dto.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
+import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
+import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.dto.response.UserInfoResponseDto;
 import com.ae.ae_SpringServer.service.UserService;
