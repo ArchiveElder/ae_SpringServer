@@ -1,16 +1,13 @@
 package com.ae.ae_SpringServer.repository;
 
-import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.CalcNutrientDtos;
-import com.ae.ae_SpringServer.dto.CalcRequestDto;
-import com.ae.ae_SpringServer.dto.SignupRequestDto;
-import com.ae.ae_SpringServer.dto.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.request.CalcRequestDto;
+import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
+import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.utils.CalcNutrients;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.time.LocalDate;

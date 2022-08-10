@@ -1,8 +1,7 @@
 package com.ae.ae_SpringServer.utils;
 
 import com.ae.ae_SpringServer.dto.CalcNutrientDtos;
-import com.ae.ae_SpringServer.dto.CalcRequestDto;
-import com.ae.ae_SpringServer.dto.SignupRequestDto;
+import com.ae.ae_SpringServer.dto.request.CalcRequestDto;
 
 
 public class CalcNutrients {

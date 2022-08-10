@@ -2,7 +2,7 @@ package com.ae.ae_SpringServer.service;
 
 import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
-import com.ae.ae_SpringServer.dto.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.repository.RecordRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
