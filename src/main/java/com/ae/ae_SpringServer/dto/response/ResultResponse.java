@@ -1,4 +1,4 @@
-package com.ae.ae_SpringServer.api;
+package com.ae.ae_SpringServer.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

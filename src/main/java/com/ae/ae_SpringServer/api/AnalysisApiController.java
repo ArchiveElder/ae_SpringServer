@@ -1,6 +1,8 @@
 package com.ae.ae_SpringServer.api;
 
 import com.ae.ae_SpringServer.domain.Record;
+import com.ae.ae_SpringServer.dto.response.AnalysisDto;
+import com.ae.ae_SpringServer.dto.response.AnalysisResponseDto;
 import com.ae.ae_SpringServer.jpql.DateAnalysisDto;
 import com.ae.ae_SpringServer.service.AnalysisService;
 import com.ae.ae_SpringServer.service.RecordService;
@@ -22,13 +24,11 @@ import static java.util.stream.Collectors.toList;
 @RestController
 @RequiredArgsConstructor
 public class AnalysisApiController {
-    private final RecordService recordService;
-    private final UserService userService;
     private final AnalysisService analysisService;
 
     //5-1
     @GetMapping("api/analysis")
-    public AnalysisResponse analysisResponse(@AuthenticationPrincipal String userId) {
+    public AnalysisResponseDto analysisResponse(@AuthenticationPrincipal String userId) {
         int status = 0;
         int ratioCarb, ratioPro, ratioFat, totalCarb, totalPro, totalFat;
         ratioCarb = ratioPro = ratioFat = totalCarb = totalPro = totalFat = 0;
@@ -49,31 +49,10 @@ public class AnalysisApiController {
            ratioCarb = totalCarb * 100 / sum;
            ratioPro = totalPro * 100 / sum;
            ratioFat = totalFat * 100 / sum;
-           return new AnalysisResponse(status, ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, collect);
+           return new AnalysisResponseDto(status, ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, collect);
        }
        //비정상 로직 status = 0
-       else { return new AnalysisResponse(status,ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, null);}
+       else { return new AnalysisResponseDto(status,ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, null);}
 
-    }
-
-    @Data
-    @AllArgsConstructor
-    private class AnalysisResponse {    //7일간 섭취 영양소 비율, 총량, [날짜별 총칼로리]
-        @NotNull
-        private int status;         //정상 로직이면 1, 비정상이면 0
-        private int ratioCarb;
-        private int ratioPro;
-        private int ratioFat;
-        private int totalCarb;
-        private int totalPro;
-        private int totalFat;
-        private List<AnalysisDto> analysisDtos;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class AnalysisDto {  //날짜별 날짜와 하루총칼로리
-        private String date;
-        private int totalCal;
     }
 }
