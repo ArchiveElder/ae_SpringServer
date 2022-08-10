@@ -1,8 +1,10 @@
 package com.ae.ae_SpringServer.api;
 
 import com.ae.ae_SpringServer.domain.Food;
+import com.ae.ae_SpringServer.dto.response.FoodResponseDto;
+import com.ae.ae_SpringServer.dto.response.FoodTypeResponseDto;
+import com.ae.ae_SpringServer.dto.response.ResResponse;
 import com.ae.ae_SpringServer.service.FoodService;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,51 +26,23 @@ public class FoodApiController {
 
     //2-1
     @GetMapping("/api/foodname")
-    public Result foods(@AuthenticationPrincipal String userId) {
+    public ResResponse foods(@AuthenticationPrincipal String userId) {
         List<Food> findFoods = foodService.findAllFoods();
-        List<FoodTypeDto> collect = findFoods.stream()
-                .map(m -> new FoodTypeDto(m.getId(), m.getName()))
+        List<FoodTypeResponseDto> collect = findFoods.stream()
+                .map(m -> new FoodTypeResponseDto(m.getId(), m.getName()))
                 .collect(toList());
-        return new Result(collect.size(), collect);
+        return new ResResponse(collect.size(), collect);
 
 
     }
     //2-2
     @PostMapping("/api/food")
-    public Result foodResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateFoodRequest request){
+    public ResResponse foodResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateFoodRequest request){
         List<Food> findFood = foodService.findFood(request.id);
-        List<FoodDto> collect = findFood.stream()
-                .map(m -> new FoodDto(m.getName(), m.getCapacity(), m.getCalory(), m.getCarb(), m.getPro(), m.getFat()))
+        List<FoodResponseDto> collect = findFood.stream()
+                .map(m -> new FoodResponseDto(m.getName(), m.getCapacity(), m.getCalory(), m.getCarb(), m.getPro(), m.getFat()))
                 .collect(toList());
-        return new Result(collect.size(), collect);
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        private Integer count;
-        private T data;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class FoodTypeDto {
-        @NotNull
-        private Long id;
-        @NotNull
-        private String name;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class FoodDto {
-        @NotNull
-        private String name;
-        private int capacity;
-        private double calory;
-        private double carb;
-        private double pro;
-        private double fat;
+        return new ResResponse(collect.size(), collect);
     }
 
     @Data

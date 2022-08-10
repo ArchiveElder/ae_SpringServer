@@ -2,12 +2,10 @@ package com.ae.ae_SpringServer.api;
 
 import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
+import com.ae.ae_SpringServer.dto.response.*;
 import com.ae.ae_SpringServer.service.RecordService;
 import com.ae.ae_SpringServer.service.UserService;
 import com.ae.ae_SpringServer.aws.S3Uploader;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.springframework.http.MediaType.TEXT_PLAIN;
 
 @RestController
 @RequiredArgsConstructor
@@ -34,17 +30,17 @@ public class RecordApiController {
 
         //1-1
     @PostMapping(value = "/api/record", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public CreateRecordResponse createRecord(@AuthenticationPrincipal String userId,
-                                             @RequestParam (value = "image", required = false) MultipartFile multipartFile,
-                                             @RequestParam (value = "text", required = true) String text,
-                                             @RequestParam (value = "calory", required = false) String calory,
-                                             @RequestParam (value = "carb", required = false) String carb,
-                                             @RequestParam (value = "protein", required = false) String protein,
-                                             @RequestParam (value = "fat", required = false) String fat,
-                                             @RequestParam (value = "rdate", required = true) String rdate,
-                                             @RequestParam (value = "rtime", required = true) String rtime,
-                                             @RequestParam (value = "amount", required = false) Double amount,
-                                             @RequestParam (value = "meal", required = true) int meal
+    public RecordResponseDto createRecord(@AuthenticationPrincipal String userId,
+                                          @RequestParam (value = "image", required = false) MultipartFile multipartFile,
+                                          @RequestParam (value = "text", required = true) String text,
+                                          @RequestParam (value = "calory", required = false) String calory,
+                                          @RequestParam (value = "carb", required = false) String carb,
+                                          @RequestParam (value = "protein", required = false) String protein,
+                                          @RequestParam (value = "fat", required = false) String fat,
+                                          @RequestParam (value = "rdate", required = true) String rdate,
+                                          @RequestParam (value = "rtime", required = true) String rtime,
+                                          @RequestParam (value = "amount", required = false) Double amount,
+                                          @RequestParam (value = "meal", required = true) int meal
                                              ) throws IOException {
         User user = userService.findOne(Long.valueOf(userId));
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
@@ -56,13 +52,13 @@ public class RecordApiController {
                 rdate, rtime, amount, meal, user);
         id = recordService.record(record);
 
-        return new CreateRecordResponse(id.intValue());
+        return new RecordResponseDto(id.intValue());
     }
 
     //1-2
     @PostMapping("/api/daterecord")
-    public DateRecordResponse dateRecords(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateDateRequest request) {
-        List<Record> findRecords = recordService.findDateRecords(Long.valueOf(userId), request.date);
+    public DateRecordResponseDto dateRecords(@AuthenticationPrincipal String userId, @RequestBody @Valid DateRecordRequestDto request) {
+        List<Record> findRecords = recordService.findDateRecords(Long.valueOf(userId), request.getDate());
         List<DateRecordDto> bRecords = new ArrayList<DateRecordDto>();
         List<DateRecordDto> lRecords = new ArrayList<DateRecordDto>();
         List<DateRecordDto> dRecords = new ArrayList<DateRecordDto>();
@@ -95,7 +91,7 @@ public class RecordApiController {
         records.add(b); records.add(l); records.add(d);
 
         User user = userService.findOne(Long.valueOf(userId));
-        return new DateRecordResponse(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
+        return new DateRecordResponseDto(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
                 (int) Math.round(Double.parseDouble(user.getRcal())), Integer.parseInt(user.getRcarb()), Integer.parseInt(user.getRpro()),
                 (int) Math.round(Double.parseDouble(user.getRfat())),
                 records);
@@ -103,94 +99,14 @@ public class RecordApiController {
 
     //1-3
     @PostMapping("api/detailrecord")
-    public Result recordResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateDetailRecordRequest request) {
-        List<Record> findDetailRecord = recordService.findDetailOne(Long.valueOf(userId), Long.valueOf(request.record_id));
+    public ResultResponse recordResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid DetailRecordRequestDto request) {
+        List<Record> findDetailRecord = recordService.findDetailOne(Long.valueOf(userId), Long.valueOf(request.getRecord_id()));
 
-        List<DetailRecordDto> collect = findDetailRecord.stream()
-                .map(m -> new DetailRecordDto(m.getText(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(), m.getImage_url(), m.getDate(), m.getTime(), m.getAmount()))
+        List<DetailRecordResponseDto> collect = findDetailRecord.stream()
+                .map(m -> new DetailRecordResponseDto(m.getText(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(), m.getImage_url(), m.getDate(), m.getTime(), m.getAmount()))
                 .collect(toList());
-        return new Result(collect);
+        return new ResultResponse(collect);
 
     }
-    
-    @Data
-    private static class CreateDateRequest {
-        @NotNull
-        private String date;
-    }
-
-    @Data
-    private static class CreateDetailRecordRequest {
-        @NotNull
-        private int record_id;
-
-    }
-
-    @Data
-    @AllArgsConstructor
-    private static class CreateRecordResponse {
-        @NotNull
-        private int id;
-    }
-
-    @Data
-    @AllArgsConstructor
-    private static class DateRecordResponse {
-        private int totalCalory;
-        private int totalCarb;
-        private int totalPro;
-        private int totalFat;
-        private int recommCalory;
-        private int recommCarb;
-        private int recommPro;
-        private int recommFat;
-        private List<RecordsDto> records;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        //private Integer count;
-        private T data;
-    }
-
-
-    @Data
-    @AllArgsConstructor
-    static class RecordsDto {
-        private int meal; // 아침, 점심, 저녁 구분
-        private int mCal; // 한끼니의 총 칼로리
-        private List<DateRecordDto> record; // 한끼니의 총 식단
-   }
-
-   @Data
-   @AllArgsConstructor
-   static class DateRecordDto {
-       private int record_id;
-       private String text;
-       private String date;
-       private String calory;
-       private String carb;
-       private String protein;
-       private String fat;
-       private String rdate;
-       private String rtime;
-       private Double amount;
-    }
-
-    @Data
-    @AllArgsConstructor
-    static class DetailRecordDto {
-        private String text;
-        private String cal;
-        private String carb;
-        private String protein;
-        private String fat;
-        private String image_url;
-        private String date;
-        private String time;
-        private Double amount;
-    }
-
 
 }
