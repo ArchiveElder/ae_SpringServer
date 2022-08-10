@@ -3,6 +3,9 @@ package com.ae.ae_SpringServer.api;
 import com.ae.ae_SpringServer.domain.Bistro;
 import com.ae.ae_SpringServer.domain.Bookmark;
 import com.ae.ae_SpringServer.domain.User;
+import com.ae.ae_SpringServer.dto.request.BookmarkRequestDto;
+import com.ae.ae_SpringServer.dto.response.CreateBookmarkResponseDto;
+import com.ae.ae_SpringServer.dto.response.RestaurantResponseDto;
 import com.ae.ae_SpringServer.service.BistroService;
 import com.ae.ae_SpringServer.service.BookmarkService;
 import com.ae.ae_SpringServer.service.UserService;
@@ -26,24 +29,24 @@ public class BookmarkApiController {
 
     //7-1
     @PostMapping("api/bookmark")
-    public CreateBookmarkResponse createBookmarkResponse(@AuthenticationPrincipal String userId,
-                                                         @RequestBody @Valid BookmarkRequest request) {
+    public CreateBookmarkResponseDto createBookmarkResponse(@AuthenticationPrincipal String userId,
+                                                         @RequestBody @Valid BookmarkRequestDto request) {
         User user = userService.findOne(Long.valueOf(userId));
-        Bistro bistro = bistroService.findOne(request.bistroId);
+        Bistro bistro = bistroService.findOne(request.getBistroId());
         Bookmark bookmark = Bookmark.createBookmark(user, bistro);
         Long id = bookmarkService.create(bookmark);
 
-        return new CreateBookmarkResponse(id.intValue());
+        return new CreateBookmarkResponseDto(id.intValue());
     }
 
     //7-2
     @GetMapping("api/bookmarklist")
     public Result bookmarkList(@AuthenticationPrincipal String userId) {
         List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
-        List<RestaurantDto> restaurantDtos = new ArrayList<>();
+        List<RestaurantResponseDto> restaurantDtos = new ArrayList<>();
 
         for(Bistro bistro: restaurant) {
-            restaurantDtos.add(new RestaurantDto(bistro.getCategory(), bistro.getName(),
+            restaurantDtos.add(new RestaurantResponseDto(bistro.getCategory(), bistro.getName(),
                     bistro.getRAddr(), bistro.getLAddr(),
                     bistro.getTel(), bistro.getLa(), bistro.getLo()));
         }
@@ -53,10 +56,10 @@ public class BookmarkApiController {
 
     //7-3
     @DeleteMapping("api/del/bookmark")
-    public CreateBookmarkResponse deleteBookmark(@AuthenticationPrincipal String userId,
-                              @RequestBody @Valid BookmarkRequest request){
-        Long bistroId = bookmarkService.deleteBookmark(Long.valueOf(userId), request.bistroId);
-        return new CreateBookmarkResponse(bistroId.intValue());
+    public CreateBookmarkResponseDto deleteBookmark(@AuthenticationPrincipal String userId,
+                              @RequestBody @Valid BookmarkRequestDto request){
+        Long bistroId = bookmarkService.deleteBookmark(Long.valueOf(userId), request.getBistroId());
+        return new CreateBookmarkResponseDto(bistroId.intValue());
 
     }
 
@@ -65,34 +68,6 @@ public class BookmarkApiController {
     static class Result<T> {
         private Integer count;
         private T data;
-    }
-
-    @Data
-    private static class BookmarkRequest{
-        @NotNull
-        private Long bistroId;
-    }
-    @Data
-    @AllArgsConstructor
-    private static class CreateBookmarkResponse {
-        @NotNull
-        private int id;
-    }
-
-    @Data
-    @AllArgsConstructor
-    private static class RestaurantDto {
-        private String category;
-        @NotNull
-        private String name;
-        private String roadAddr;
-        private String lnmAddr;
-        private String telNo;
-        @NotNull
-        private String la;
-        @NotNull
-        private String lo;
-
     }
 
 }
