@@ -2,6 +2,8 @@ package com.ae.ae_SpringServer.api;
 
 import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
+import com.ae.ae_SpringServer.dto.request.DateRecordRequestDto;
+import com.ae.ae_SpringServer.dto.request.DetailRecordRequestDto;
 import com.ae.ae_SpringServer.dto.response.*;
 import com.ae.ae_SpringServer.service.RecordService;
 import com.ae.ae_SpringServer.service.UserService;

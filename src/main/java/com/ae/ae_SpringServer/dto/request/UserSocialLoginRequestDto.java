@@ -1,4 +1,4 @@
-package com.ae.ae_SpringServer.dto;
+package com.ae.ae_SpringServer.dto.request;
 
 import lombok.*;
 

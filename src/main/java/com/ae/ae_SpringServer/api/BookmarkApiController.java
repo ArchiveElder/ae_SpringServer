@@ -5,6 +5,7 @@ import com.ae.ae_SpringServer.domain.Bookmark;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.BookmarkRequestDto;
 import com.ae.ae_SpringServer.dto.response.CreateBookmarkResponseDto;
+import com.ae.ae_SpringServer.dto.response.ResResponse;
 import com.ae.ae_SpringServer.dto.response.RestaurantResponseDto;
 import com.ae.ae_SpringServer.service.BistroService;
 import com.ae.ae_SpringServer.service.BookmarkService;
@@ -41,7 +42,7 @@ public class BookmarkApiController {
 
     //7-2
     @GetMapping("api/bookmarklist")
-    public Result bookmarkList(@AuthenticationPrincipal String userId) {
+    public ResResponse bookmarkList(@AuthenticationPrincipal String userId) {
         List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
         List<RestaurantResponseDto> restaurantDtos = new ArrayList<>();
 
@@ -50,7 +51,7 @@ public class BookmarkApiController {
                     bistro.getRAddr(), bistro.getLAddr(),
                     bistro.getTel(), bistro.getLa(), bistro.getLo()));
         }
-        return new Result(restaurantDtos.size(), restaurantDtos);
+        return new ResResponse(restaurantDtos.size(), restaurantDtos);
 
     }
 
@@ -63,11 +64,6 @@ public class BookmarkApiController {
 
     }
 
-    @Data
-    @AllArgsConstructor
-    static class Result<T> {
-        private Integer count;
-        private T data;
-    }
+
 
 }
