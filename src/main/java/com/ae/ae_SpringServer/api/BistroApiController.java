@@ -46,12 +46,19 @@ public class BistroApiController {
     public CategoryListResponseDto categories(@AuthenticationPrincipal String userId, @RequestBody @Valid CategoryRequestDto request) {
         List<Bistro> categoryList = bistroService.getCategoryList(request.getWide(), request.getMiddle());
         List<Bistro> categoryGroup = bistroService.getCategories(request.getWide(), request.getMiddle());
+        List<Bistro> bookmark = bookmarkService.findBookmark(Long.valueOf(userId));
 
         List<CategoryListDto> listDtos = new ArrayList<>();
         List<String> categories = new ArrayList<>();
 
         for(Bistro bistro : categoryList) {
-            listDtos.add(new CategoryListDto(bistro.getCategory(), bistro.getName(), bistro.getRAddr(), bistro.getLAddr(), bistro.getTel()));
+            int isBookmark;
+            if(bookmark.indexOf(bistro) != -1) {
+                isBookmark = 1;
+            } else {
+                isBookmark = 0;
+            }
+            listDtos.add(new CategoryListDto(isBookmark, bistro.getCategory(), bistro.getName(), bistro.getRAddr(), bistro.getLAddr(), bistro.getTel()));
         }
 
         for(Bistro bistro : categoryGroup) {
