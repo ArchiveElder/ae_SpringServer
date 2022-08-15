@@ -37,7 +37,7 @@ public class RecordRepository {
     //7개의 기록된 날짜의 날짜별 총열량, 총영양소
     public List<DateAnalysisDto> analysisDate(Long id) {
         String sql = "SELECT r.record_date, SUM(r.cal), SUM(r.carb), SUM(r.protein), SUM(r.fat)" +
-                " FROM record r JOIN user u WHERE r.user_user_id = :user_id" +
+                " FROM record r JOIN user u ON r.user_user_id = u.user_id WHERE r.user_user_id = :user_id" +
                 " and r.record_date != :date" +
                 " GROUP BY r.record_date ORDER BY r.record_date DESC LIMIT 7";
         //NativeQuery로 직접 날림
