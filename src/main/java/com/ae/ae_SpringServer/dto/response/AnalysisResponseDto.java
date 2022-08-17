@@ -10,6 +10,11 @@ import java.util.List;
 public class AnalysisResponseDto {
     @NotNull
     private int status;         //정상 로직이면 1, 비정상이면 0
+    private String todayDate;
+    private String rcal;
+    private String rcarb;
+    private String rpro;
+    private String rfat;
     private int ratioCarb;
     private int ratioPro;
     private int ratioFat;
