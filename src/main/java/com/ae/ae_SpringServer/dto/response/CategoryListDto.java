@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 public class CategoryListDto {
+    private int bistroId;
     private int isBookmark;
     private String category;
     @NotNull
