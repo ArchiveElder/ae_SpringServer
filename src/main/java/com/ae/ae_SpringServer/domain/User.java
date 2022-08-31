@@ -25,6 +25,7 @@ public class User {
     private String height;
     private String weight;
     private String kakao;
+    private String apple;
     private int icon;
     private int activity;
 
@@ -48,6 +49,11 @@ public class User {
     public static User createUser(String kakao) {
         User user = new User();
         user.setKakao(kakao);
+        return user;
+    }
+    public static User createAppleUser(String apple){
+        User user = new User();
+        user.setApple(apple);
         return user;
     }
 }
