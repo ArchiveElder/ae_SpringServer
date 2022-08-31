@@ -5,6 +5,7 @@ import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.dto.response.UserInfoResponseDto;
 import com.ae.ae_SpringServer.service.UserService;
@@ -77,6 +78,13 @@ public class UserApiController {
             userService.create(u);
             return new LoginResponseDto(u.getId(), jwtProvider.createToken(u), true);
         }
+    }
+
+    //[POST] 4-2 : 애플로그인 api
+    @PostMapping("/api/apple-login")
+    public LoginResponseDto loginByApple(@RequestBody UserSocialLoginRequestDto socialLoginRequestDto){
+        return userService.login(socialLoginRequestDto);
+
     }
 
     @PostMapping("/api/signup")

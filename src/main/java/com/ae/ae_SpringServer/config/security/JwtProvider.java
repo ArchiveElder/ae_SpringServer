@@ -2,22 +2,29 @@ package com.ae.ae_SpringServer.config.security;
 
 import com.ae.ae_SpringServer.domain.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Component
 public class JwtProvider {
-    @Value("spring.jwt.secret")
+    @Value("spring.jwt.secretakjhfluwehlfsdfbuawegfdvhsfvawgrywiehsrjfbsauaweiruhawusdhfvwhsvdfalsdfh")
     private String secretKey;
 
     private Long tokenValidMillisecond = 60 * 60 * 1000L;
@@ -42,7 +49,6 @@ public class JwtProvider {
                 .setExpiration(expiryDate)
                 .compact();
     }
-
     // Token 내용을 뜯어서 id 얻기
     public String validateAndGetUserId(String token) {
         // parseClaimsJws 메서드가 base64로 디코딩 및 파싱
