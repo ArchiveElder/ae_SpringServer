@@ -2,27 +2,43 @@ package com.ae.ae_SpringServer.config.security;
 
 import com.ae.ae_SpringServer.domain.User;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Map;
+import java.util.Random;
 
 @RequiredArgsConstructor
 @Component
 public class JwtProvider {
-    @Value("spring.jwt.secret")
+    @Value("spring.jwt.secretakjhfluwehlfsdfbuawegfdvhsfvawgrywiehsrjfbsauaweiruhawusdhfvwhsvdfalsdfh")
     private String secretKey;
 
     private Long tokenValidMillisecond = 60 * 60 * 1000L;
 
     //private final CustomUserDetailsService userDetailsService;
+    private static final Map<String, String> SECRET_KEY_SET = Map.of(
+            "key1", "aefsdfakjhfluwehlfsdfbuawegfdvhsfvawgrywiehsrjfbsauaweiruhawusdhfvwhsvdfalsdfh",
+            "key2", "werwsdfzxchaebbiakjhfluwehlfsdfbuawegfdvhsfvawgrywiehsrjfbsauaweiruhawusdhfvwhsvdfalsdfh",
+            "key3", "werwscbdcvcakjhfluwehlfsdfbuawegfdvhsfvawgrywiehsrjfbsauaweiruhawusdhfvwhsvdfalsdfh"
+    );
+    private static final String[] KID_SET = SECRET_KEY_SET.keySet().toArray(new String[0]);
+    private static Random randomIndex = new Random();
+    private static Date expiryDate = Date.from(Instant.now().plus(90, ChronoUnit.DAYS));
+
 
     @PostConstruct
     protected void init() {
@@ -41,6 +57,38 @@ public class JwtProvider {
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .compact();
+    }
+
+    public static String createAccessToken(User user) {
+        Claims claims = Jwts.claims().setSubject(user.getId().toString());
+        Date now = new Date();
+        Pair<String, Key> key = getRandomKey();
+        // Token 생성
+        return Jwts.builder()
+                .setClaims(claims) // 정보 저장
+                .setIssuedAt(now) // 토큰 발행 시간 정보
+                .setExpiration(expiryDate) // 토큰 만료 시간 설정
+                .setHeaderParam(JwsHeader.KEY_ID, key.getFirst()) //kid
+                .signWith(SignatureAlgorithm.HS256, key.getSecond()) // signature
+                .compact();
+    }
+    public static String createRefreshToken(User user) {
+        Claims claims = Jwts.claims().setSubject(user.getId().toString());
+        Date now = new Date();
+        Pair<String, Key> key = getRandomKey();
+        // Token 생성
+        return Jwts.builder()
+                .setClaims(claims) // 정보 저장
+                .setIssuedAt(now) // 토큰 발행 시간 정보
+                .setExpiration(expiryDate) // 토큰 만료 시간 설정
+                .setHeaderParam(JwsHeader.KEY_ID, key.getFirst()) // kid
+                .signWith(SignatureAlgorithm.HS256, key.getSecond()) // signature
+                .compact();
+    }
+    public static Pair<String, Key> getRandomKey() {
+        String kid = KID_SET[randomIndex.nextInt(KID_SET.length)];
+        String secretKey = SECRET_KEY_SET.get(kid);
+        return Pair.of(kid, Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)));
     }
 
     // Token 내용을 뜯어서 id 얻기
