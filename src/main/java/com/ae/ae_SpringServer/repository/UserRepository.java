@@ -88,4 +88,11 @@ public class UserRepository {
                 .setParameter("id", id)
                 .executeUpdate();
     }
+
+    public Optional<User> findByApple(String appleId) {
+        List<User> user = em.createQuery("select u from User u where u.apple = :apple", User.class)
+                .setParameter("apple", appleId)
+                .getResultList();
+        return user.stream().findAny();
+    }
 }
