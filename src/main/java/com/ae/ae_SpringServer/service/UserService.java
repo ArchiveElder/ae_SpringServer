@@ -68,20 +68,14 @@ public class UserService {
         boolean isEmpty = user.isEmpty();
         // 로그인
         if(!isEmpty) {
-            //Pair<String, String> tokens = getTokens(user.get());
-            //return new AppleLoginResponse(user.get().getId(), tokens.getFirst(), tokens.getSecond(), jwtProvider.createToken(user.get()), true);
             return new LoginResponseDto(user.get().getId(),jwtProvider.createToken(user.get()), true);
         }
         // 회원가입
         else {
             User u = User.createAppleUser(appleId);
             create(u);
-            //Pair<String, String> tokens = getTokens(u);
-            //return new AppleLoginResponse(u.getId(), tokens.getFirst(), tokens.getSecond(), jwtProvider.createToken(u), false);
             return new LoginResponseDto(u.getId(), jwtProvider.createToken(u), false);
         }
-
-
     }
 
     // 엑세스 토큰으로 apple 고유 ID "sub" 추출
