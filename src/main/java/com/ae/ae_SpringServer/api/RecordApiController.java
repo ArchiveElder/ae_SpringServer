@@ -47,11 +47,17 @@ public class RecordApiController {
         User user = userService.findOne(Long.valueOf(userId));
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
         //S3 Bucket upload
-        String img_url = s3Uploader.upload(multipartFile, "static");
+        String img_url =  "empty";
+        if(multipartFile != null) {
+            if(!multipartFile.isEmpty()) {
+                img_url = s3Uploader.upload(multipartFile, "static");
+            }
+        }
 
         Long id = null;
         Record record = Record.createRecord(img_url, text, date, calory, carb, protein, fat,
                 rdate, rtime, amount, meal, user);
+
         id = recordService.record(record);
 
         return new RecordResponseDto(id.intValue());
