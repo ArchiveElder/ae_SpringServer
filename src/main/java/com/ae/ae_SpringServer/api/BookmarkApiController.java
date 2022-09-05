@@ -20,6 +20,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,6 +34,13 @@ public class BookmarkApiController {
     public CreateBookmarkResponseDto createBookmarkResponse(@AuthenticationPrincipal String userId,
                                                          @RequestBody @Valid BookmarkRequestDto request) {
         User user = userService.findOne(Long.valueOf(userId));
+        List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
+        List<Long> restaurantId = restaurant.stream().map(Bistro::getId).collect(Collectors.toList());
+        Long count = restaurantId.stream().filter(m-> request.getBistroId().equals(m)).count();
+        if(count > 0 ){
+            Long i = bookmarkService.findBookmarkId(Long.valueOf(userId), request.getBistroId());
+            return new CreateBookmarkResponseDto(i.intValue());
+        }
         Bistro bistro = bistroService.findOne(request.getBistroId());
         Bookmark bookmark = Bookmark.createBookmark(user, bistro);
         Long id = bookmarkService.create(bookmark);

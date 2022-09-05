@@ -49,4 +49,7 @@ public class BookmarkService {
         return 0L;
     }
 
+    public Long findBookmarkId(Long userId, Long bistroId) {
+        return bookmarkRepository.findBookmarkById(userId, bistroId);
+    }
 }
