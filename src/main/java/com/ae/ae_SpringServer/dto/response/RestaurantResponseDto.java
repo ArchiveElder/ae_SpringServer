@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
 public class RestaurantResponseDto {
+    private int bistroId;
     private String category;
     @NotNull
     private String name;
