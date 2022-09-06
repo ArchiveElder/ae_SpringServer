@@ -68,13 +68,13 @@ public class UserService {
         boolean isEmpty = user.isEmpty();
         // 로그인
         if(!isEmpty) {
-            return new LoginResponseDto(user.get().getId(),jwtProvider.createToken(user.get()), true);
+            return new LoginResponseDto(user.get().getId(),jwtProvider.createToken(user.get()), false);
         }
         // 회원가입
         else {
             User u = User.createAppleUser(appleId);
             create(u);
-            return new LoginResponseDto(u.getId(), jwtProvider.createToken(u), false);
+            return new LoginResponseDto(u.getId(), jwtProvider.createToken(u), true);
         }
     }
 
