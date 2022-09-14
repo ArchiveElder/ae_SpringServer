@@ -53,12 +53,14 @@ public class AnalysisApiController {
            ratioPro = totalPro * 100 / sum;
            ratioFat = totalFat * 100 / sum;
            return new AnalysisResponseDto(status, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd.")),
-                   user.getRcal(), user.getRcarb(), user.getRpro(), user.getRfat(),
+                   String.valueOf((int) Math.round(Double.parseDouble(user.getRcal()))), String.valueOf((int) Math.round(Double.parseDouble(user.getRcarb()))),
+                   String.valueOf((int) Math.round(Double.parseDouble(user.getRpro()))), String.valueOf((int) Math.round(Double.parseDouble(user.getRfat()))),
                    ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, collect);
        }
        //비정상 로직 status = 0
        else { return new AnalysisResponseDto(status,LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd.")),
-                user.getRcal(), user.getRcarb(), user.getRpro(), user.getRfat(),
+                String.valueOf((int) Math.round(Double.parseDouble(user.getRcal()))), String.valueOf((int) Math.round(Double.parseDouble(user.getRcarb()))),
+                String.valueOf((int) Math.round(Double.parseDouble(user.getRpro()))), String.valueOf((int) Math.round(Double.parseDouble(user.getRfat()))),
                 ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, null);}
 
     }
