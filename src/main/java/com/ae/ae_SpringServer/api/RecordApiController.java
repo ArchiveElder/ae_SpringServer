@@ -1,5 +1,6 @@
 package com.ae.ae_SpringServer.api;
 
+import com.ae.ae_SpringServer.config.BaseException;
 import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
@@ -216,13 +217,21 @@ public class RecordApiController {
 
     //1-3
     @PostMapping("api/detailrecord")
-    public ResultResponse recordResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid DetailRecordRequestDto request) {
+    public BaseResponse<ResultResponse> recordResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid DetailRecordRequestDto request) throws BaseException {
+        if(userId == null) {
+            return new BaseResponse<>(EMPTY_JWT);
+        }
+        User user = userService.findOne(Long.valueOf(userId));
+        if (user == null) {
+            return new BaseResponse<>(INVALID_JWT);
+        }
+
         List<Record> findDetailRecord = recordService.findDetailOne(Long.valueOf(userId), Long.valueOf(request.getRecord_id()));
 
         List<DetailRecordResponseDto> collect = findDetailRecord.stream()
                 .map(m -> new DetailRecordResponseDto(m.getText(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(), m.getImage_url(), m.getDate(), m.getTime(), m.getAmount()))
                 .collect(toList());
-        return new ResultResponse(collect);
+        return new BaseResponse<>(new ResultResponse(collect));
 
     }
 
