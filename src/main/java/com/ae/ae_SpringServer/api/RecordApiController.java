@@ -151,7 +151,31 @@ public class RecordApiController {
 
     //1-2
     @PostMapping("/api/daterecord")
-    public DateRecordResponseDto dateRecords(@AuthenticationPrincipal String userId, @RequestBody @Valid DateRecordRequestDto request) {
+    public BaseResponse<DateRecordResponseDto> dateRecords(@AuthenticationPrincipal String userId, @RequestBody @Valid DateRecordRequestDto request) {
+        if(userId == null) {
+            return new BaseResponse<>(EMPTY_JWT);
+        }
+        User user = userService.findOne(Long.valueOf(userId));
+        if (user == null) {
+            return new BaseResponse<>(INVALID_JWT);
+        }
+
+        if(request.getDate().isEmpty()) {
+            return new BaseResponse<>(POST_RECORD_NO_RDATE);
+        }
+
+        if(request.getDate().equals("")){
+            return new BaseResponse<>(POST_RECORD_NO_RDATE);
+        }
+
+        try {
+            LocalDate.from(LocalDate.parse(request.getDate(), DateTimeFormatter.ofPattern("yyyy.MM.dd.")));
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return new BaseResponse<>(POST_RECORD_INVALID_RDATE);
+        }
+
+
         List<Record> findRecords = recordService.findDateRecords(Long.valueOf(userId), request.getDate());
         List<DateRecordDto> bRecords = new ArrayList<DateRecordDto>();
         List<DateRecordDto> lRecords = new ArrayList<DateRecordDto>();
@@ -184,11 +208,10 @@ public class RecordApiController {
         List<RecordsDto> records = new ArrayList<RecordsDto>();
         records.add(b); records.add(l); records.add(d);
 
-        User user = userService.findOne(Long.valueOf(userId));
-        return new DateRecordResponseDto(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
+        return new BaseResponse<>(new DateRecordResponseDto(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
                 (int) Math.round(Double.parseDouble(user.getRcal())), (int) Math.round(Double.parseDouble(user.getRcarb())), (int) Math.round(Double.parseDouble(user.getRpro())),
                 (int) Math.round(Double.parseDouble(user.getRfat())),
-                records);
+                records));
     }
 
     //1-3
