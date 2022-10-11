@@ -1,6 +1,7 @@
 package com.ae.ae_SpringServer.repository;
 
 import com.ae.ae_SpringServer.domain.Record;
+import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.jpql.DateAnalysisDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,36 @@ public class RecordRepository {
     private final EntityManager em;
 
     public void save(Record record) { em.persist(record); }
+
+    public Long update(Long recordId, String imgUrl, String text, String date, String calory, String carb, String protein, String fat,
+                       String rdate, String rtime, double amount, int meal, User user) {
+        em.createQuery("update Record r set r.image_url = :imgUrl, r.text = :text, r.server_date = :date, r.cal = :calory, " +
+                "r.carb = :carb, r.protein = :protein, r.fat = :fat, r.date = :rdate, r.time = :rtime, r.amount = :amount, r.meal = :meal " +
+                "where r.id = :recordId and r.user = (select u from User u where u.id = :id)")
+                .setParameter("imgUrl", imgUrl)
+                .setParameter("text", text)
+                .setParameter("date", date)
+                .setParameter("calory", calory)
+                .setParameter("carb", carb)
+                .setParameter("protein", protein)
+                .setParameter("fat", fat)
+                .setParameter("rdate", rdate)
+                .setParameter("rtime", rtime)
+                .setParameter("amount", amount)
+                .setParameter("meal", meal)
+                .setParameter("recordId", recordId)
+                .setParameter("id", user.getId())
+                .executeUpdate();
+        return recordId;
+    }
+
+    public void delete(Long userId, Long recordId) {
+        em.createQuery("delete from Record r where r.user = (select u from User u where u.id = :uid) and " +
+                "r.id = :rid")
+                .setParameter("uid", userId)
+                .setParameter("rid", recordId)
+                .executeUpdate();
+    }
 
     public List<Record> findDateRecords(Long id, String date) {
         return em.createQuery("select r from Record r join fetch r.user u where u.id = :param and r.date = :date", Record.class)

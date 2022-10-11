@@ -85,6 +85,10 @@ public enum BaseResponseStatus {
     POST_BOOKMARK_LIST_EMPTY(false, 2146, "북마크한 식당이 없습니다"),
     POST_BOOMARK_THERE_NO_BISTRO(false, 2147, "북마크 한적 없는 식당을 북마크 해제 하고있습니다"),
 
+    // [POST] /record-update
+    POST_EMPTY_NO_RECORD_ID(false, 2148, "recordId를 입력해주세요. "),
+    POST_INVALID_RECORD(false, 2149, "기록한 식단이 없습니다. "),
+
 
     /**
      * 3000 : Response오류
