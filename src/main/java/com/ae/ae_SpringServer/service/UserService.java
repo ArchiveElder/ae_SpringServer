@@ -62,6 +62,10 @@ public class UserService {
         userRepository.update(id, dto);
     }
 
+    public void delete(Long id) {
+        userRepository.delete(id);
+    }
+
     public LoginResponseDto login(UserSocialLoginRequestDto socialLoginRequestDto) {
         String appleId = getSocialId(socialLoginRequestDto.getAccessToken());
         Optional<User> user = userRepository.findByApple(appleId);

@@ -89,6 +89,15 @@ public class UserRepository {
                 .executeUpdate();
     }
 
+    public void delete(Long id) {
+        em.createQuery("delete from Record r where r.user = (select u from User u where u.id = :id)")
+                        .setParameter("id", id)
+                        .executeUpdate();
+        em.createQuery("delete from User u where u.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
+    }
+
     public Optional<User> findByApple(String appleId) {
         List<User> user = em.createQuery("select u from User u where u.apple = :apple", User.class)
                 .setParameter("apple", appleId)

@@ -1,5 +1,6 @@
 package com.ae.ae_SpringServer.api;
 
+import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.config.security.JwtProvider;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
@@ -28,6 +29,9 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
+
+import static com.ae.ae_SpringServer.config.BaseResponseStatus.EMPTY_JWT;
+import static com.ae.ae_SpringServer.config.BaseResponseStatus.INVALID_JWT;
 
 @RestController
 @RequiredArgsConstructor
@@ -103,6 +107,23 @@ public class UserApiController {
     public ResponseEntity<?> update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         userService.update(Long.valueOf(userId), userUpdateRequestDto);
         return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/api/userdelete")
+    public BaseResponse<String> deleteUser(@AuthenticationPrincipal String userId) {
+        if(userId.equals("INVALID JWT")){
+            return new BaseResponse<>(INVALID_JWT);
+        }
+        if(userId == null) {
+            return new BaseResponse<>(EMPTY_JWT);
+        }
+        User user = userService.findOne(Long.valueOf(userId));
+        if(user == null) {
+            return new BaseResponse<>(INVALID_JWT);
+        }
+
+        userService.delete(Long.valueOf(userId));
+        return new BaseResponse<>("회원 탈퇴 되었습니다.");
     }
 
 
