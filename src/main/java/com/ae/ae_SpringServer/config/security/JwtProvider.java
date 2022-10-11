@@ -1,12 +1,10 @@
 package com.ae.ae_SpringServer.config.security;
 
 import com.ae.ae_SpringServer.domain.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwsHeader;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
@@ -21,8 +19,10 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
+
 public class JwtProvider {
     @Value("spring.jwt.secretakjhfluwehlfsdfbuawegfdvhsfvawgrywiehsrjfbsauaweiruhawusdhfvwhsvdfalsdfh")
     private String secretKey;
@@ -55,12 +55,20 @@ public class JwtProvider {
         // 헤더와 페이로드를 setsigninKey로 넘어온 시크릿을 이용해 서명한 후 token의 서명과 비교
         // 위조되지 않았다면 페이로드(Claims) 리턴, 위조라면 예외를 날림
         // 그중 우리는 userId가 필요하므로 getBody를 부른다.
-        Claims claims = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-        return claims.getSubject();
+        try{
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody();
+            return claims.getSubject();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("*** token 내용에 에러가 있음 -- JwtProvide");
+            return "INVALID JWT";
+        }
+
     }
+
 
     /*
     // Jwt로 인증정보를 조회
@@ -78,8 +86,7 @@ public class JwtProvider {
     public String resolveToken(HttpServletRequest request) {
         return request.getHeader("X-AUTH-TOKEN");
     }
-
-    // jwt의 유효성 및 만료일자 확인
+       // jwt의 유효성 및 만료일자 확인
     public boolean validationToken(String token) {
         try {
             Jws<Claims> claimsJws = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
@@ -88,5 +95,6 @@ public class JwtProvider {
             return false;
         }
     }
+
      */
 }
