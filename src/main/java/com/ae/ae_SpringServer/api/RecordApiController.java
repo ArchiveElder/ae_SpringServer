@@ -50,10 +50,13 @@ public class RecordApiController {
                                           @RequestParam (value = "meal", required = true) int meal
                                              ) throws IOException {
 
-
+        if(userId.equals("INVALID JWT")){
+            return new BaseResponse<>(INVALID_JWT);
+        }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
+
         User user = userService.findOne(Long.valueOf(userId));
         if (user == null) {
             return new BaseResponse<>(INVALID_JWT);
@@ -156,6 +159,9 @@ public class RecordApiController {
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
+        if(userId.equals("INVALID JWT")){
+            return new BaseResponse<>(INVALID_JWT);
+        }
         User user = userService.findOne(Long.valueOf(userId));
         if (user == null) {
             return new BaseResponse<>(INVALID_JWT);
@@ -218,6 +224,9 @@ public class RecordApiController {
     //1-3
     @PostMapping("api/detailrecord")
     public BaseResponse<ResultResponse> recordResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid DetailRecordRequestDto request) throws BaseException {
+        if(userId.equals("INVALID JWT")){
+            return new BaseResponse<>(INVALID_JWT);
+        }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
