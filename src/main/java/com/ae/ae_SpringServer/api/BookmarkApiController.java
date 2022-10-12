@@ -1,5 +1,6 @@
 package com.ae.ae_SpringServer.api;
 
+import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.domain.Bistro;
 import com.ae.ae_SpringServer.domain.Bookmark;
 import com.ae.ae_SpringServer.domain.User;
@@ -22,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
+
 @RestController
 @RequiredArgsConstructor
 public class BookmarkApiController {
@@ -29,28 +32,44 @@ public class BookmarkApiController {
     private final UserService userService;
     private final BistroService bistroService;
 
-    //7-1
+    //[POST] 7-1 북마크 등록
     @PostMapping("api/bookmark")
-    public CreateBookmarkResponseDto createBookmarkResponse(@AuthenticationPrincipal String userId,
-                                                         @RequestBody @Valid BookmarkRequestDto request) {
+    public BaseResponse<CreateBookmarkResponseDto> createBookmarkResponse(@AuthenticationPrincipal String userId,
+                                                                          @RequestBody @Valid BookmarkRequestDto request) {
+        if(userId.equals("INVALID JWT")){
+            return new BaseResponse<>(INVALID_JWT);
+        }
+        if(userId == null) {
+            return new BaseResponse<>(EMPTY_JWT);
+        }
         User user = userService.findOne(Long.valueOf(userId));
+        if (request.getBistroId() == null || request.getBistroId().equals("")){
+            return new BaseResponse<>(POST_BOOKMARK_NO_BISTRO_ID);
+        }
+
         List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
         List<Long> restaurantId = restaurant.stream().map(Bistro::getId).collect(Collectors.toList());
         Long count = restaurantId.stream().filter(m-> request.getBistroId().equals(m)).count();
         if(count > 0 ){
             Long i = bookmarkService.findBookmarkId(Long.valueOf(userId), request.getBistroId());
-            return new CreateBookmarkResponseDto(i.intValue());
+            return new BaseResponse<>(POST_BOOKMARK_PRESENT_BISTRO);
         }
         Bistro bistro = bistroService.findOne(request.getBistroId());
         Bookmark bookmark = Bookmark.createBookmark(user, bistro);
         Long id = bookmarkService.create(bookmark);
 
-        return new CreateBookmarkResponseDto(id.intValue());
+        return new BaseResponse<>(new CreateBookmarkResponseDto(id.intValue()));
     }
 
-    //7-2
+    //[GET] 7-2 즐겨찾기 조회
     @GetMapping("api/bookmarklist")
-    public ResResponse bookmarkList(@AuthenticationPrincipal String userId) {
+    public BaseResponse<ResResponse> bookmarkList(@AuthenticationPrincipal String userId) {
+        if(userId.equals("INVALID JWT")){
+            return new BaseResponse<>(INVALID_JWT);
+        }
+        if(userId == null) {
+            return new BaseResponse<>(EMPTY_JWT);
+        }
         List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
         List<RestaurantResponseDto> restaurantDtos = new ArrayList<>();
 
@@ -59,16 +78,33 @@ public class BookmarkApiController {
                     bistro.getRAddr(), bistro.getLAddr(),
                     bistro.getTel(), bistro.getLa(), bistro.getLo()));
         }
-        return new ResResponse(restaurantDtos.size(), restaurantDtos);
+        if(restaurant.size() > 0){
+            return new BaseResponse<>(new ResResponse(restaurantDtos.size(), restaurantDtos));
+
+        }else return new BaseResponse<>(POST_BOOKMARK_LIST_EMPTY);
 
     }
 
-    //7-3
+    //[DELETE] 7-3 즐겨찾기 삭제
     @DeleteMapping("api/del/bookmark")
-    public CreateBookmarkResponseDto deleteBookmark(@AuthenticationPrincipal String userId,
+    public BaseResponse<CreateBookmarkResponseDto> deleteBookmark(@AuthenticationPrincipal String userId,
                               @RequestBody @Valid BookmarkRequestDto request){
-        Long bistroId = bookmarkService.deleteBookmark(Long.valueOf(userId), request.getBistroId());
-        return new CreateBookmarkResponseDto(bistroId.intValue());
+        if(userId.equals("INVALID JWT")){
+            return new BaseResponse<>(INVALID_JWT);
+        }
+        if(userId == null) {
+            return new BaseResponse<>(EMPTY_JWT);
+        }
+        List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
+        Long count =restaurant.stream().map(Bistro::getId).collect(Collectors.toList())
+                .stream().filter(
+                        m-> request.getBistroId().equals(m))
+                .count();
+        if(count > 0 ){
+            Long bistroId = bookmarkService.deleteBookmark(Long.valueOf(userId), request.getBistroId());
+            return new BaseResponse<>(new CreateBookmarkResponseDto(bistroId.intValue()));
+
+        } else return new BaseResponse<>(POST_BOOMARK_THERE_NO_BISTRO);
 
     }
 
