@@ -28,9 +28,9 @@ public class BistroV2 {
     private String tel;
     @Column(name = "menu_info")
     private String menu;
-    @Column(name = "restaurant_la")
+    @Column(name = "rstrnt_la")
     private String la;
-    @Column(name = "restaurant_lo")
+    @Column(name = "rstrnt_lo")
     private String lo;
 
     private String bistroUrl;

@@ -17,6 +17,8 @@ public class BistroService {
 
     public BistroV2 findOne(Long id) { return bistroRepository.findOne(id); }
 
+    public Bistro findV1One(Long id) { return bistroRepository.findV1One(id); }
+
     public List<BistroV2> getMiddle(String wide) {
         return bistroRepository.getMiddle(wide);
     }

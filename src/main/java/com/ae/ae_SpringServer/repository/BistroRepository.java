@@ -15,6 +15,8 @@ public class BistroRepository {
 
     public BistroV2 findOne(Long id) { return em.find(BistroV2.class, id);  }
 
+    public Bistro findV1One(Long id) { return em.find(Bistro.class, id); }
+
     public List<BistroV2> getMiddle(String wide) {
         return em.createQuery("select b from BistroV2 b where b.wide = :wide group by b.middle", BistroV2.class)
                 .setParameter("wide", wide)

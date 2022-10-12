@@ -47,7 +47,7 @@ public class BookmarkApiController {
         if (request.getBistroId() == null || request.getBistroId().equals("")){
             return new BaseResponse<>(POST_BOOKMARK_NO_BISTRO_ID);
         }
-
+        // 북마크 상태 조회
         List<BistroV2> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
         List<Long> restaurantId = restaurant.stream().map(BistroV2::getId).collect(Collectors.toList());
         Long count = restaurantId.stream().filter(m-> request.getBistroId().equals(m)).count();
@@ -55,7 +55,12 @@ public class BookmarkApiController {
             Long i = bookmarkService.findBookmarkId(Long.valueOf(userId), request.getBistroId());
             return new BaseResponse<>(POST_BOOKMARK_PRESENT_BISTRO);
         }
-        Bookmark bookmark = Bookmark.createBookmark(user, request.getBistroId());
+        // 북마크 식당의 존재여부 확인
+        BistroV2 bistro = bistroService.findOne(request.getBistroId());
+        if(bistro == null) return new BaseResponse<>(POST_BOOKMARK_WRONG_BISTRO);
+        Bistro bistro_v1 = bistroService.findV1One(request.getBistroId());
+
+        Bookmark bookmark = Bookmark.createBookmark(user, bistro_v1, request.getBistroId());
         Long id = bookmarkService.create(bookmark);
 
         return new BaseResponse<>(new CreateBookmarkResponseDto(id.intValue()));
