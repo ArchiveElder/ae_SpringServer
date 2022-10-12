@@ -87,6 +87,7 @@ public enum BaseResponseStatus {
     POST_BOOKMARK_PRESENT_BISTRO(false, 2145, "이미 북마크한 bistro입니다. "),
     POST_BOOKMARK_LIST_EMPTY(false, 2146, "북마크한 식당이 없습니다"),
     POST_BOOMARK_THERE_NO_BISTRO(false, 2147, "북마크 한적 없는 식당을 북마크 해제 하고있습니다"),
+    POST_BOOKMARK_WRONG_BISTRO(false, 2150, "북마크 할 수 없는 식당의 id입니다. "),
 
     // [POST] /record-update
     POST_EMPTY_NO_RECORD_ID(false, 2148, "recordId를 입력해주세요. "),

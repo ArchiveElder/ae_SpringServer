@@ -18,4 +18,5 @@ public class RestaurantResponseDto {
     private String la;
     @NotNull
     private String lo;
+    private String bistroUrl;
 }

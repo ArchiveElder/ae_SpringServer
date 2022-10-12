@@ -1,6 +1,7 @@
 package com.ae.ae_SpringServer.service;
 
 import com.ae.ae_SpringServer.domain.Bistro;
+import com.ae.ae_SpringServer.domain.BistroV2;
 import com.ae.ae_SpringServer.domain.Bookmark;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.repository.BookmarkRepository;
@@ -24,7 +25,7 @@ public class BookmarkService {
         return bookmark.getId();
     }
 
-    public List<Bistro> findBookmark(Long userId) {
+    public List<BistroV2> findBookmark(Long userId) {
         return bookmarkRepository.findBookmark(userId);
     }
 
