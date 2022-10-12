@@ -36,7 +36,8 @@ public class RecordApiController {
     private final UserService userService;
     private final S3Uploader s3Uploader;
 
-        //1-1
+
+    //[POST] 1-1 식단기록
     @PostMapping(value = "/api/record", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public  BaseResponse<RecordResponseDto> createRecord(@AuthenticationPrincipal String userId,
                                           @RequestParam (value = "image", required = false) MultipartFile multipartFile,
@@ -154,6 +155,7 @@ public class RecordApiController {
         return new BaseResponse<>(new RecordResponseDto(id.intValue()));
     }
 
+    // [POST] 1-4 식단기록 (직접, 이미지X)
     @PostMapping("/api/record-no-img")
     public BaseResponse<RecordResponseDto> noImgRecord(@AuthenticationPrincipal String userId,
                                                        @RequestParam (value = "text", required = true) String text,
@@ -261,7 +263,7 @@ public class RecordApiController {
 
     }
 
-    //1-2
+    //[POST] 1-2 식단 날짜별 조회
     @PostMapping("/api/daterecord")
     public BaseResponse<DateRecordResponseDto> dateRecords(@AuthenticationPrincipal String userId, @RequestBody @Valid DateRecordRequestDto request) {
         if(userId == null) {
@@ -329,7 +331,7 @@ public class RecordApiController {
                 records));
     }
 
-    //1-3
+    //[POST] 1-3 식단 상세조회
     @PostMapping("api/detailrecord")
     public BaseResponse<ResultResponse> recordResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid DetailRecordRequestDto request) throws BaseException {
         if(userId.equals("INVALID JWT")){
@@ -352,6 +354,7 @@ public class RecordApiController {
 
     }
 
+    // [POST] 1-5  식단 수정(이미지O)
     @PostMapping("/api/record-update")
     public BaseResponse<RecordResponseDto> updateResponse(@AuthenticationPrincipal String userId,
                                                           @RequestParam (value = "recordId", required = true) int recordId,
@@ -476,6 +479,7 @@ public class RecordApiController {
         return new BaseResponse<>(new RecordResponseDto(id.intValue()));
     }
 
+    // [POST] 1-6 식단 수정(이미지X)
     @PostMapping("/api/record-update-no-img")
     public BaseResponse<RecordResponseDto> updateResponse(@AuthenticationPrincipal String userId,
                                                           @RequestParam (value = "recordId", required = true) int recordId,
@@ -591,6 +595,7 @@ public class RecordApiController {
     }
 
 
+    // [DELETE] 1-7 식단 삭제
     @DeleteMapping("/api/record")
     public BaseResponse<String> deleteRecord(@AuthenticationPrincipal String userId, @RequestBody @Valid RecordDeleteRequestDto request) {
         if(userId.equals("INVALID JWT")){
