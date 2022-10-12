@@ -92,7 +92,7 @@ public class UserApiController {
 
     // [POST] 3-3  회원 등록
     @PostMapping("/api/signup")
-    public BaseResponse<ResponseEntity<?>> signup(@AuthenticationPrincipal String userId, @RequestBody SignupRequestDto signupRequestDto) {
+    public BaseResponse<String> signup(@AuthenticationPrincipal String userId, @RequestBody SignupRequestDto signupRequestDto) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -135,7 +135,7 @@ public class UserApiController {
             return new BaseResponse<>(POST_USER_INVALID_ACTIVITY);
         }
         userService.signup(Long.valueOf(userId), signupRequestDto);
-        return new BaseResponse<>(ResponseEntity.ok().build());
+        return new BaseResponse<>(userId + "번  회원 등록되었습니다");
     }
 
     // [GET] 3-1 회원 정보 조회
@@ -157,7 +157,7 @@ public class UserApiController {
 
     // [PUT] 3-2 회원 정보 수정
     @PutMapping("/api/userupdate")
-    public BaseResponse<ResponseEntity<?>>  update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+    public BaseResponse<String>  update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -192,7 +192,7 @@ public class UserApiController {
         }
 
         userService.update(Long.valueOf(userId), userUpdateRequestDto);
-        return new BaseResponse<>(ResponseEntity.ok().build());
+        return new BaseResponse<>(userId + "번  회원 정보 수정되었습니다");
     }
 
     // [DELETE] 3-4 회원 탈퇴
