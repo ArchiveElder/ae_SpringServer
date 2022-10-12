@@ -24,10 +24,12 @@ public class Bookmark {
     @JoinColumn(name = "bistro_id")
     private Bistro bistro;
 
-    public static Bookmark createBookmark(User user, Bistro bistro){
+    private Long bistro_v2_id;
+
+    public static Bookmark createBookmark(User user, Long bistro_v2_id){
         Bookmark bookmark = new Bookmark();
         bookmark.setUser(user);
-        bookmark.setBistro(bistro);
+        bookmark.setBistro_v2_id(bistro_v2_id);
         return bookmark;
     }
 

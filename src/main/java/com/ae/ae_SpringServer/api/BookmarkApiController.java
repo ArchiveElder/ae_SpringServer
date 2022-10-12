@@ -2,6 +2,7 @@ package com.ae.ae_SpringServer.api;
 
 import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.domain.Bistro;
+import com.ae.ae_SpringServer.domain.BistroV2;
 import com.ae.ae_SpringServer.domain.Bookmark;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.BookmarkRequestDto;
@@ -47,15 +48,14 @@ public class BookmarkApiController {
             return new BaseResponse<>(POST_BOOKMARK_NO_BISTRO_ID);
         }
 
-        List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
-        List<Long> restaurantId = restaurant.stream().map(Bistro::getId).collect(Collectors.toList());
+        List<BistroV2> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
+        List<Long> restaurantId = restaurant.stream().map(BistroV2::getId).collect(Collectors.toList());
         Long count = restaurantId.stream().filter(m-> request.getBistroId().equals(m)).count();
         if(count > 0 ){
             Long i = bookmarkService.findBookmarkId(Long.valueOf(userId), request.getBistroId());
             return new BaseResponse<>(POST_BOOKMARK_PRESENT_BISTRO);
         }
-        Bistro bistro = bistroService.findOne(request.getBistroId());
-        Bookmark bookmark = Bookmark.createBookmark(user, bistro);
+        Bookmark bookmark = Bookmark.createBookmark(user, request.getBistroId());
         Long id = bookmarkService.create(bookmark);
 
         return new BaseResponse<>(new CreateBookmarkResponseDto(id.intValue()));
@@ -70,13 +70,13 @@ public class BookmarkApiController {
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
+        List<BistroV2> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
         List<RestaurantResponseDto> restaurantDtos = new ArrayList<>();
 
-        for(Bistro bistro: restaurant) {
+        for(BistroV2 bistro: restaurant) {
             restaurantDtos.add(new RestaurantResponseDto(bistro.getId().intValue(), bistro.getCategory(), bistro.getName(),
                     bistro.getRAddr(), bistro.getLAddr(),
-                    bistro.getTel(), bistro.getLa(), bistro.getLo()));
+                    bistro.getTel(), bistro.getLa(), bistro.getLo(), bistro.getBistroUrl()));
         }
         if(restaurant.size() > 0){
             return new BaseResponse<>(new ResResponse(restaurantDtos.size(), restaurantDtos));
@@ -95,8 +95,8 @@ public class BookmarkApiController {
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        List<Bistro> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
-        Long count =restaurant.stream().map(Bistro::getId).collect(Collectors.toList())
+        List<BistroV2> restaurant = bookmarkService.findBookmark(Long.valueOf(userId));
+        Long count =restaurant.stream().map(BistroV2::getId).collect(Collectors.toList())
                 .stream().filter(
                         m-> request.getBistroId().equals(m))
                 .count();

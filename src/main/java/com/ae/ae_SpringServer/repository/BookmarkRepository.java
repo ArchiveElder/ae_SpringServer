@@ -1,6 +1,7 @@
 package com.ae.ae_SpringServer.repository;
 
 import com.ae.ae_SpringServer.domain.Bistro;
+import com.ae.ae_SpringServer.domain.BistroV2;
 import com.ae.ae_SpringServer.domain.Bookmark;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,10 +19,10 @@ public class BookmarkRepository {
     }
 
 
-    public List<Bistro> findBookmark(Long userId) {
-        return em.createQuery("select b from Bistro b" +
+    public List<BistroV2> findBookmark(Long userId) {
+        return em.createQuery("select b from BistroV2 b" +
                 " where b.id IN" +
-                " (select bm.bistro from Bookmark bm join bm.user u where u.id = :param)", Bistro.class)
+                " (select bm.bistro from Bookmark bm join bm.user u where u.id = :param)", BistroV2.class)
                 .setParameter("param", userId)
                 .getResultList();
 

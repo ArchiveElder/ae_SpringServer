@@ -1,6 +1,7 @@
 package com.ae.ae_SpringServer.service;
 
 import com.ae.ae_SpringServer.domain.Bistro;
+import com.ae.ae_SpringServer.domain.BistroV2;
 import com.ae.ae_SpringServer.repository.BistroRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,21 +15,21 @@ import java.util.List;
 public class BistroService {
     private final BistroRepository bistroRepository;
 
-    public Bistro findOne(Long id) { return bistroRepository.findOne(id); }
+    public BistroV2 findOne(Long id) { return bistroRepository.findOne(id); }
 
-    public List<Bistro> getMiddle(String wide) {
+    public List<BistroV2> getMiddle(String wide) {
         return bistroRepository.getMiddle(wide);
     }
 
-    public List<Bistro> getCategoryList(String wide, String middle) {
+    public List<BistroV2> getCategoryList(String wide, String middle) {
         return bistroRepository.getCategoryList(wide, middle);
     }
 
-    public List<Bistro> getCategories(String wide, String middle) {
+    public List<BistroV2> getCategories(String wide, String middle) {
         return bistroRepository.getCategories(wide, middle);
     }
 
-    public List<Bistro> getBistro() {
+    public List<BistroV2> getBistro() {
         return bistroRepository.getBistro();
     }
 
