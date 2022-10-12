@@ -346,7 +346,9 @@ public class RecordApiController {
         }
 
         List<Record> findDetailRecord = recordService.findDetailOne(Long.valueOf(userId), Long.valueOf(request.getRecord_id()));
-
+        if(findDetailRecord.size() == 0) {
+            return new BaseResponse<>(POST_DETAIL_NO_RECORD_ID);
+        }
         List<DetailRecordResponseDto> collect = findDetailRecord.stream()
                 .map(m -> new DetailRecordResponseDto(m.getText(), m.getCal(), m.getCarb(), m.getProtein(), m.getFat(), m.getImage_url(), m.getDate(), m.getTime(), m.getAmount()))
                 .collect(toList());
