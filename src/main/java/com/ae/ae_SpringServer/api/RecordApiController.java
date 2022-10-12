@@ -399,199 +399,88 @@ public class RecordApiController {
                 imgUrl = s3Uploader.upload(multipartFile, "static");
             }
         }
+
+        if(text.isEmpty() || text.equals("")) {
+            return new BaseResponse<>(POST_RECORD_NO_TEXT);
+        }
+
+        if(calory.isEmpty() || calory.equals("")) {
+            return new BaseResponse<>(POST_RECORD_NO_CALORY);
+        }
+        if(Double.valueOf(calory) <= 0) {
+            return new BaseResponse<>(POST_RECORD_MINUS_CALORY);
+        }
+
+        if(carb.isEmpty() || carb.equals("")) {
+            return new BaseResponse<>(POST_RECORD_NO_CARB);
+        }
+
+        if(Double.valueOf(carb) <= 0) {
+            return new BaseResponse<>(POST_RECORD_MINUS_CARB);
+        }
+
+        if(protein.isEmpty() || protein.equals("")) {
+            return new BaseResponse<>(POST_RECORD_NO_PROTEIN);
+        }
+
+        if(Double.valueOf(protein) <= 0) {
+            return new BaseResponse<>(POST_RECORD_MINUS_PROTEIN);
+        }
+
+        if(fat.isEmpty() || fat.equals("")) {
+            return new BaseResponse<>(POST_RECORD_NO_FAT);
+        }
+
+        if(Double.valueOf(fat) <= 0) {
+            return new BaseResponse<>(POST_RECORD_MINUS_FAT);
+        }
+
+        if(rdate.isEmpty() || rdate.equals("")) {
+            return new BaseResponse<>(POST_RECORD_NO_RDATE);
+        }
+        try {
+            LocalDate.from(LocalDate.parse(rdate, DateTimeFormatter.ofPattern("yyyy.MM.dd.")));
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return new BaseResponse<>(POST_RECORD_INVALID_RDATE);
+        }
+
+        if(rtime.isEmpty() || rtime.equals("")) {
+            return new BaseResponse<>(POST_RECORD_NO_RTIME);
+        }
+
+        try{
+            LocalTime.from(LocalTime.parse(rtime, DateTimeFormatter.ofPattern("HH:mm")));
+        }catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return new BaseResponse<>(POST_RECORD_INVALID_RTIME);
+        }
+
+
+        if(amount == null) {
+            return new BaseResponse<>(POST_RECORD_NO_AMOUNT);
+        }
+
+        if(amount <= 0) {
+            return new BaseResponse<>(POST_RECORD_MINUS_AMOUNT);
+        }
+
+        if(String.valueOf(meal).isEmpty() || String.valueOf(meal).equals("")) {
+            return new BaseResponse<>(POST_RECORD_NO_MEAL);
+        }
+
+        if(meal != 0 && meal != 1 && meal != 2) {
+            return new BaseResponse<>(POST_RECORD_INVALID_MEAL);
+        }
+
+        Long id;
         if(multipartFile == null || multipartFile.isEmpty()) {
-            return new BaseResponse<>(POST_RECORD_NO_IMAGE);
+            id = recordService.update(Long.valueOf(recordId), null, text, date, calory, carb, protein, fat,
+                    rdate, rtime, amount, meal, user);
+        } else {
+            id = recordService.update(Long.valueOf(recordId), imgUrl, text, date, calory, carb, protein, fat,
+                    rdate, rtime, amount, meal, user);
         }
-        if(text.isEmpty() || text.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_TEXT);
-        }
-
-        if(calory.isEmpty() || calory.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_CALORY);
-        }
-        if(Double.valueOf(calory) <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_CALORY);
-        }
-
-        if(carb.isEmpty() || carb.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_CARB);
-        }
-
-        if(Double.valueOf(carb) <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_CARB);
-        }
-
-        if(protein.isEmpty() || protein.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_PROTEIN);
-        }
-
-        if(Double.valueOf(protein) <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_PROTEIN);
-        }
-
-        if(fat.isEmpty() || fat.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_FAT);
-        }
-
-        if(Double.valueOf(fat) <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_FAT);
-        }
-
-        if(rdate.isEmpty() || rdate.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_RDATE);
-        }
-        try {
-            LocalDate.from(LocalDate.parse(rdate, DateTimeFormatter.ofPattern("yyyy.MM.dd.")));
-        } catch (DateTimeParseException e) {
-            e.printStackTrace();
-            return new BaseResponse<>(POST_RECORD_INVALID_RDATE);
-        }
-
-        if(rtime.isEmpty() || rtime.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_RTIME);
-        }
-
-        try{
-            LocalTime.from(LocalTime.parse(rtime, DateTimeFormatter.ofPattern("HH:mm")));
-        }catch (DateTimeParseException e) {
-            e.printStackTrace();
-            return new BaseResponse<>(POST_RECORD_INVALID_RTIME);
-        }
-
-
-        if(amount == null) {
-            return new BaseResponse<>(POST_RECORD_NO_AMOUNT);
-        }
-
-        if(amount <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_AMOUNT);
-        }
-
-        if(String.valueOf(meal).isEmpty() || String.valueOf(meal).equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_MEAL);
-        }
-
-        if(meal != 0 && meal != 1 && meal != 2) {
-            return new BaseResponse<>(POST_RECORD_INVALID_MEAL);
-        }
-
-        Long id = recordService.update(Long.valueOf(recordId), imgUrl, text, date, calory, carb, protein, fat,
-                rdate, rtime, amount, meal, user);
-
-        return new BaseResponse<>(new RecordResponseDto(id.intValue()));
-    }
-
-    // [POST] 1-6 식단 수정(이미지X)
-    @PostMapping("/api/record-update-no-img")
-    public BaseResponse<RecordResponseDto> updateResponse(@AuthenticationPrincipal String userId,
-                                                          @RequestParam (value = "recordId", required = true) int recordId,
-                                                          @RequestParam (value = "text", required = true) String text,
-                                                          @RequestParam (value = "calory", required = false) String calory,
-                                                          @RequestParam (value = "carb", required = false) String carb,
-                                                          @RequestParam (value = "protein", required = false) String protein,
-                                                          @RequestParam (value = "fat", required = false) String fat,
-                                                          @RequestParam (value = "rdate", required = true) String rdate,
-                                                          @RequestParam (value = "rtime", required = true) String rtime,
-                                                          @RequestParam (value = "amount", required = false) Double amount,
-                                                          @RequestParam (value = "meal", required = true) int meal
-    ) {
-        if(userId.equals("INVALID JWT")){
-            return new BaseResponse<>(INVALID_JWT);
-        }
-        if(userId == null) {
-            return new BaseResponse<>(EMPTY_JWT);
-        }
-
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
-            return new BaseResponse<>(INVALID_JWT);
-        }
-
-        if(String.valueOf(recordId).isEmpty() || String.valueOf(recordId).equals("")) {
-            return new BaseResponse<>(POST_EMPTY_NO_RECORD_ID);
-        }
-        List<Record> record = recordService.findDetailOne(Long.valueOf(userId), Long.valueOf(recordId));
-        if(record.isEmpty()) {
-            return new BaseResponse<>(POST_INVALID_RECORD);
-        }
-
-        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
-
-        if(text.isEmpty() || text.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_TEXT);
-        }
-
-        if(calory.isEmpty() || calory.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_CALORY);
-        }
-        if(Double.valueOf(calory) <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_CALORY);
-        }
-
-        if(carb.isEmpty() || carb.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_CARB);
-        }
-
-        if(Double.valueOf(carb) <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_CARB);
-        }
-
-        if(protein.isEmpty() || protein.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_PROTEIN);
-        }
-
-        if(Double.valueOf(protein) <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_PROTEIN);
-        }
-
-        if(fat.isEmpty() || fat.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_FAT);
-        }
-
-        if(Double.valueOf(fat) <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_FAT);
-        }
-
-        if(rdate.isEmpty() || rdate.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_RDATE);
-        }
-        try {
-            LocalDate.from(LocalDate.parse(rdate, DateTimeFormatter.ofPattern("yyyy.MM.dd.")));
-        } catch (DateTimeParseException e) {
-            e.printStackTrace();
-            return new BaseResponse<>(POST_RECORD_INVALID_RDATE);
-        }
-
-        if(rtime.isEmpty() || rtime.equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_RTIME);
-        }
-
-        try{
-            LocalTime.from(LocalTime.parse(rtime, DateTimeFormatter.ofPattern("HH:mm")));
-        }catch (DateTimeParseException e) {
-            e.printStackTrace();
-            return new BaseResponse<>(POST_RECORD_INVALID_RTIME);
-        }
-
-
-        if(amount == null) {
-            return new BaseResponse<>(POST_RECORD_NO_AMOUNT);
-        }
-
-        if(amount <= 0) {
-            return new BaseResponse<>(POST_RECORD_MINUS_AMOUNT);
-        }
-
-        if(String.valueOf(meal).isEmpty() || String.valueOf(meal).equals("")) {
-            return new BaseResponse<>(POST_RECORD_NO_MEAL);
-        }
-
-        if(meal != 0 && meal != 1 && meal != 2) {
-            return new BaseResponse<>(POST_RECORD_INVALID_MEAL);
-        }
-
-        Long id = recordService.update(Long.valueOf(recordId), null, text, date, calory, carb, protein, fat,
-                rdate, rtime, amount, meal, user);
 
         return new BaseResponse<>(new RecordResponseDto(id.intValue()));
     }
