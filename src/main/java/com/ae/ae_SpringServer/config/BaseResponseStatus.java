@@ -62,6 +62,8 @@ public enum BaseResponseStatus {
     PUT_USER_INVALID_ACTIVITY(false, 2128, "활동 점수가 유효하지 않습니다."),
 
     // [POST] /signup
+    POST_USER_NO_NAME(false, 2129, "이름을 입력해주세요."),
+    POST_USER_LONG_NAME(false, 2130, "이름이 45자보다 깁니다."),
     POST_USER_MINUS_AGE(false, 2132, "나이가 1보다 작습니다."),
     POST_USER_NO_GENDER(false, 2133, "성별을 입력해주세요."),
     POST_USER_INVALID_GENDER(false, 2134, "성별이 유효하지 않습니다."),
