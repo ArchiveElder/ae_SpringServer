@@ -42,7 +42,7 @@ public class UserApiController {
     //[POST] 4-1 카카오 로그인
     // 로그인 시에, kakaoprofile로 받은 정보가 db에 있으면 jwt 토큰 발급(status코드는 온보딩 안띄우게). db에 없으면 new user로 저장시키고 jwt 토큰발급(온보딩 띄우게)
     @PostMapping("/api/login")
-    public LoginResponseDto loginByKakao(
+    public  BaseResponse<LoginResponseDto> loginByKakao(
             @RequestBody UserSocialLoginRequestDto socialLoginRequestDto) {
         String token = socialLoginRequestDto.getAccessToken();
         // KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(token);
@@ -75,18 +75,18 @@ public class UserApiController {
         boolean isEmpty = user.isEmpty();
         System.out.println(isEmpty);
         if(!isEmpty) {
-            return new LoginResponseDto(user.get().getId(), jwtProvider.createToken(user.get()), false);
+            return new BaseResponse<>(new LoginResponseDto(user.get().getId(), jwtProvider.createToken(user.get()), false));
         } else {
             User u = User.createUser(id);
             userService.create(u);
-            return new LoginResponseDto(u.getId(), jwtProvider.createToken(u), true);
+            return new BaseResponse<>(new LoginResponseDto(u.getId(), jwtProvider.createToken(u), true));
         }
     }
 
     //[POST] 4-2 : 애플로그인 api
     @PostMapping("/api/apple-login")
-    public LoginResponseDto loginByApple(@RequestBody UserSocialLoginRequestDto socialLoginRequestDto){
-        return userService.login(socialLoginRequestDto);
+    public BaseResponse<LoginResponseDto> loginByApple(@RequestBody UserSocialLoginRequestDto socialLoginRequestDto){
+        return new BaseResponse<>(userService.login(socialLoginRequestDto));
 
     }
 
