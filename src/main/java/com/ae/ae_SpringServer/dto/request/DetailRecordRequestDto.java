@@ -8,5 +8,4 @@ import javax.validation.constraints.NotNull;
 public class DetailRecordRequestDto {
     @NotNull
     private int record_id;
-    private int meal;
 }
