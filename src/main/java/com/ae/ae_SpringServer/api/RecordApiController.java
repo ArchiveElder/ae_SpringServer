@@ -89,7 +89,7 @@ public class RecordApiController {
             return new BaseResponse<>(POST_RECORD_NO_CARB);
         }
 
-        if(Double.valueOf(carb) <= 0) {
+        if(Double.valueOf(carb) < 0) {
             return new BaseResponse<>(POST_RECORD_MINUS_CARB);
         }
 
@@ -97,7 +97,7 @@ public class RecordApiController {
             return new BaseResponse<>(POST_RECORD_NO_PROTEIN);
         }
 
-        if(Double.valueOf(protein) <= 0) {
+        if(Double.valueOf(protein) < 0) {
             return new BaseResponse<>(POST_RECORD_MINUS_PROTEIN);
         }
 
@@ -105,7 +105,7 @@ public class RecordApiController {
             return new BaseResponse<>(POST_RECORD_NO_FAT);
         }
 
-        if(Double.valueOf(fat) <= 0) {
+        if(Double.valueOf(fat) < 0) {
             return new BaseResponse<>(POST_RECORD_MINUS_FAT);
         }
 
@@ -196,7 +196,7 @@ public class RecordApiController {
             return new BaseResponse<>(POST_RECORD_NO_CARB);
         }
 
-        if(Double.valueOf(carb) <= 0) {
+        if(Double.valueOf(carb) < 0) {
             return new BaseResponse<>(POST_RECORD_MINUS_CARB);
         }
 
@@ -204,7 +204,7 @@ public class RecordApiController {
             return new BaseResponse<>(POST_RECORD_NO_PROTEIN);
         }
 
-        if(Double.valueOf(protein) <= 0) {
+        if(Double.valueOf(protein) < 0) {
             return new BaseResponse<>(POST_RECORD_MINUS_PROTEIN);
         }
 
@@ -212,7 +212,7 @@ public class RecordApiController {
             return new BaseResponse<>(POST_RECORD_NO_FAT);
         }
 
-        if(Double.valueOf(fat) <= 0) {
+        if(Double.valueOf(fat) < 0) {
             return new BaseResponse<>(POST_RECORD_MINUS_FAT);
         }
 
@@ -415,7 +415,7 @@ public class RecordApiController {
             return new BaseResponse<>(POST_RECORD_NO_CARB);
         }
 
-        if(Double.valueOf(carb) <= 0) {
+        if(Double.valueOf(carb) < 0) {
             return new BaseResponse<>(POST_RECORD_MINUS_CARB);
         }
 
@@ -423,7 +423,7 @@ public class RecordApiController {
             return new BaseResponse<>(POST_RECORD_NO_PROTEIN);
         }
 
-        if(Double.valueOf(protein) <= 0) {
+        if(Double.valueOf(protein) < 0) {
             return new BaseResponse<>(POST_RECORD_MINUS_PROTEIN);
         }
 
@@ -431,7 +431,7 @@ public class RecordApiController {
             return new BaseResponse<>(POST_RECORD_NO_FAT);
         }
 
-        if(Double.valueOf(fat) <= 0) {
+        if(Double.valueOf(fat) < 0) {
             return new BaseResponse<>(POST_RECORD_MINUS_FAT);
         }
 
