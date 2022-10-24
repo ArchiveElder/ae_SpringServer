@@ -1,8 +1,6 @@
-package com.ae.ae_SpringServer.api;
+package com.ae.ae_SpringServer.api.v1;
 
-import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.domain.Bistro;
-import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.CategoryRequestDto;
 import com.ae.ae_SpringServer.dto.request.MiddleRequestDto;
 import com.ae.ae_SpringServer.dto.response.BistroResponseDto;
@@ -11,9 +9,6 @@ import com.ae.ae_SpringServer.dto.response.CategoryListResponseDto;
 import com.ae.ae_SpringServer.dto.response.ResultResponse;
 import com.ae.ae_SpringServer.service.BistroService;
 import com.ae.ae_SpringServer.service.BookmarkService;
-import com.ae.ae_SpringServer.service.UserService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,69 +17,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
-
 @RestController
 @RequiredArgsConstructor
-public class BistroApiController {
+public class BistroApiControllerV1 {
     private final BistroService bistroService;
     private final BookmarkService bookmarkService;
-    private final UserService userService;
-    /*
-    * version 1 사용자를 위한 bistro.v1  api
-     * */
 
-    //[POST] 6-1 음식점 중분류 조회
+    //6-1
     @PostMapping("/api/bistromiddle")
-    public BaseResponse<ResultResponse> middle(@AuthenticationPrincipal String userId, @RequestBody @Valid MiddleRequestDto request) {
-        if(userId.equals("INVALID JWT")){
-            return new BaseResponse<>(INVALID_JWT);
-        }
-        if(userId == null) {
-            return new BaseResponse<>(EMPTY_JWT);
-        }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
-            return new BaseResponse<>(INVALID_JWT);
-        }
-
-        if(request.getWide().isEmpty() || request.getWide().equals("")) {
-            return new BaseResponse<>(POST_BISTRO_NO_WIDE);
-        }
+    public ResultResponse middle(@AuthenticationPrincipal String userId, @RequestBody @Valid MiddleRequestDto request) {
         List<Bistro> bistros = bistroService.getMiddle(request.getWide());
         List<String> middles = new ArrayList<>();
 
         for(Bistro bistro : bistros) {
             middles.add(bistro.getMiddle());
         }
-        return new BaseResponse<>(new ResultResponse(middles));
+        return new ResultResponse(middles);
     }
 
-    //[POST] 6-2 대분류,중분류별 음식점조회
+    //6-2
     @PostMapping("/api/categories")
-    public BaseResponse<CategoryListResponseDto> categories(@AuthenticationPrincipal String userId, @RequestBody @Valid CategoryRequestDto request) {
-        if(userId.equals("INVALID JWT")){
-            return new BaseResponse<>(INVALID_JWT);
-        }
-        if(userId == null) {
-            return new BaseResponse<>(EMPTY_JWT);
-        }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
-            return new BaseResponse<>(INVALID_JWT);
-        }
-
-        if(request.getWide().isEmpty() || request.getWide().equals("")) {
-            return new BaseResponse<>(POST_BISTRO_NO_WIDE);
-        }
-
-        if(request.getMiddle().isEmpty() || request.getMiddle().equals("")) {
-            return new BaseResponse<>(POST_BISTRO_NO_MIDDLE);
-        }
+    public CategoryListResponseDto categories(@AuthenticationPrincipal String userId, @RequestBody @Valid CategoryRequestDto request) {
         List<Bistro> categoryList = bistroService.getCategoryList(request.getWide(), request.getMiddle());
         List<Bistro> categoryGroup = bistroService.getCategories(request.getWide(), request.getMiddle());
         List<Bistro> bookmark = bookmarkService.findBookmark(Long.valueOf(userId));
@@ -106,22 +62,12 @@ public class BistroApiController {
             categories.add(bistro.getCategory());
         }
 
-        return new BaseResponse<>(new CategoryListResponseDto(categories, listDtos.size(), listDtos));
+        return new CategoryListResponseDto(categories, listDtos.size(), listDtos);
     }
 
-    //[POST] 6-3 (지도)음식점 전체 조회
+    //6-3
     @GetMapping("/api/allbistro")
-    public BaseResponse<ResultResponse> allBistro(@AuthenticationPrincipal String userId) {
-        if(userId.equals("INVALID JWT")){
-            return new BaseResponse<>(INVALID_JWT);
-        }
-        if(userId == null) {
-            return new BaseResponse<>(EMPTY_JWT);
-        }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
-            return new BaseResponse<>(INVALID_JWT);
-        }
+    public ResultResponse allBistro(@AuthenticationPrincipal String userId) {
         List<Bistro> allBistro = bistroService.getBistro();
         List<Bistro> bookmark = bookmarkService.findBookmark(Long.valueOf(userId));
         List<BistroResponseDto> bistroDtos = new ArrayList<>();
@@ -135,6 +81,8 @@ public class BistroApiController {
             bistroDtos.add(new BistroResponseDto(isBookmark, bistro.getId(), bistro.getCategory(), bistro.getName(), bistro.getRAddr(), bistro.getLAddr(),
                     bistro.getTel(), bistro.getMenu(), Double.parseDouble(bistro.getLa()), Double.parseDouble(bistro.getLo())));
         }
-        return new BaseResponse<>(new ResultResponse(bistroDtos));
+        return new ResultResponse(bistroDtos);
     }
+
+
 }
