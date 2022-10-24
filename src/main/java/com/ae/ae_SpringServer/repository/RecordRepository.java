@@ -65,6 +65,14 @@ public class RecordRepository {
 
     }
 
+    public List<Record> findDetailOneWithMeal(Long id, Long record_id, int meal) {
+        return em.createQuery("select r from Record r join r.user u where u.id = :param and r.id = :record_id and r.meal = :meal", Record.class)
+                .setParameter("param", id)
+                .setParameter("record_id", record_id)
+                .setParameter("meal", meal)
+                .getResultList();
+    }
+
     //7개의 기록된 날짜의 날짜별 총열량, 총영양소
     public List<DateAnalysisDto> analysisDate(Long id) {
         String sql = "SELECT r.record_date, SUM(r.cal), SUM(r.carb), SUM(r.protein), SUM(r.fat)" +

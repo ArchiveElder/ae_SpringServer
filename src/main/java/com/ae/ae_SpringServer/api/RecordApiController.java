@@ -345,7 +345,7 @@ public class RecordApiController {
             return new BaseResponse<>(INVALID_JWT);
         }
 
-        List<Record> findDetailRecord = recordService.findDetailOne(Long.valueOf(userId), Long.valueOf(request.getRecord_id()));
+        List<Record> findDetailRecord = recordService.findDetailOneWithMeal(Long.valueOf(userId), Long.valueOf(request.getRecord_id()), request.getMeal());
         if(findDetailRecord.size() == 0) {
             return new BaseResponse<>(POST_DETAIL_NO_RECORD_ID);
         }
