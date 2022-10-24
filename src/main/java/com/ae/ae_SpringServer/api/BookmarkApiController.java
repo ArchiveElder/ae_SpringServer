@@ -8,7 +8,7 @@ import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.BookmarkRequestDto;
 import com.ae.ae_SpringServer.dto.response.CreateBookmarkResponseDto;
 import com.ae.ae_SpringServer.dto.response.ResResponse;
-import com.ae.ae_SpringServer.dto.response.RestaurantResponseDtoV2;
+import com.ae.ae_SpringServer.dto.response.v2.RestaurantResponseDtoV2;
 import com.ae.ae_SpringServer.service.BistroService;
 import com.ae.ae_SpringServer.service.BookmarkService;
 import com.ae.ae_SpringServer.service.UserService;
