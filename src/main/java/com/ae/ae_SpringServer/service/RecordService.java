@@ -40,8 +40,4 @@ public class RecordService {
     public List<Record> findDetailOne(Long id, Long record_id) {
         return recordRepository.findDetaileOne(id, record_id);
     }
-
-    public List<Record> findDetailOneWithMeal(Long id, Long record_id, int meal) {
-        return recordRepository.findDetailOneWithMeal(id, record_id, meal);
-    }
 }
