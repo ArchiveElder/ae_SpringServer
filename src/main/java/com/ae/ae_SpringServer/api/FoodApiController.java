@@ -31,7 +31,7 @@ public class FoodApiController {
     private final UserService userService;
 
     //[GET] 2-1 모든 음식 검색
-    @GetMapping("/api/foodname")
+    @GetMapping("/api/v2/foodname")
     public BaseResponse<ResResponse> foods(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -52,7 +52,7 @@ public class FoodApiController {
 
     }
     //[POST] 2-2 음식 1개 검색
-    @PostMapping("/api/food")
+    @PostMapping("/api/v2/food")
     public BaseResponse<ResResponse> foodResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateFoodRequest request){
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
