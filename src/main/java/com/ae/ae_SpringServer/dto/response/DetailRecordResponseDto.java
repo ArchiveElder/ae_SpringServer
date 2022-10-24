@@ -15,4 +15,5 @@ public class DetailRecordResponseDto {
     private String date;
     private String time;
     private Double amount;
+    private int meal;
 }

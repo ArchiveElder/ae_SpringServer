@@ -40,5 +40,4 @@ public class RecordService {
     public List<Record> findDetailOne(Long id, Long record_id) {
         return recordRepository.findDetaileOne(id, record_id);
     }
-
 }
