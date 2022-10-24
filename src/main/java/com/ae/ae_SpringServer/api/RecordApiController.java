@@ -71,9 +71,6 @@ public class RecordApiController {
                 img_url = s3Uploader.upload(multipartFile, "static");
             }
         }
-        if(multipartFile == null || multipartFile.isEmpty()) {
-            return new BaseResponse<>(POST_RECORD_NO_IMAGE);
-        }
         if(text.isEmpty() || text.equals("")) {
             return new BaseResponse<>(POST_RECORD_NO_TEXT);
         }
