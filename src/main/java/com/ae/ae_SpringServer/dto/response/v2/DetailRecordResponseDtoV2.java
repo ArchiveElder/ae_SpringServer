@@ -1,11 +1,11 @@
-package com.ae.ae_SpringServer.dto.response;
+package com.ae.ae_SpringServer.dto.response.v2;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class DetailRecordResponseDto {
+public class DetailRecordResponseDtoV2 {
     private String text;
     private String cal;
     private String carb;
@@ -15,4 +15,5 @@ public class DetailRecordResponseDto {
     private String date;
     private String time;
     private Double amount;
+    private int meal;
 }
