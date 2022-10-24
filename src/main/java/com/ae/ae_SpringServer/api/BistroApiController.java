@@ -24,7 +24,7 @@ import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
 
 @RestController
 @RequiredArgsConstructor
-public class BistroV2ApiController {
+public class BistroApiController {
     private final BistroService bistroService;
     private final BookmarkService bookmarkService;
     private final UserService userService;
