@@ -1,5 +1,6 @@
-package com.ae.ae_SpringServer.dto.response;
+package com.ae.ae_SpringServer.dto.response.v2;
 
+import com.ae.ae_SpringServer.dto.response.v2.CategoryListDtoV2;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
