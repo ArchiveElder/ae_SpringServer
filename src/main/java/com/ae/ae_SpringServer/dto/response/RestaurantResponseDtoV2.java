@@ -6,7 +6,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
-public class RestaurantResponseDto {
+public class RestaurantResponseDtoV2 {
     private int bistroId;
     private String category;
     @NotNull
@@ -18,4 +18,5 @@ public class RestaurantResponseDto {
     private String la;
     @NotNull
     private String lo;
+    private String bistroUrl;
 }
