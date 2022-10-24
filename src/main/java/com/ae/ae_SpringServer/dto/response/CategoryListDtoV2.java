@@ -6,16 +6,14 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 @Data
 @AllArgsConstructor
-public class RestaurantResponseDto {
+public class CategoryListDtoV2 {
     private int bistroId;
+    private int isBookmark;
     private String category;
     @NotNull
     private String name;
     private String roadAddr;
     private String lnmAddr;
     private String telNo;
-    @NotNull
-    private String la;
-    @NotNull
-    private String lo;
+    private String bistroUrl;
 }

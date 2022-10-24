@@ -16,5 +16,4 @@ public class BistroResponseDto {
     private String menuInfo;
     private Double la;
     private Double lo;
-    private String bistroUrl;
 }

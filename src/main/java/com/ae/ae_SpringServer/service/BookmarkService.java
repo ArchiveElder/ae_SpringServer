@@ -25,21 +25,10 @@ public class BookmarkService {
         return bookmark.getId();
     }
 
-    public List<BistroV2> findBookmark(Long userId) {
-        return bookmarkRepository.findBookmark(userId);
+    public List<BistroV2> findBookmarkV2(Long userId) {
+        return bookmarkRepository.findBookmarkV2(userId);
     }
 
-    /*
-    *
-    * @Transactional
-	public int delete(long id) {
-		Optional<User> oUser = userRepository.findById(id);
-		if(oUser.isPresent()) {
-			userRepository.delete(oUser.get());
-			return 1;
-		}
-		return 0;
-	}*/
     @Transactional
     public Long deleteBookmark(Long userId, Long bistroId) {
         Long findBmId = bookmarkRepository.findBookmarkById(userId, bistroId);
@@ -50,6 +39,16 @@ public class BookmarkService {
         return 0L;
     }
 
+    public Long findBookmarkIdV2(Long userId, Long bistroId) {
+        return bookmarkRepository.findBookmarkByIdV2(userId, bistroId);
+    }
+
+    /*
+    * version 1 사용자를 위한 코드
+    * */
+    public List<Bistro> findBookmark(Long userId) {
+        return bookmarkRepository.findBookmark(userId);
+    }
     public Long findBookmarkId(Long userId, Long bistroId) {
         return bookmarkRepository.findBookmarkById(userId, bistroId);
     }

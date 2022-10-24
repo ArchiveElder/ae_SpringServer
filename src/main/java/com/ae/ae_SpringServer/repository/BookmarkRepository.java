@@ -19,10 +19,39 @@ public class BookmarkRepository {
     }
 
 
-    public List<BistroV2> findBookmark(Long userId) {
+    public List<BistroV2> findBookmarkV2(Long userId) {
         return em.createQuery("select b from BistroV2 b" +
                 " where b.id IN" +
                 " (select bm.bistro from Bookmark bm join bm.user u where u.id = :param)", BistroV2.class)
+                .setParameter("param", userId)
+                .getResultList();
+
+    }
+
+    public Long findBookmarkByIdV2(Long userId, Long bistroV2Id) {
+        Bookmark bookmark = em.createQuery("select bm from Bookmark bm" +
+                        " where bm.bistro_v2_id = :bistroId" +
+                        " and bm.user.id = :userId", Bookmark.class)
+                .setParameter("bistroId", bistroV2Id)
+                .setParameter("userId", userId)
+                .getSingleResult();
+        return bookmark.getId();
+    }
+
+    public Long deleteBoomark(Long bookmarkId) {
+        em.createQuery("delete from Bookmark b where b.id = :param")
+                .setParameter("param", bookmarkId)
+                .executeUpdate();
+        return bookmarkId;
+    }
+
+    /*
+    * version 1 사용자를 위한
+    * */
+    public List<Bistro> findBookmark(Long userId) {
+        return em.createQuery("select b from Bistro b" +
+                        " where b.id IN" +
+                        " (select bm.bistro from Bookmark bm join bm.user u where u.id = :param)", Bistro.class)
                 .setParameter("param", userId)
                 .getResultList();
 
@@ -38,11 +67,6 @@ public class BookmarkRepository {
         return bookmark.getId();
     }
 
-    public Long deleteBoomark(Long bookmarkId) {
-        em.createQuery("delete from Bookmark b where b.id = :param")
-                .setParameter("param", bookmarkId)
-                .executeUpdate();
-        return bookmarkId;
-    }
+
 
 }

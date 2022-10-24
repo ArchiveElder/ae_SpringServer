@@ -15,5 +15,4 @@ public class CategoryListDto {
     private String roadAddr;
     private String lnmAddr;
     private String telNo;
-    private String bistroUrl;
 }
