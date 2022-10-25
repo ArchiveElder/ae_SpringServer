@@ -28,6 +28,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/v2/login").permitAll()
+                .antMatchers("/api/v2/apple-login").permitAll()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/apple-login").permitAll()
                 .anyRequest().authenticated();
