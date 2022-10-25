@@ -42,7 +42,7 @@ public class UserApiController {
     //[POST] 4-1 카카오 로그인
     // 로그인 시에, kakaoprofile로 받은 정보가 db에 있으면 jwt 토큰 발급(status코드는 온보딩 안띄우게). db에 없으면 new user로 저장시키고 jwt 토큰발급(온보딩 띄우게)
     @PostMapping("/api/v2/login")
-    public  BaseResponse<LoginResponseDto> loginByKakao(
+    public BaseResponse<LoginResponseDto> loginByKakao(
             @RequestBody UserSocialLoginRequestDto socialLoginRequestDto) {
         String token = socialLoginRequestDto.getAccessToken();
         // KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(token);
