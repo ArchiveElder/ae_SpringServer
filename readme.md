@@ -52,5 +52,5 @@
 |Position|Name|Repository|
 |:---:|:---:|---|
 |Server|[김세현](https://early-tithonia-af2.notion.site/KIM-SEHYEON-8d0186298ecc43a797abb8de0436c15e)|https://github.com/ArchiveElder/ae_SpringServer|
-|Server|[김민서](https://github.com/rosesua318)|https://github.com/ArchiveElder/ae_SpringServer|
+|Server|[김민서](https://www.notion.so/d6d0e962e84942a39a9e527fd602337f)|https://github.com/ArchiveElder/ae_SpringServer|
 |iOS|[권하은,안소정](https://github.com/eilyri)|https://github.com/ArchiveElder/ae-iOS|
