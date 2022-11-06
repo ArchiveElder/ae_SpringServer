@@ -20,6 +20,7 @@ public class User {
     @Column(name = "user_id")
     private Long id;
     private String name;
+    private String nickname;
     private int gender;
     private int age;
     private String height;
