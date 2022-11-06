@@ -8,6 +8,7 @@ import com.ae.ae_SpringServer.dto.request.UserNicknameRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
+import com.ae.ae_SpringServer.dto.request.v3.UserInfoResponseDtoV3;
 import com.ae.ae_SpringServer.dto.request.v3.UserUpdateRequestDtoV3;
 import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
@@ -135,9 +136,9 @@ public class UserApiController {
         return new BaseResponse<>(userId + "번  회원 등록되었습니다");
     }
 
-    // [GET] 3-1 회원 정보 조회
-    @GetMapping("/api/v2/userinfo")
-    public BaseResponse<UserInfoResponseDto> info(@AuthenticationPrincipal String userId) {
+    // [GET] 3-1 회원 정보 조회 for version3
+    @GetMapping("/v3/userinfo")
+    public BaseResponse<UserInfoResponseDtoV3> info(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -148,7 +149,7 @@ public class UserApiController {
         if (user == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
-        return new BaseResponse<>(new UserInfoResponseDto(user.getName(), user.getGender(), user.getAge(), user.getHeight(), user.getWeight(), user.getIcon(), user.getActivity()));
+        return new BaseResponse<>(new UserInfoResponseDtoV3(user.getNickname(), user.getGender(), user.getAge(), user.getHeight(), user.getWeight(), user.getIcon(), user.getActivity()));
 
     }
 
