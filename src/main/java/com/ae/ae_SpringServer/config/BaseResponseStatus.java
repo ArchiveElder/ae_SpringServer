@@ -48,6 +48,9 @@ public enum BaseResponseStatus {
     POST_RECORD_NO_RECORD_DATA(false, 2119, "해당하는 기록이 없습니다."),
     POST_DETAIL_NO_RECORD_ID(false, 2150, "기록id에 해당하는 상세정보가 없습니다."),
 
+    // [POST] /user-nickname
+    POST_EMPTY_NICKNAME(false, 2161, "닉네임을 입력해주세요. "),
+
 
     // [POST] /food
     POST_FOOD_NO_ID(false, 2120, "조회하고 싶은 음식 id를 입력해주세요."),
@@ -74,6 +77,8 @@ public enum BaseResponseStatus {
     POST_USER_MINUS_WEIGHT(false, 2138, "몸무게가 0보다 작습니다."),
     POST_USER_NO_ACTIVITY(false, 2139, "활동 점수를 입력해주세요."),
     POST_USER_INVALID_ACTIVITY(false, 2140, "활동 점수가 유효하지 않습니다."),
+    POST_USER_NO_NICKNAME(false, 2141, "닉네임을 입력해주세요."),
+    POST_USER_LONG_NICKNAME(false, 2142, "닉네임이 45자보다 깁니다."),
 
     // [POST] /login
     POST_USER_NO_TOKEN(false, 2141, "accessToken을 입력해주세요."),

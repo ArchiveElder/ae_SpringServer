@@ -4,11 +4,16 @@ import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.config.security.JwtProvider;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
+import com.ae.ae_SpringServer.dto.request.UserNicknameRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
+import com.ae.ae_SpringServer.dto.request.v3.UserInfoResponseDtoV3;
+import com.ae.ae_SpringServer.dto.request.v3.UserUpdateRequestDtoV3;
 import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.dto.response.UserInfoResponseDto;
+import com.ae.ae_SpringServer.dto.response.UserNicknameResponseDto;
 import com.ae.ae_SpringServer.service.UserService;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import lombok.RequiredArgsConstructor;
@@ -45,14 +50,7 @@ public class UserApiController {
     public BaseResponse<LoginResponseDto> loginByKakao(
             @RequestBody UserSocialLoginRequestDto socialLoginRequestDto) {
         String token = socialLoginRequestDto.getAccessToken();
-        // KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(token);
 
-        /*
-        if (kakaoProfile.getKakao_account().getEmail() == null) {
-            kakaoService.kakaoUnlink(socialSignupRequestDto.getAccessToken());
-            throw new CSocialAgreementException();
-        }
-         */
         RestTemplate restTemplate = new RestTemplate();
         URI uri = URI.create("https://kapi.kakao.com/v2/user/me");
         HttpHeaders headers = new org.springframework.http.HttpHeaders();
@@ -90,9 +88,9 @@ public class UserApiController {
 
     }
 
-    // [POST] 3-3  회원 등록
-    @PostMapping("/api/v2/signup")
-    public BaseResponse<String> signup(@AuthenticationPrincipal String userId, @RequestBody SignupRequestDto signupRequestDto) {
+    // [POST] 3-3  회원 등록 (version 3 )
+    @PostMapping("/v3/signup")
+    public BaseResponse<String> signup(@AuthenticationPrincipal String userId, @RequestBody SignupRequestDtoV3 signupRequestDto) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -103,10 +101,10 @@ public class UserApiController {
         if (user == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
-        if(signupRequestDto.getName().isEmpty() || signupRequestDto.getName().equals("")) {
+        if(signupRequestDto.getNickname().isEmpty() || signupRequestDto.getNickname().equals("")) {
             return new BaseResponse<>(POST_USER_NO_NAME);
         }
-        if(signupRequestDto.getName().length() > 45) {
+        if(signupRequestDto.getNickname().length() > 45) {
             return new BaseResponse<>(POST_USER_LONG_NAME);
         }
         if(signupRequestDto.getAge() < 1) {
@@ -134,13 +132,13 @@ public class UserApiController {
         if(signupRequestDto.getActivity() != 25 && signupRequestDto.getActivity() != 33 && Integer.valueOf(signupRequestDto.getActivity()) != 40) {
             return new BaseResponse<>(POST_USER_INVALID_ACTIVITY);
         }
-        userService.signup(Long.valueOf(userId), signupRequestDto);
+        userService.signupNickname(Long.valueOf(userId), signupRequestDto);
         return new BaseResponse<>(userId + "번  회원 등록되었습니다");
     }
 
-    // [GET] 3-1 회원 정보 조회
-    @GetMapping("/api/v2/userinfo")
-    public BaseResponse<UserInfoResponseDto> info(@AuthenticationPrincipal String userId) {
+    // [GET] 3-1 회원 정보 조회 for version3
+    @GetMapping("/v3/userinfo")
+    public BaseResponse<UserInfoResponseDtoV3> info(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -151,13 +149,13 @@ public class UserApiController {
         if (user == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
-        return new BaseResponse<>(new UserInfoResponseDto(user.getName(), user.getGender(), user.getAge(), user.getHeight(), user.getWeight(), user.getIcon(), user.getActivity()));
+        return new BaseResponse<>(new UserInfoResponseDtoV3(user.getNickname(), user.getGender(), user.getAge(), user.getHeight(), user.getWeight(), user.getIcon(), user.getActivity()));
 
     }
 
-    // [PUT] 3-2 회원 정보 수정
-    @PutMapping("/api/v2/userupdate")
-    public BaseResponse<String>  update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+    // [PUT] 3-2 회원 정보 수정 for version3
+    @PutMapping("/v3/userupdate")
+    public BaseResponse<String>  update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDtoV3 userUpdateRequestDto) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -191,7 +189,7 @@ public class UserApiController {
             return new BaseResponse<>(PUT_USER_INVALID_ACTIVITY);
         }
 
-        userService.update(Long.valueOf(userId), userUpdateRequestDto);
+        userService.updateV3(Long.valueOf(userId), userUpdateRequestDto);
         return new BaseResponse<>(userId + "번  회원 정보 수정되었습니다");
     }
 
@@ -213,16 +211,21 @@ public class UserApiController {
         return new BaseResponse<>("회원 탈퇴 되었습니다.");
     }
 
+    // [POST] 3-5 닉네임 중복확인
+    @PostMapping("/v3/nicknamecheck")
+    public BaseResponse<UserNicknameResponseDto> nicknameCheck(@RequestBody UserNicknameRequestDto request) {
+        if(request.getNickname().isEmpty() || request.getNickname().equals("")) {
+            return new BaseResponse<>(POST_EMPTY_NICKNAME);
+        }
 
-    /*
-    // 액세스 토큰 만료시 회원 검증 후 리프레쉬 토큰을 검증해서 액세스 토큰과 리프레시 토큰을 재발급함
-    @PostMapping("/reissue")
-    public SingleResult<TokenDto> reissue(
-            @ApiParam(value = "토큰 재발급 요청 DTO", required = true)
-            @RequestBody TokenRequestDto tokenRequestDto) {
-        return responseService.getSingleResult(signService.reissue(tokenRequestDto));
+        Long isExist = userService.nicknameCheck(request.getNickname().trim());
+        if(isExist > 0) {
+            return new BaseResponse<>(new UserNicknameResponseDto(true, "이미 존재하는 닉네임입니다."));
+        } else {
+            return new BaseResponse<>(new UserNicknameResponseDto(false, "사용해도 되는 닉네임입니다."));
+        }
     }
-     */
+
 
 
 

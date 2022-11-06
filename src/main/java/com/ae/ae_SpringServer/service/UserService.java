@@ -6,6 +6,8 @@ import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
+import com.ae.ae_SpringServer.dto.request.v3.UserUpdateRequestDtoV3;
 import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.exception.AeException;
@@ -57,6 +59,9 @@ public class UserService {
     public void signup(Long id, SignupRequestDto dto) {
         userRepository.signup(id, dto);
     }
+    public void signupNickname(Long id, SignupRequestDtoV3 dto) {
+        userRepository.signupNickname(id, dto);
+    }
 
     public void update(Long id, UserUpdateRequestDto dto) {
         userRepository.update(id, dto);
@@ -100,46 +105,13 @@ public class UserService {
             throw new AeException(INVALID_APPLE_TOKEN);
         }
     }
-    /*
-    // createAccessToken, createRefreshToken 발급
-    private Pair<String, String> getTokens(User user) {
-        String accessToken = createAccessToken(user);
-        String refreshToken = createRefreshToken(user);
 
-
-        return Pair.of(accessToken, refreshToken);
+    public Long nicknameCheck(String nickname) {
+        return userRepository.nicknameCheck(nickname);
     }
-    // 애플 공개키 조회
-    private JSONObject getApplePublicKey(String headerStr) {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            URI uri = URI.create(APPLE_AUTH);
-            ResponseEntity<JSONObject> apiResponse = restTemplate.getForEntity(uri, JSONObject.class);
-            JSONObject responseBody = apiResponse.getBody();
-            ArrayList<JSONObject> keyArray = (ArrayList<JSONObject>) responseBody.get("keys");
-
-            JSONParser parser = new JSONParser();
-            JSONObject header = (JSONObject) parser.parse(headerStr);
-            JSONObject availableKey = null;
-
-            for (int i=0; i<keyArray.size(); i++) {
-                JSONObject key = new JSONObject(keyArray.get(i));
-                if (key.get("kid").equals(header.get("kid")) &&
-                        key.get("alg").equals(header.get("alg"))) {
-                    availableKey = key;
-                }
-            }
-            if (ObjectUtils.isEmpty(availableKey))
-                throw new AeException(FAILED_TO_FIND_AVAILABLE_RSA);
-            return availableKey;
-
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new AeException(INVALID_APPLE_ACCESS);
-        } catch (ParseException e) {
-            throw new AeException(INVALID_APPLE_TOKEN);
-        }
-    }*/
 
 
-
+    public void updateV3(Long id, UserUpdateRequestDtoV3 dto) {
+        userRepository.updateV3(id, dto);
+    }
 }

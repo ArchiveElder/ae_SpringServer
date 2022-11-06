@@ -32,6 +32,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/v2/apple-login").permitAll()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/api/apple-login").permitAll()
+                .antMatchers("/v3/nicknamecheck").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterAfter(jwtAuthenticationFilter, CorsFilter.class);
