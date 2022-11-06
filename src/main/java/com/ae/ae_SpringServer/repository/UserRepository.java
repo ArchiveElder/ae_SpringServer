@@ -5,6 +5,7 @@ import com.ae.ae_SpringServer.dto.CalcNutrientDtos;
 import com.ae.ae_SpringServer.dto.request.CalcRequestDto;
 import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
 import com.ae.ae_SpringServer.utils.CalcNutrients;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -109,5 +110,38 @@ public class UserRepository {
         return (Long) em.createQuery("select count(u.id) from User u where u.nickname = :nickname")
                 .setParameter("nickname", nickname)
                 .getSingleResult();
+    }
+
+    public void signupNickname(Long id, SignupRequestDtoV3 dto) {
+        int age = dto.getAge();
+        int gender = dto.getGender();
+        String nickname = dto.getNickname();
+        String weight = dto.getWeight();
+        String height = dto.getHeight();
+        int activity = dto.getActivity();
+        int icon = (int)(Math.random() * 13);
+        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
+        CalcRequestDto calcRequestDto = new CalcRequestDto(dto.getNickname(), dto.getAge(),dto.getGender(), dto.getHeight(), dto.getWeight(), dto.getActivity());
+        CalcNutrientDtos calcNutrientDtos = CalcNutrients.calcNutrientDtos(calcRequestDto);
+
+        em.createQuery("update User u set u.nickname = :nickname, u.age = :age, u.gender = :gender, u.height = :height, u.weight = :weight," +
+                        "u.date = :date, u.icon = :icon, u.activity = :activity, u.rcal = :calory, u.rcarb = :carb, " +
+                        "u.rpro = :pro, u.rfat = :fat " +
+                        "where u.id = :id")
+                .setParameter("nickname", nickname)
+                .setParameter("age", age)
+                .setParameter("gender", gender)
+                .setParameter("height", height)
+                .setParameter("weight", weight)
+                .setParameter("icon", icon)
+                .setParameter("activity", activity)
+                .setParameter("calory", calcNutrientDtos.getRcal())
+                .setParameter("carb", calcNutrientDtos.getRcarb())
+                .setParameter("pro", calcNutrientDtos.getRpro())
+                .setParameter("fat", calcNutrientDtos.getRfat())
+                .setParameter("date", date)
+                .setParameter("id", id)
+                .executeUpdate();
+
     }
 }

@@ -6,6 +6,7 @@ import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
 import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.exception.AeException;
@@ -56,6 +57,9 @@ public class UserService {
 
     public void signup(Long id, SignupRequestDto dto) {
         userRepository.signup(id, dto);
+    }
+    public void signupNickname(Long id, SignupRequestDtoV3 dto) {
+        userRepository.signupNickname(id, dto);
     }
 
     public void update(Long id, UserUpdateRequestDto dto) {

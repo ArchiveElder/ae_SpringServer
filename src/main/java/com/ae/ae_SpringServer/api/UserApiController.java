@@ -7,6 +7,7 @@ import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserNicknameRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
+import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
 import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.dto.response.UserInfoResponseDto;
@@ -85,9 +86,9 @@ public class UserApiController {
 
     }
 
-    // [POST] 3-3  회원 등록
-    @PostMapping("/api/v2/signup")
-    public BaseResponse<String> signup(@AuthenticationPrincipal String userId, @RequestBody SignupRequestDto signupRequestDto) {
+    // [POST] 3-3  회원 등록 (version 3 )
+    @PostMapping("/v3/signup")
+    public BaseResponse<String> signup(@AuthenticationPrincipal String userId, @RequestBody SignupRequestDtoV3 signupRequestDto) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -98,10 +99,10 @@ public class UserApiController {
         if (user == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
-        if(signupRequestDto.getName().isEmpty() || signupRequestDto.getName().equals("")) {
+        if(signupRequestDto.getNickname().isEmpty() || signupRequestDto.getNickname().equals("")) {
             return new BaseResponse<>(POST_USER_NO_NAME);
         }
-        if(signupRequestDto.getName().length() > 45) {
+        if(signupRequestDto.getNickname().length() > 45) {
             return new BaseResponse<>(POST_USER_LONG_NAME);
         }
         if(signupRequestDto.getAge() < 1) {
@@ -129,7 +130,7 @@ public class UserApiController {
         if(signupRequestDto.getActivity() != 25 && signupRequestDto.getActivity() != 33 && Integer.valueOf(signupRequestDto.getActivity()) != 40) {
             return new BaseResponse<>(POST_USER_INVALID_ACTIVITY);
         }
-        userService.signup(Long.valueOf(userId), signupRequestDto);
+        userService.signupNickname(Long.valueOf(userId), signupRequestDto);
         return new BaseResponse<>(userId + "번  회원 등록되었습니다");
     }
 
