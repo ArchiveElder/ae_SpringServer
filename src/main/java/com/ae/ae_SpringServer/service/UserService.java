@@ -100,45 +100,10 @@ public class UserService {
             throw new AeException(INVALID_APPLE_TOKEN);
         }
     }
-    /*
-    // createAccessToken, createRefreshToken 발급
-    private Pair<String, String> getTokens(User user) {
-        String accessToken = createAccessToken(user);
-        String refreshToken = createRefreshToken(user);
 
-
-        return Pair.of(accessToken, refreshToken);
+    public Long nicknameCheck(String nickname) {
+        return userRepository.nicknameCheck(nickname);
     }
-    // 애플 공개키 조회
-    private JSONObject getApplePublicKey(String headerStr) {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            URI uri = URI.create(APPLE_AUTH);
-            ResponseEntity<JSONObject> apiResponse = restTemplate.getForEntity(uri, JSONObject.class);
-            JSONObject responseBody = apiResponse.getBody();
-            ArrayList<JSONObject> keyArray = (ArrayList<JSONObject>) responseBody.get("keys");
-
-            JSONParser parser = new JSONParser();
-            JSONObject header = (JSONObject) parser.parse(headerStr);
-            JSONObject availableKey = null;
-
-            for (int i=0; i<keyArray.size(); i++) {
-                JSONObject key = new JSONObject(keyArray.get(i));
-                if (key.get("kid").equals(header.get("kid")) &&
-                        key.get("alg").equals(header.get("alg"))) {
-                    availableKey = key;
-                }
-            }
-            if (ObjectUtils.isEmpty(availableKey))
-                throw new AeException(FAILED_TO_FIND_AVAILABLE_RSA);
-            return availableKey;
-
-        } catch (HttpClientErrorException | HttpServerErrorException e) {
-            throw new AeException(INVALID_APPLE_ACCESS);
-        } catch (ParseException e) {
-            throw new AeException(INVALID_APPLE_TOKEN);
-        }
-    }*/
 
 
 

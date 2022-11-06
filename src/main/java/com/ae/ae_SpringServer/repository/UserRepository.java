@@ -104,4 +104,10 @@ public class UserRepository {
                 .getResultList();
         return user.stream().findAny();
     }
+
+    public Long nicknameCheck(String nickname) {
+        return (Long) em.createQuery("select count(u.id) from User u where u.nickname = :nickname")
+                .setParameter("nickname", nickname)
+                .getSingleResult();
+    }
 }

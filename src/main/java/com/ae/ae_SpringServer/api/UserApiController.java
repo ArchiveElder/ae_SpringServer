@@ -4,11 +4,13 @@ import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.config.security.JwtProvider;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
+import com.ae.ae_SpringServer.dto.request.UserNicknameRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.dto.response.UserInfoResponseDto;
+import com.ae.ae_SpringServer.dto.response.UserNicknameResponseDto;
 import com.ae.ae_SpringServer.service.UserService;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import lombok.RequiredArgsConstructor;
@@ -45,14 +47,7 @@ public class UserApiController {
     public BaseResponse<LoginResponseDto> loginByKakao(
             @RequestBody UserSocialLoginRequestDto socialLoginRequestDto) {
         String token = socialLoginRequestDto.getAccessToken();
-        // KakaoProfile kakaoProfile = kakaoService.getKakaoProfile(token);
 
-        /*
-        if (kakaoProfile.getKakao_account().getEmail() == null) {
-            kakaoService.kakaoUnlink(socialSignupRequestDto.getAccessToken());
-            throw new CSocialAgreementException();
-        }
-         */
         RestTemplate restTemplate = new RestTemplate();
         URI uri = URI.create("https://kapi.kakao.com/v2/user/me");
         HttpHeaders headers = new org.springframework.http.HttpHeaders();
@@ -213,16 +208,21 @@ public class UserApiController {
         return new BaseResponse<>("회원 탈퇴 되었습니다.");
     }
 
+    // [POST] 3-5 닉네임 중복확인
+    @PostMapping("/v3/nicknamecheck")
+    public BaseResponse<UserNicknameResponseDto> nicknameCheck(@RequestBody UserNicknameRequestDto request) {
+        if(request.getNickname().isEmpty() || request.getNickname().equals("")) {
+            return new BaseResponse<>(POST_EMPTY_NICKNAME);
+        }
 
-    /*
-    // 액세스 토큰 만료시 회원 검증 후 리프레쉬 토큰을 검증해서 액세스 토큰과 리프레시 토큰을 재발급함
-    @PostMapping("/reissue")
-    public SingleResult<TokenDto> reissue(
-            @ApiParam(value = "토큰 재발급 요청 DTO", required = true)
-            @RequestBody TokenRequestDto tokenRequestDto) {
-        return responseService.getSingleResult(signService.reissue(tokenRequestDto));
+        Long isExist = userService.nicknameCheck(request.getNickname().trim());
+        if(isExist > 0) {
+            return new BaseResponse<>(new UserNicknameResponseDto(true, "이미 존재하는 닉네임입니다."));
+        } else {
+            return new BaseResponse<>(new UserNicknameResponseDto(false, "사용해도 되는 닉네임입니다."));
+        }
     }
-     */
+
 
 
 

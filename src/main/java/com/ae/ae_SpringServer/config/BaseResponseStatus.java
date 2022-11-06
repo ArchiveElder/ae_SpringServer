@@ -48,6 +48,9 @@ public enum BaseResponseStatus {
     POST_RECORD_NO_RECORD_DATA(false, 2119, "해당하는 기록이 없습니다."),
     POST_DETAIL_NO_RECORD_ID(false, 2150, "기록id에 해당하는 상세정보가 없습니다."),
 
+    // [POST] /user-nickname
+    POST_EMPTY_NICKNAME(false, 2161, "닉네임을 입력해주세요. "),
+
 
     // [POST] /food
     POST_FOOD_NO_ID(false, 2120, "조회하고 싶은 음식 id를 입력해주세요."),
