@@ -7,6 +7,7 @@ import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
+import com.ae.ae_SpringServer.dto.request.v3.UserUpdateRequestDtoV3;
 import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.exception.AeException;
@@ -110,5 +111,7 @@ public class UserService {
     }
 
 
-
+    public void updateV3(Long id, UserUpdateRequestDtoV3 dto) {
+        userRepository.updateV3(id, dto);
+    }
 }

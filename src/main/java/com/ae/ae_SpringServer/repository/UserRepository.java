@@ -6,6 +6,7 @@ import com.ae.ae_SpringServer.dto.request.CalcRequestDto;
 import com.ae.ae_SpringServer.dto.request.SignupRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
+import com.ae.ae_SpringServer.dto.request.v3.UserUpdateRequestDtoV3;
 import com.ae.ae_SpringServer.utils.CalcNutrients;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -143,5 +144,28 @@ public class UserRepository {
                 .setParameter("id", id)
                 .executeUpdate();
 
+    }
+
+    public void updateV3(Long id, UserUpdateRequestDtoV3 dto) {
+        User u = findOne(id);
+        String name = u.getName();
+        int gender = u.getGender();
+
+        CalcRequestDto calcRequestDto = new CalcRequestDto(name, dto.getAge(), gender, dto.getHeight(), dto.getWeight(), dto.getActivity());
+        CalcNutrientDtos calcNutrientDtos = CalcNutrients.calcNutrientDtos(calcRequestDto);
+        em.createQuery("update User u set u.nickname = :nickname, u.age = :age, u.height = :height, u.weight = :weight, u.activity = :activity," +
+                        " u.rcal = :cal, u.rcarb = :carb, u.rpro = :pro, u.rfat = :fat " +
+                        "where u.id = :id")
+                .setParameter("nickname", dto.getNickname())
+                .setParameter("age", dto.getAge())
+                .setParameter("height", dto.getHeight())
+                .setParameter("weight", dto.getWeight())
+                .setParameter("activity", dto.getActivity())
+                .setParameter("cal", calcNutrientDtos.getRcal())
+                .setParameter("carb", calcNutrientDtos.getRcarb())
+                .setParameter("pro", calcNutrientDtos.getRpro())
+                .setParameter("fat", calcNutrientDtos.getRfat())
+                .setParameter("id", id)
+                .executeUpdate();
     }
 }

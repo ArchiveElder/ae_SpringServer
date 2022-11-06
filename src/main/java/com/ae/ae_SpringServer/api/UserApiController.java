@@ -8,6 +8,7 @@ import com.ae.ae_SpringServer.dto.request.UserNicknameRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserSocialLoginRequestDto;
 import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
+import com.ae.ae_SpringServer.dto.request.v3.UserUpdateRequestDtoV3;
 import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
 import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.dto.response.UserInfoResponseDto;
@@ -151,9 +152,9 @@ public class UserApiController {
 
     }
 
-    // [PUT] 3-2 회원 정보 수정
-    @PutMapping("/api/v2/userupdate")
-    public BaseResponse<String>  update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDto userUpdateRequestDto) {
+    // [PUT] 3-2 회원 정보 수정 for version3
+    @PutMapping("/v3/userupdate")
+    public BaseResponse<String>  update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDtoV3 userUpdateRequestDto) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -187,7 +188,7 @@ public class UserApiController {
             return new BaseResponse<>(PUT_USER_INVALID_ACTIVITY);
         }
 
-        userService.update(Long.valueOf(userId), userUpdateRequestDto);
+        userService.updateV3(Long.valueOf(userId), userUpdateRequestDto);
         return new BaseResponse<>(userId + "번  회원 정보 수정되었습니다");
     }
 
