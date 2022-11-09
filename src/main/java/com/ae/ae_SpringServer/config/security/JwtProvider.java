@@ -24,7 +24,7 @@ import java.util.Random;
 @Component
 
 public class JwtProvider {
-    @Value("spring.jwt.secretakjhfluwehlfsdfbuawegfdvhsfvawgrywiehsrjfbsauaweiruhawusdhfvwhsvdfalsdfh")
+    @Value("${jwt.secret-key}")
     private String secretKey;
 
     private Long tokenValidMillisecond = 60 * 60 * 1000L;
