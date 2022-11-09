@@ -35,4 +35,9 @@ public class BistroV2 {
 
     private String bistroUrl;
 
+    @Column(name = "main_category")
+    private String mainCategory;
+    @Column(name = "middle_category")
+    private String middleCategory;
+
 }

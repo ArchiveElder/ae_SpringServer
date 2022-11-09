@@ -1,6 +1,7 @@
 package com.ae.ae_SpringServer.service;
 
 import com.ae.ae_SpringServer.domain.Bistro;
+import com.ae.ae_SpringServer.domain.BistroV2;
 import com.ae.ae_SpringServer.domain.Bookmark;
 import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.repository.BookmarkRepository;
@@ -43,9 +44,10 @@ public class BookmarkServiceTest {
         em.persist(user);
 
         List<Bistro> allBistro = bistroService.getBistro();
+        List<BistroV2> allBistroV2 = bistroService.getBistroV2();
 
         // when
-        Bookmark bookmark = Bookmark.createBookmark(user, allBistro.get(0));
+        Bookmark bookmark = Bookmark.createBookmark(user, allBistro.get(0), allBistroV2.get(0).getId());
         Long id = bookmarkService.create(bookmark);
 
         // then
@@ -69,9 +71,10 @@ public class BookmarkServiceTest {
         em.persist(user);
 
         List<Bistro> allBistro = bistroService.getBistro();
+        List<BistroV2> allBistroV2 = bistroService.getBistroV2();
 
         // when
-        Bookmark bookmark = Bookmark.createBookmark(user, allBistro.get(0));
+        Bookmark bookmark = Bookmark.createBookmark(user, allBistro.get(0), allBistroV2.get(0).getId());
         Long id = bookmarkService.create(bookmark);
         List<Bistro> bm = bookmarkService.findBookmark(id);
 
