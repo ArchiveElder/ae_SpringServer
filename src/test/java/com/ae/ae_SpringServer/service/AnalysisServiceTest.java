@@ -2,7 +2,7 @@ package com.ae.ae_SpringServer.service;
 
 import com.ae.ae_SpringServer.domain.Record;
 import com.ae.ae_SpringServer.domain.User;
-import com.ae.ae_SpringServer.jpql.DateAnalysisDto;
+import com.ae.ae_SpringServer.jpql.DateAnalysisDtoV2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -78,7 +78,7 @@ public class AnalysisServiceTest {
         id = recordService.record(record);
 
         // when
-        List<DateAnalysisDto> findRecords = analysisService.findRecords(Long.valueOf(user.getId()));
+        List<DateAnalysisDtoV2> findRecords = analysisService.findRecords(Long.valueOf(user.getId()));
 
         // then
         assertEquals(findRecords.get(0).getSumCal(), 612.0);
