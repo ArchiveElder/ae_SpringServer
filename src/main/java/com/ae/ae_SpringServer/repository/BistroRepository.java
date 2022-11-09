@@ -65,4 +65,41 @@ public class BistroRepository {
         return em.createQuery("select b from Bistro b", Bistro.class)
                 .getResultList();
     }
+
+    public List<BistroV2> getCategoryMain(String mainCategory) {
+        return em.createQuery("select b from BistroV2 b where b.mainCategory = :mainCategory", BistroV2.class)
+                .setParameter("mainCategory", mainCategory)
+                .getResultList();
+    }
+
+    public List<BistroV2> getCategoryMiddle(String mainCategory, String middleCategory) {
+        return em.createQuery("select b from BistroV2 b where b.mainCategory = :mainCategory and b.middleCategory = :middleCategory", BistroV2.class)
+                .setParameter("mainCategory", mainCategory)
+                .setParameter("middleCategory", middleCategory)
+                .getResultList();
+    }
+
+    public List<BistroV2> getBistroMain(String siteWide, String siteMiddle, String mainCategory) {
+        return em.createQuery("select b from BistroV2 b where b.wide = :siteWide and b.middle = :siteMiddle and b.mainCategory = :mainCategory", BistroV2.class)
+                .setParameter("siteWide", siteWide)
+                .setParameter("siteMiddle", siteMiddle)
+                .setParameter("mainCategory", mainCategory)
+                .getResultList();
+    }
+
+    public List<BistroV2> getBistroMiddle(String siteWide, String siteMiddle, String mainCategory, String middleCategory) {
+        return em.createQuery("select b from BistroV2 b where b.wide = :siteWide and b.middle = :siteMiddle and b.mainCategory = :mainCategory and b.middleCategory = :middleCategory", BistroV2.class)
+                .setParameter("siteWide", siteWide)
+                .setParameter("siteMiddle", siteMiddle)
+                .setParameter("mainCategory", mainCategory)
+                .setParameter("middleCategory", middleCategory)
+                .getResultList();
+    }
+
+    public List<BistroV2> getSiteWideMain(String siteWide, String mainCategory) {
+        return em.createQuery("select b from BistroV2 b where b.wide = :siteWide and b.mainCategory = :mainCategory", BistroV2.class)
+                .setParameter("siteWide", siteWide)
+                .setParameter("mainCategory", mainCategory)
+                .getResultList();
+    }
 }

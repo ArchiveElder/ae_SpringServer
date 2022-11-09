@@ -52,5 +52,23 @@ public class BistroService {
         return bistroRepository.getBistro();
     }
 
+    public List<BistroV2> getCategoryMain(String mainCategory) {
+        return bistroRepository.getCategoryMain(mainCategory);
+    }
 
+    public List<BistroV2> getCategoryMiddle(String mainCategory, String middleCategory) {
+        return bistroRepository.getCategoryMiddle(mainCategory, middleCategory);
+    }
+
+    public List<BistroV2> getBistroMain(String siteWide, String siteMiddle, String mainCategory) {
+        return bistroRepository.getBistroMain(siteWide, siteMiddle, mainCategory);
+    }
+
+    public List<BistroV2> getBistroMiddle(String siteWide, String siteMiddle, String mainCategory, String middleCategory) {
+        return bistroRepository.getBistroMiddle(siteWide, siteMiddle, mainCategory, middleCategory);
+    }
+
+    public List<BistroV2> getSiteWideMain(String siteWide, String mainCategory) {
+        return bistroRepository.getSiteWideMain(siteWide, mainCategory);
+    }
 }

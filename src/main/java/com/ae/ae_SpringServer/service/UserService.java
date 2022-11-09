@@ -13,6 +13,7 @@ import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
 import com.ae.ae_SpringServer.exception.AeException;
 import com.ae.ae_SpringServer.repository.UserRepository;
 
+import com.ae.ae_SpringServer.repository.UserRepositoryV3;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -40,12 +41,17 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final UserRepositoryV3 userRepositoryV3;
     private final JwtProvider jwtProvider;
     private static final String APPLE_AUTH = "https://appleid.apple.com/auth/keys";
 
 
     public User findOne(Long id) {
         return userRepository.findOne(id);
+    }
+
+    public Optional<User> findById(Long id) {
+        return userRepositoryV3.findById(id);
     }
 
     public void create(User user) {

@@ -3,8 +3,7 @@ package com.ae.ae_SpringServer.api;
 import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.domain.BistroV2;
 import com.ae.ae_SpringServer.domain.User;
-import com.ae.ae_SpringServer.dto.request.CategoryRequestDto;
-import com.ae.ae_SpringServer.dto.request.MiddleRequestDto;
+import com.ae.ae_SpringServer.dto.request.*;
 import com.ae.ae_SpringServer.dto.response.*;
 import com.ae.ae_SpringServer.dto.response.v2.BistroResponseDtoV2;
 import com.ae.ae_SpringServer.dto.response.v2.CategoryListDtoV2;
@@ -12,12 +11,12 @@ import com.ae.ae_SpringServer.dto.response.v2.CategoryListResponseDtoV2;
 import com.ae.ae_SpringServer.service.BistroService;
 import com.ae.ae_SpringServer.service.BookmarkService;
 import com.ae.ae_SpringServer.service.UserService;
+import com.ae.ae_SpringServer.validation.BistroValidationController;
+import com.ae.ae_SpringServer.validation.UserValidationController;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -31,6 +30,9 @@ public class BistroApiController {
     private final BistroService bistroService;
     private final BookmarkService bookmarkService;
     private final UserService userService;
+
+    private final UserValidationController userValidationController;
+    private final BistroValidationController bistroValidationController;
 
     //[POST] 6-1 음식점 중분류 조회
     @PostMapping("/api/v2/bistromiddle")
@@ -131,5 +133,142 @@ public class BistroApiController {
                     bistro.getTel(), bistro.getMenu(), Double.parseDouble(bistro.getLa()), Double.parseDouble(bistro.getLo()), bistro.getBistroUrl()));
         }
         return new BaseResponse<>(new ResultResponse(bistroDtos));
+    }
+
+    // [POST] 6-4 음식점 대분류 카테고리 검색
+    @PostMapping("/api/category-main")
+    public ResponseEntity<?> getCategoryMain(@AuthenticationPrincipal String userId, @RequestBody PostCategoryMainReqDto request) {
+        //validation 로직
+        userValidationController.validateuser(Long.valueOf(userId));
+        bistroValidationController.validateCategoryMain(request.getMainCategory());
+
+        List<BistroV2> bistroList = bistroService.getCategoryMain(request.getMainCategory());
+        List<BistroV2> bookmark = bookmarkService.findBookmarkV2(Long.valueOf(userId));
+
+        List<MainCategoryListDto> listDtos = new ArrayList<>();
+
+        for(BistroV2 bistro : bistroList) {
+            int isBookmark;
+            if(bookmark.indexOf(bistro) != -1) {
+                isBookmark = 1;
+            } else {
+                isBookmark = 0;
+            }
+            listDtos.add(new MainCategoryListDto(bistro.getId(), isBookmark, bistro.getName(), bistro.getRAddr(), bistro.getLAddr(), bistro.getTel(), bistro.getMenu(),
+                    bistro.getLa(), bistro.getLa(), bistro.getBistroUrl(), bistro.getMiddleCategory()));
+        }
+
+        return ResponseEntity.ok().body(listDtos);
+    }
+
+    // [POST] 6-5 음식점 대분류, 중분류 카테고리별 검색
+    @PostMapping("/api/category-middle")
+    public ResponseEntity<?> getCategoryMiddle(@AuthenticationPrincipal String userId, @RequestBody PostCategoryMiddleReqDto request) {
+        //validation 로직
+        userValidationController.validateuser(Long.valueOf(userId));
+        bistroValidationController.validateCategoryMain(request.getMainCategory());
+        bistroValidationController.validateCategoryMiddle(request.getMiddleCategory());
+
+        List<BistroV2> bistroList = bistroService.getCategoryMiddle(request.getMainCategory(), request.getMiddleCategory());
+        List<BistroV2> bookmark = bookmarkService.findBookmarkV2(Long.valueOf(userId));
+
+        List<MiddleCategoryListDto> listDtos = new ArrayList<>();
+
+        for(BistroV2 bistro : bistroList) {
+            int isBookmark;
+            if(bookmark.indexOf(bistro) != -1) {
+                isBookmark = 1;
+            } else {
+                isBookmark = 0;
+            }
+            listDtos.add(new MiddleCategoryListDto(bistro.getId(), isBookmark, bistro.getName(), bistro.getRAddr(), bistro.getLAddr(), bistro.getTel(), bistro.getMenu(),
+                    bistro.getLa(), bistro.getLa(), bistro.getBistroUrl()));
+        }
+
+        return ResponseEntity.ok().body(listDtos);
+    }
+
+    // [POST] 6-6 음식점 ‘장소(지역) 대분류& 장소(지역) 중분류& 카테고리 대분류’ 검색
+    @PostMapping("/api/bistro-category-main")
+    public ResponseEntity<?> getBistroMain(@AuthenticationPrincipal String userId, @RequestBody PostBistroMainReqDto request) {
+        //validation 로직
+        userValidationController.validateuser(Long.valueOf(userId));
+        bistroValidationController.validateSiteWide(request.getSiteWide());
+        bistroValidationController.validateSiteMiddle(request.getSiteMiddle());
+        bistroValidationController.validateCategoryMain(request.getMainCategory());
+
+        List<BistroV2> bistroList = bistroService.getBistroMain(request.getSiteWide(), request.getSiteMiddle(), request.getMainCategory());
+        List<BistroV2> bookmark = bookmarkService.findBookmarkV2(Long.valueOf(userId));
+
+        List<MainCategoryListDto> listDtos = new ArrayList<>();
+
+        for(BistroV2 bistro : bistroList) {
+            int isBookmark;
+            if(bookmark.indexOf(bistro) != -1) {
+                isBookmark = 1;
+            } else {
+                isBookmark = 0;
+            }
+            listDtos.add(new MainCategoryListDto(bistro.getId(), isBookmark, bistro.getName(), bistro.getRAddr(), bistro.getLAddr(), bistro.getTel(), bistro.getMenu(),
+                    bistro.getLa(), bistro.getLa(), bistro.getBistroUrl(), bistro.getMiddleCategory()));
+        }
+
+        return ResponseEntity.ok().body(listDtos);
+    }
+
+    // [POST] 6-7 음식점 ‘장소(지역) 대분류& 장소(지역) 중분류& 카테고리 대분류&카테고리 중분류’ 검색
+    @PostMapping("/api/bistro-category-middle")
+    public ResponseEntity<?> getBistroMiddle(@AuthenticationPrincipal String userId, @RequestBody PostBistroMiddleReqDto request) {
+        //validation 로직
+        userValidationController.validateuser(Long.valueOf(userId));
+        bistroValidationController.validateSiteWide(request.getSiteWide());
+        bistroValidationController.validateSiteMiddle(request.getSiteMiddle());
+        bistroValidationController.validateCategoryMain(request.getMainCategory());
+        bistroValidationController.validateCategoryMiddle(request.getMiddleCategory());
+
+        List<BistroV2> bistroList = bistroService.getBistroMiddle(request.getSiteWide(), request.getSiteMiddle(), request.getMainCategory(), request.getMiddleCategory());
+        List<BistroV2> bookmark = bookmarkService.findBookmarkV2(Long.valueOf(userId));
+
+        List<MiddleCategoryListDto> listDtos = new ArrayList<>();
+
+        for(BistroV2 bistro : bistroList) {
+            int isBookmark;
+            if(bookmark.indexOf(bistro) != -1) {
+                isBookmark = 1;
+            } else {
+                isBookmark = 0;
+            }
+            listDtos.add(new MiddleCategoryListDto(bistro.getId(), isBookmark, bistro.getName(), bistro.getRAddr(), bistro.getLAddr(), bistro.getTel(), bistro.getMenu(),
+                    bistro.getLa(), bistro.getLa(), bistro.getBistroUrl()));
+        }
+
+        return ResponseEntity.ok().body(listDtos);
+    }
+
+    // [POST] 6-8 음식점 ‘장소(지역) 대분류&카테고리 대분류’ 검색
+    @PostMapping("/api/site-wide-category-main")
+    public ResponseEntity<?> getSiteWideMain(@AuthenticationPrincipal String userId, @RequestBody PostSiteWideMainReqDto request) {
+        //validation 로직
+        userValidationController.validateuser(Long.valueOf(userId));
+        bistroValidationController.validateSiteWide(request.getSiteWide());
+        bistroValidationController.validateCategoryMain(request.getMainCategory());
+
+        List<BistroV2> bistroList = bistroService.getSiteWideMain(request.getSiteWide(), request.getMainCategory());
+        List<BistroV2> bookmark = bookmarkService.findBookmarkV2(Long.valueOf(userId));
+
+        List<MainCategoryListDto> listDtos = new ArrayList<>();
+
+        for(BistroV2 bistro : bistroList) {
+            int isBookmark;
+            if(bookmark.indexOf(bistro) != -1) {
+                isBookmark = 1;
+            } else {
+                isBookmark = 0;
+            }
+            listDtos.add(new MainCategoryListDto(bistro.getId(), isBookmark, bistro.getName(), bistro.getRAddr(), bistro.getLAddr(), bistro.getTel(), bistro.getMenu(),
+                    bistro.getLa(), bistro.getLa(), bistro.getBistroUrl(), bistro.getMiddleCategory()));
+        }
+
+        return ResponseEntity.ok().body(listDtos);
     }
 }
