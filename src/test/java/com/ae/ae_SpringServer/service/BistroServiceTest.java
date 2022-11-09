@@ -1,6 +1,7 @@
 package com.ae.ae_SpringServer.service;
 
 import com.ae.ae_SpringServer.domain.Bistro;
+import com.ae.ae_SpringServer.domain.BistroV2;
 import com.ae.ae_SpringServer.repository.BistroRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,4 +83,97 @@ public class BistroServiceTest {
 
     }
 
+    // 6-4
+    @Test
+    public void 음식점대분류카테고리조회() {
+        // given
+        String mainCategory = "음식점";
+
+        // when
+        Object listCount = em.createQuery("select COUNT(b.name) from BistroV2 b where b.mainCategory = :mainCategory")
+                .setParameter("mainCategory", mainCategory)
+                .getSingleResult();
+        List<BistroV2> mainCategoryList = bistroService.getCategoryMain(mainCategory);
+
+        // then
+        assertEquals(listCount, mainCategoryList.stream().count());
+    }
+
+    // 6-5
+    @Test
+    public void 음식점대분류중분류별카테고리조회() {
+        // given
+        String mainCategory = "음식점";
+        String middleCategory = "양식";
+
+        // when
+        Object listCount = em.createQuery("select COUNT(b.name) from BistroV2 b where b.mainCategory = :mainCategory and b.middleCategory = :middleCategory")
+                .setParameter("mainCategory", mainCategory)
+                .setParameter("middleCategory", middleCategory)
+                .getSingleResult();
+        List<BistroV2> middleCategoryList = bistroService.getCategoryMiddle(mainCategory, middleCategory);
+
+        // then
+        assertEquals(listCount, middleCategoryList.stream().count());
+    }
+
+    // 6-6
+    @Test
+    public void 음식점_위치대분류중분류_대분류카테고리별조회() {
+        // given
+        String siteWide = "서울특별시";
+        String siteMiddle = "강남구";
+        String mainCategory = "음식점";
+
+        // when
+        Object listCount = em.createQuery("select COUNT(b.name) from BistroV2 b where b.wide = :siteWide and b.middle = :siteMiddle and b.mainCategory = :mainCategory")
+                .setParameter("siteWide", siteWide)
+                .setParameter("siteMiddle", siteMiddle)
+                .setParameter("mainCategory", mainCategory)
+                .getSingleResult();
+        List<BistroV2> mainCategoryList = bistroService.getBistroMain(siteWide, siteMiddle, mainCategory);
+
+        // then
+        assertEquals(listCount, mainCategoryList.stream().count());
+    }
+
+    // 6-7
+    @Test
+    public void 음식점_위치대분류중분류_중분류카테고리별조회() {
+        // given
+        String siteWide = "서울특별시";
+        String siteMiddle = "강남구";
+        String mainCategory = "음식점";
+        String middleCategory = "양식";
+
+        // when
+        Object listCount = em.createQuery("select COUNT(b.name) from BistroV2 b where b.wide = :siteWide and b.middle = :siteMiddle and b.mainCategory = :mainCategory and b.middleCategory = :middleCategory")
+                .setParameter("siteWide", siteWide)
+                .setParameter("siteMiddle", siteMiddle)
+                .setParameter("mainCategory", mainCategory)
+                .setParameter("middleCategory", middleCategory)
+                .getSingleResult();
+        List<BistroV2> middleCategoryList = bistroService.getBistroMiddle(siteWide, siteMiddle, mainCategory, middleCategory);
+
+        // then
+        assertEquals(listCount, middleCategoryList.stream().count());
+    }
+
+    // 6-8
+    @Test
+    public void 음식점_위치대분류_대분류카테고리별조회() {
+        // given
+        String siteWide = "서울특별시";
+        String mainCategory = "음식점";
+
+        // when
+        Object listCount = em.createQuery("select COUNT(b.name) from BistroV2 b where b.wide = :siteWide and b.mainCategory = :mainCategory")
+                .setParameter("siteWide", siteWide)
+                .setParameter("mainCategory", mainCategory)
+                .getSingleResult();
+        List<BistroV2> mainCategoryList = bistroService.getSiteWideMain(siteWide, mainCategory);
+
+        // then
+        assertEquals(listCount, mainCategoryList.stream().count());
+    }
 }
