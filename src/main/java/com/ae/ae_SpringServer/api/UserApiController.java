@@ -70,9 +70,13 @@ public class UserApiController {
         String id = String.valueOf(responseBody.get("id"));
 
         Optional<User> user = userService.findByKakaoId(id);
-        boolean isEmpty = user.isEmpty();
-        System.out.println(isEmpty);
-        if(!isEmpty) {
+        boolean isKakaoEmpty = user.isEmpty();
+
+        if(!isKakaoEmpty) {
+            // 로그인 후 온보딩이 아직 입력 안된 상태
+            if(user.get().getHeight() == null || user.get().getWeight() == null) {
+                return new BaseResponse<>(new LoginResponseDto(user.get().getId(), jwtProvider.createToken(user.get()), true));
+            }
             return new BaseResponse<>(new LoginResponseDto(user.get().getId(), jwtProvider.createToken(user.get()), false));
         } else {
             User u = User.createUser(id);
