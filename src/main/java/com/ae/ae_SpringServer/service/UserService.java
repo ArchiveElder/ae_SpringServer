@@ -1,5 +1,6 @@
 package com.ae.ae_SpringServer.service;
 
+import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.config.security.JwtProperties;
 import com.ae.ae_SpringServer.config.security.JwtProvider;
 import com.ae.ae_SpringServer.domain.User;
@@ -83,6 +84,10 @@ public class UserService {
         boolean isEmpty = user.isEmpty();
         // 로그인
         if(!isEmpty) {
+            // 로그인 후 온보딩이 아직 입력 안된 상태
+            if(user.get().getHeight() == null || user.get().getWeight() == null) {
+                return new LoginResponseDto(user.get().getId(), jwtProvider.createToken(user.get()), true);
+            }
             return new LoginResponseDto(user.get().getId(),jwtProvider.createToken(user.get()), false);
         }
         // 회원가입
